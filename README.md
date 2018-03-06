@@ -1,8 +1,23 @@
 # cs0320 Term Project 2018
 
-**Team Members:** _Fill this in!_
+**Team Members:** 
+Gokul Ajith
+Michael Bardakji
+Prithu Dasgupta
+Ben Deckey
 
-**Team Strengths and Weaknesses:** _Fill this in!_
+**Team Strengths and Weaknesses:**
+Strengths:
+Gokul - Databases, Front-End/Graphics, Debugging.
+Michael - AI, Optimizations, Testing, SQL.
+Prithu - Algorithms, Project Design, Testing.
+Benjamin - Algorithms, Optimizations, Front-End/Graphics.
+
+Weaknesses:
+Gokul - Testing, Project Organization.
+Michael- Debugging, Abstractions.
+Prithu - Debugging, SQL.
+Ben - Test Writing, Generics.
 
 **Project Idea(s):** _Fill this in!_
 
