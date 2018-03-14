@@ -93,7 +93,7 @@ What you expect will be most challenging about each feature?
 	-Getting our app working with venmo (the back-end).
 
 
-**Mentor TA:** _Put your mentor TA's name and email here once you're assigned one!_
+**Mentor TA:** Raghu
 
 ## Meetings
 _On your first meeting with your mentor TA, you should plan dates for at least the following meetings:_
