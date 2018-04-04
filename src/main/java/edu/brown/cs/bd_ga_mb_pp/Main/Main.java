@@ -1,10 +1,6 @@
 package edu.brown.cs.bd_ga_mb_pp.Main;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
+import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import spark.ExceptionHandler;
@@ -13,8 +9,10 @@ import spark.Response;
 import spark.Spark;
 import spark.template.freemarker.FreeMarkerEngine;
 
-
-import freemarker.template.Configuration;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * The Main class of our project. This is where execution begins.
