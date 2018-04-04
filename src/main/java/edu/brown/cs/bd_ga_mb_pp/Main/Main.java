@@ -4,13 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Map;
 
+import com.google.common.collect.ImmutableMap;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import spark.ExceptionHandler;
+import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
+import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
 
 
@@ -57,13 +61,25 @@ public final class Main {
       gui = true;
     }
 
-
     // Process commands in a REPL
     // end GUI
     if (options.has("gui")) {
       Spark.stop();
     }
   }
+
+  /**
+   * Handle requests to the front page of Bacon website.
+   */
+  private static class TestHandler implements TemplateViewRoute {
+    @Override
+    public ModelAndView handle(Request req, Response res) {
+      Map<String, Object> variables = ImmutableMap.of("title", "test");
+      return new ModelAndView(variables, "test.ftl");
+    }
+  }
+
+
   private static FreeMarkerEngine createEngine() {
     Configuration config = new Configuration();
     File templates = new File("src/main/resources/spark/template/freemarker");
@@ -76,12 +92,16 @@ public final class Main {
     }
     return new FreeMarkerEngine(config);
   }
+
+
   private void runSparkServer(int port) {
     Spark.port(port);
     Spark.externalStaticFileLocation("src/main/resources/static");
     Spark.exception(Exception.class, new ExceptionPrinter());
 
     FreeMarkerEngine freeMarker = createEngine();
+
+    Spark.get("/test", new TestHandler(), freeMarker);
 
 
   }

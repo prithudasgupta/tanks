@@ -9,16 +9,13 @@
     <link rel="stylesheet" href="/css/normalize.css">
     <link rel="stylesheet" href="/css/html5bp.css">
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/images/yellow-star-animated.gif">
-    <link rel="stylesheet" href="/images/loading.gif">
   </head>
   <body>
      ${content}
      <!-- Again, we're serving up the unminified source for clarity. -->
      <script src="/js/jquery-2.1.1.js"></script>
-     <script src="/js/autocorrect.js"></script>
-     <script src="/js/connections.js"></script>
-     <script src="/js/dropdown.js"></script>
+     <script src="/js/jquery-3.1.1.js"></script>
+     <#--<script src="/js/tankMove.js"></script>-->
   </body>
   <!-- See http://html5boilerplate.com/ for a good place to start
        dealing with real world issues like old browsers.  -->
