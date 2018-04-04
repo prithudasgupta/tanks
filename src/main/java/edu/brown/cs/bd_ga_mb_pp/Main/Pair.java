@@ -1,4 +1,4 @@
-package edu.brown.cs.bdeckey.Main;
+package edu.brown.cs.bd_ga_mb_pp.Main;
 
 import java.util.Objects;
 
