@@ -1,5 +1,15 @@
 package edu.brown.cs.bd_ga_mb_pp.Tank;
 
-interface Tank {
-
+public interface Tank {
+	
+	void move(Direction d);
+	
+	void rotateTank(Direction d);
+	
+	void rotateLauncher(Direction d);
+	
+	void shoot();
+	
 }
+
+
