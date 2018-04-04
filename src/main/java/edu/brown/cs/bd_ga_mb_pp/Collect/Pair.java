@@ -1,4 +1,4 @@
-package edu.brown.cs.bd_ga_mb_pp.Main;
+package edu.brown.cs.bd_ga_mb_pp.Collect;
 
 import java.util.Objects;
 
