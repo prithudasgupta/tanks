@@ -1,8 +1,14 @@
 package edu.brown.cs.bdGaMbPp.Map;
 
+import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
 import edu.brown.cs.bdGaMbPp.Collect.Pair;
+import edu.brown.cs.bdGaMbPp.Tank.Tank;
+import edu.brown.cs.bdGaMbPp.Tank.UserTank;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class MapBuilder {
@@ -108,5 +114,17 @@ public class MapBuilder {
                 break;
         }
         return false;
+    }
+
+    public Map getMap() {
+        return new Map();
+    }
+
+    public List<Tank> getEnemies() {
+        return Collections.emptyList();
+    }
+
+    public Tank getUser() {
+        return null;
     }
 }

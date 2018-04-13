@@ -48,6 +48,41 @@ function paintMap() {
 
 $(document).ready(() => {
 
+    $(document).on("keyup", function() {
+        // rotation event
+       if (event.which === 65 || event.which === 68 || event.which === 87 || event.which === 83) {
+           let direction;
+           // a
+           if (event.which === 65) {
+               // left
+               direction = 0;
+           }
+           // d
+           else if (event.which === 68) {
+               // right
+               direction = 1;
+           }
+           // w
+           else if (event.which === 87) {
+               // forward
+               direction = 2
+           }
+           // s
+           else {
+               direction = 3;
+           }
+           $.post('/', {'direction': direction}, responseJSON => {
+               const respObject = JSON.parse(responseJSON);
+
+
+           });
+       }
+
+
+
+
+    });
+
     // Setting up the canvas.
     canvas = $('#canvas')[0];
     canvas.width = BOARD_WIDTH * TILE_SIZE;
@@ -56,5 +91,4 @@ $(document).ready(() => {
     // TODO: Set up the canvas context.
     ctx = canvas.getContext("2d");
     paintMap();
-    addTank();
 });

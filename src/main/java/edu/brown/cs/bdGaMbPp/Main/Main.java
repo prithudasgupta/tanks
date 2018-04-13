@@ -64,8 +64,8 @@ public final class Main {
     // Process commands in a REPL
     // end GUI
 
-    MapBuilder temp = new MapBuilder();
-    System.out.println("temp = " + temp.createMap());
+//    MapBuilder temp = new MapBuilder();
+//    System.out.println("temp = " + temp.createMap());
 
 
   }
@@ -126,5 +126,7 @@ public final class Main {
       res.body(stacktrace.toString());
     }
   }
+
+
 
 }
