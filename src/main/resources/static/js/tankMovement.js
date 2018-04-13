@@ -44,11 +44,6 @@ function paintMap() {
     }
 }
 
-function addTank() {
-    ctx.fillStyle = "RED";
-    ctx.fillRect(50, 50, TANK_WIDTH, TANK_HEIGHT);
-}
-
 
 
 $(document).ready(() => {

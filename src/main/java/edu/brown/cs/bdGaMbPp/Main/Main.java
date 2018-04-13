@@ -64,7 +64,8 @@ public final class Main {
     // end GUI
 
     MapBuilder temp = new MapBuilder();
-    temp.createMap();
+    System.out.println("temp = " + temp.createMap());
+
 
   }
 
