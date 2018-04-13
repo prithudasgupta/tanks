@@ -1,7 +1,7 @@
-package edu.brown.cs.bd_ga_mb_pp.Tank;
+package edu.brown.cs.bdGaMbPp.Tank;
 
-import edu.brown.cs.bd_ga_mb_pp.Collect.Angle;
-import edu.brown.cs.bd_ga_mb_pp.Collect.Coordinate;
+import edu.brown.cs.bdGaMbPp.Collect.Angle;
+import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
 
 public class UserTank implements Tank{
 	

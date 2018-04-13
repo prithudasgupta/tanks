@@ -1,4 +1,4 @@
-package edu.brown.cs.bd_ga_mb_pp.Main;
+package edu.brown.cs.bdGaMbPp.Main;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,9 +63,9 @@ public final class Main {
 
     // Process commands in a REPL
     // end GUI
-    if (options.has("gui")) {
-      Spark.stop();
-    }
+//    if (options.has("gui")) {
+//      Spark.stop();
+//    }
   }
 
   /**
@@ -102,7 +102,6 @@ public final class Main {
     FreeMarkerEngine freeMarker = createEngine();
 
     Spark.get("/test", new TestHandler(), freeMarker);
-
 
   }
 
