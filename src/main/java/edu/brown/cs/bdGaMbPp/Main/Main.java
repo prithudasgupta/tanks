@@ -1,24 +1,18 @@
 package edu.brown.cs.bdGaMbPp.Main;
 
+import com.google.common.collect.ImmutableMap;
+import com.sun.corba.se.impl.presentation.rmi.ExceptionHandler;
+import edu.brown.cs.bd_ga_mb_pp.Map.MapBuilder;
+import freemarker.template.Configuration;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import spark.template.freemarker.FreeMarkerEngine;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Map;
-
-import com.google.common.collect.ImmutableMap;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import spark.ExceptionHandler;
-import spark.ModelAndView;
-import spark.Request;
-import spark.Response;
-import spark.Spark;
-import spark.TemplateViewRoute;
-import spark.template.freemarker.FreeMarkerEngine;
-
-
-import freemarker.template.Configuration;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -63,9 +57,10 @@ public final class Main {
 
     // Process commands in a REPL
     // end GUI
-//    if (options.has("gui")) {
-//      Spark.stop();
-//    }
+
+    MapBuilder temp = new MapBuilder();
+    temp.createMap();
+
   }
 
   /**
