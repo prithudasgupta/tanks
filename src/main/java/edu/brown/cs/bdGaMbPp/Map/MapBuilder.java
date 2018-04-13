@@ -1,6 +1,6 @@
-package edu.brown.cs.bd_ga_mb_pp.Map;
+package edu.brown.cs.bdGaMbPp.Map;
 
-import edu.brown.cs.bd_ga_mb_pp.Collect.Pair;
+import edu.brown.cs.bdGaMbPp.Collect.Pair;
 
 import java.util.LinkedList;
 import java.util.Queue;
