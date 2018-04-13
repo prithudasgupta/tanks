@@ -1,4 +1,4 @@
-package edu.brown.cs.bd_ga_mb_pp.Tank;
+package edu.brown.cs.bdGaMbPp.Tank;
 
 public enum Direction {
 	

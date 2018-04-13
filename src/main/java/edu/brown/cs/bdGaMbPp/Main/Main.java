@@ -1,4 +1,4 @@
-package edu.brown.cs.bd_ga_mb_pp.Main;
+package edu.brown.cs.bdGaMbPp.Main;
 
 import com.google.common.collect.ImmutableMap;
 import com.sun.corba.se.impl.presentation.rmi.ExceptionHandler;
@@ -57,12 +57,9 @@ public final class Main {
 
     // Process commands in a REPL
     // end GUI
-    if (options.has("gui")) {
-      Spark.stop();
-    }
+
     MapBuilder temp = new MapBuilder();
     temp.createMap();
-
 
   }
 
@@ -100,7 +97,6 @@ public final class Main {
     FreeMarkerEngine freeMarker = createEngine();
 
     Spark.get("/test", new TestHandler(), freeMarker);
-
 
   }
 

@@ -1,4 +1,4 @@
-package edu.brown.cs.bd_ga_mb_pp.Collect;
+package edu.brown.cs.bdGaMbPp.Collect;
 
 
 public class Angle {
