@@ -12,6 +12,7 @@ public class UserTank implements Tank{
 	
 	private static final double MOVE_SPEED = .01;
 	private static final double ROTATE_SPEED = .01;
+	private static final double EPSILON = .01;
 	
 	public UserTank(Coordinate startCoord, double startDegrees) {
 		location = startCoord;
@@ -24,10 +25,10 @@ public class UserTank implements Tank{
 	@Override
 	public void move(Direction d) {
 		if (d.equals(Direction.FORWARD)) {
-			
+			location.forwardByAngle(angleForward, MOVE_SPEED);
 		}
 		else if (d.equals(Direction.BACKWARD)) {
-			
+			location.backwardByAngle(angleForward, MOVE_SPEED);
 		}	
 	}
 
@@ -43,14 +44,16 @@ public class UserTank implements Tank{
 		
 	}
 
-	@Override
-	public void rotateLauncher(Direction d) {
-		if (d.equals(Direction.LEFT)) {
-			
+	public void rotateLauncher(Coordinate mouseCoord) {
+		double tankCoordX = location.getCoordinate(0);
+		double tankCoordY = location.getCoordinate(1);
+		double mouseCoordX = mouseCoord.getCoordinate(0);
+		double mouseCoordY = mouseCoord.getCoordinate(1);
+		
+		if (Math.abs(tankCoordX - mouseCoordX) > EPSILON) {
+			launcherAngle.setAngle(Math.toDegrees(Math.atan((mouseCoordY-tankCoordY)/(mouseCoordX-tankCoordX))));
 		}
-		else if (d.equals(Direction.RIGHT)) {
-			
-		}			
+		
 	}
 
 	@Override

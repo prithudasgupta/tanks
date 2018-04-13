@@ -30,5 +30,19 @@ public class Angle {
 		}
 	}
 	
+	public void setAngle(double newAngle) {
+		degrees = newAngle;
+	}
+	
+	public double getSin() {
+		return Math.sin(degrees);
+	}
+	
+	public double getCos() {
+		return Math.cos(degrees);
+	}
+	
+	
+	
 
 }

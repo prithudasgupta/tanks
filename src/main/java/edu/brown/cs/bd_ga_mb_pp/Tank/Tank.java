@@ -6,8 +6,6 @@ public interface Tank {
 	
 	void rotateTank(Direction d);
 	
-	void rotateLauncher(Direction d);
-	
 	void shoot();
 	
 }

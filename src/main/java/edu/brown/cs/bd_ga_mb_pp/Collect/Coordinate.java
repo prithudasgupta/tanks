@@ -93,6 +93,16 @@ public class Coordinate {
   public double getCoordinateByAxis(int level) {
     return getCoordinate(level % getNumDimmensions());
   }
+  
+  public void forwardByAngle(Angle currentAngle, double moveSpeed) {
+	  coordinates.set(0, coordinates.get(0) + (moveSpeed * currentAngle.getCos()));
+	  coordinates.set(1, coordinates.get(1) + (moveSpeed * currentAngle.getSin()));
+  }
+  
+  public void backwardByAngle(Angle currentAngle, double moveSpeed) {
+	  coordinates.set(0, coordinates.get(0) - (moveSpeed * currentAngle.getCos()));
+	  coordinates.set(1, coordinates.get(1) - (moveSpeed * currentAngle.getSin()));
+  }
 
   /**
    * Returns readable version of coordinate in form (x, y, z, ...).
