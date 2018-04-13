@@ -1,6 +1,7 @@
 package edu.brown.cs.bdGaMbPp.Main;
 
 import com.google.common.collect.ImmutableMap;
+
 import edu.brown.cs.bdGaMbPp.Map.MapBuilder;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
