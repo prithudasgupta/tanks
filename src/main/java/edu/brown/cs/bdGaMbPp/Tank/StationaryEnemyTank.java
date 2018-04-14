@@ -56,4 +56,10 @@ public class StationaryEnemyTank implements Tank{
 		// TODO Auto-generated method stub
 		
 	}
+
+
+	@Override
+	public Coordinate getCoord() {
+		return location;
+	}
 }

@@ -10,7 +10,7 @@ public interface Tank {
 	
 	void shoot();
 
-	Coordinate getCords();
+	Coordinate getCoord();
 }
 
 

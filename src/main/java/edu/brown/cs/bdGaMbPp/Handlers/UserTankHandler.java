@@ -23,5 +23,6 @@ public class UserTankHandler implements Route{
 
     Direction d = directions[Integer.valueOf(qm.value("direction"))];
     currentGame.getUser().move(d);
+    return "hello";
   }
 }

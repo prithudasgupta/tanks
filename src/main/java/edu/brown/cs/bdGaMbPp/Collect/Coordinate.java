@@ -1,5 +1,6 @@
 package edu.brown.cs.bdGaMbPp.Collect;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -25,13 +26,33 @@ public class Coordinate {
    * @param coordinates
    *          List of doubles representing value of each dimension
    */
-  public Coordinate(int numDimmensions, List<Double> coordinates) {
-    if (numDimmensions == coordinates.size()) {
-      this.numDimmensions = numDimmensions;
-      this.coordinates = coordinates;
-    } else {
-      System.out.println("Error: Incorrect dimmensions to size of vector");
-    }
+  public Coordinate(List<Double> theCoordinates) {
+    numDimmensions = coordinates.size();
+    coordinates = theCoordinates;
+  }
+  
+  public Coordinate(double x) {
+	  numDimmensions = 1;
+	  List<Double> theCoords = new ArrayList<Double>();
+	  theCoords.add(x);
+	  coordinates = theCoords;
+  }
+  
+  public Coordinate(double x, double y) {
+	  numDimmensions = 2;
+	  List<Double> theCoords = new ArrayList<Double>();
+	  theCoords.add(x);
+	  theCoords.add(y);
+	  coordinates = theCoords;
+  }
+  
+  public Coordinate(double x, double y, double z) {
+	  numDimmensions = 3;
+	  List<Double> theCoords = new ArrayList<Double>();
+	  theCoords.add(x);
+	  theCoords.add(y);
+	  theCoords.add(z);
+	  coordinates = theCoords;
   }
 
   /**
@@ -61,7 +82,7 @@ public class Coordinate {
    * @return Numerical value of axis in given dimension
    */
   public double getCoordinate(int dimmension) {
-    return getCoordinateVector().get(dimmension);
+    return coordinates.get(dimmension);
   }
 
   /**

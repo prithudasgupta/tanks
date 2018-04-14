@@ -62,5 +62,11 @@ public class UserTank implements Tank{
 		
 	}
 
+
+	@Override
+	public Coordinate getCoord() {
+		return location;
+	}
+
 	
 }
