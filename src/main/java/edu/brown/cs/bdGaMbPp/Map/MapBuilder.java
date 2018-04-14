@@ -5,17 +5,49 @@ import edu.brown.cs.bdGaMbPp.Collect.Pair;
 import edu.brown.cs.bdGaMbPp.Tank.Tank;
 import edu.brown.cs.bdGaMbPp.Tank.UserTank;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public class MapBuilder {
-    private Integer leastwall;
-    public MapBuilder(){
-        leastwall = 4;
-    }
+public final class MapBuilder {
+	
+	private static final int ROW_SIZE = 16;
+	private static final int COLUMN_SIZE = 24;
+    private static final int LEAST_WALL = 4;
+    
+    private GameMap map;
+    
+   public static GameMap newMap() {
+	   List<List<Location>> initialMap = initalizeMap();
+	   //need to continue
+	   
+	   return null;
+   }
+    
+   public static GameMap reuseMap(GameMap oldMap) {
+    		return new GameMap(oldMap);
+   }
+   
+   public static GameMap reuseMap(List<List<String>> oldMapRepresentaion) {
+	   return GameMap.representationToMap(oldMapRepresentaion);
+	   
+	   
+   } 
+   
+   private static List<List<Location>> initalizeMap(){
+	   List<List<Location>> initial = new ArrayList<List<Location>>();
+	   for (int i = 0; i < ROW_SIZE; i++) {
+		   List<Location> row = new ArrayList<Location>();
+		   for (int j = 0; j < COLUMN_SIZE; j++) {
+			   row.add(new BreakableWall());
+		   }
+		   initial.add(row);
+	   }
+	   return initial;
+   }
 
     public Character[][] createMap(){
         Character[][] map = new Character[16][24];
@@ -89,25 +121,25 @@ public class MapBuilder {
         int i;
         switch(roworcol){
             case "row":
-                for(i = row - leastwall; i < row + leastwall ; i ++){
+                for(i = row - LEAST_WALL; i < row + LEAST_WALL ; i ++){
                     if(map[i][col] == 'w'){
                         numofblocks ++;
                     }else{
                         numofblocks = 0;
                     }
-                    if(numofblocks == leastwall){
+                    if(numofblocks == LEAST_WALL){
                         return true;
                     }
                 }
                 break;
             case "col":
-                for(i = col - leastwall; i < col + leastwall ; i ++){
+                for(i = col - LEAST_WALL; i < col + LEAST_WALL ; i ++){
                     if(map[row][i] == 'w'){
                         numofblocks ++;
                     }else{
                         numofblocks = 0;
                     }
-                    if(numofblocks == leastwall){
+                    if(numofblocks == LEAST_WALL){
                         return true;
                     }
                 }
@@ -116,15 +148,7 @@ public class MapBuilder {
         return false;
     }
 
-    public Map getMap() {
-        return new Map();
-    }
-
-    public List<Tank> getEnemies() {
-        return Collections.emptyList();
-    }
-
-    public Tank getUser() {
-        return null;
+    public GameMap getMap() {
+        return map;
     }
 }
