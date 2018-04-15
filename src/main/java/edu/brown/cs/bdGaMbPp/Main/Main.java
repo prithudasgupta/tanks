@@ -62,7 +62,9 @@ public final class Main {
     }
 
 
-    MapBuilder temp = new MapBuilder();
+    MapBuilder builder = new MapBuilder();
+    Character[][] m = builder.createMap();
+    builder.printMap(m);
 
 
   }

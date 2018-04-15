@@ -152,5 +152,14 @@ public class MapBuilder {
     }
 
 
-    
+    public void printMap(Character[][] map) {
+        for(int i = 0 ; i < 16; i ++){
+            for(int j=0;j<24;j++){
+                System.out.print(map[i][j].toString());
+                System.out.print(" ");
+            }
+            System.out.print("\n");
+        }
+    }
+
 }
