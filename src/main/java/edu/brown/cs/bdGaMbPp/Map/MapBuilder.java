@@ -77,7 +77,6 @@ public class MapBuilder {
                 case 1:
                     rand = (int)(Math.random() * (rowend - rowstart));
                     rand += rowstart;
-                    System.out.println(rand);
                     for(i = colstart; i < colend; i ++){
                         if(map[rand][i] == 'w' && this.isValid(map, rand, i, "row")){
                             map[rand][i] = 'b';
@@ -151,4 +150,7 @@ public class MapBuilder {
         }
         return false;
     }
+
+
+    
 }
