@@ -48,6 +48,9 @@ function paintMap() {
 
 $(document).ready(() => {
 
+    
+
+
     $(document).on("keyup", function() {
         // rotation event
        if (event.which === 65 || event.which === 68 || event.which === 87 || event.which === 83) {
