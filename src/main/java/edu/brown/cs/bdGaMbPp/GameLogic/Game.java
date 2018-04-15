@@ -13,8 +13,10 @@ public class Game {
   private Tank user;
   private List<Tank> enemies;
 
-  public Game(MapBuilder mapBuilder) {
-    
+  public Game(GameMap aMap, Tank userTank, List<Tank> enemyTanks) {
+    map = aMap;
+    user = userTank;
+    enemyTanks = enemies;
   }
 
   public Tank getUser(){
