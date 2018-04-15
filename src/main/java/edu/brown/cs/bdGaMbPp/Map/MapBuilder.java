@@ -26,7 +26,7 @@ public class MapBuilder {
     	return map;
     }
 
-    public List<List<Location>> createMap(){
+    public GameMap createMap(){
     	//16 rows, 24 cols
   
         String upDownLeftRight = "0,16,0,24";
@@ -114,9 +114,7 @@ public class MapBuilder {
 
         }
 
-
-
-        return map;
+        return new GameMap(map);
     }
     
     

@@ -120,6 +120,18 @@ public class GameMap {
 		    return line.get(c);
 		    
 		  }
+
+		public List<List<String>> getRepresentations() {
+	  	List<List<String>> rep = new ArrayList<>();
+			for (List<Location> row : tiles) {
+				List<String> temp = new ArrayList<>();
+				for (Location c : row) {
+					temp.add(c.getRepresentation());
+				}
+				rep.add(temp);
+			}
+			return rep;
+		}
 	  
 	  @Override
 	  public String toString() {

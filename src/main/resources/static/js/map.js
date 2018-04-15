@@ -104,7 +104,7 @@ $(document).ready(() => {
         const respObject = JSON.parse(responseJSON);
         for (let row = 0; row < 16; row++) {
             for (let col = 0; col < 24; col++) {
-                if (respObject[row][col] === "w") {
+                if (respObject[row][col] === "u") {
                     populateMap(row, col, "wall");
                 } else {
                     populateMap(row, col, "free");
