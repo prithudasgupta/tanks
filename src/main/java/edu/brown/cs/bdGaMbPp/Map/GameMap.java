@@ -3,6 +3,8 @@ package edu.brown.cs.bdGaMbPp.Map;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.brown.cs.bdGaMbPp.Collect.Pair;
+
 public class GameMap {
 	
 	  private final List<List<Location>> tiles;
@@ -65,6 +67,17 @@ public class GameMap {
 	  		return new GameMap(newLocations);
 	  }
 	  
+	  public List<Pair<Integer, Integer>> indicesByType(String representation){
+		  List<Pair<Integer, Integer>> indices = new ArrayList<Pair<Integer, Integer>>();
+		  for (int i = 0; i < length; i++) {
+			  for (int j = 0; j < width; j++) {
+				  if (this.get(i, j).getRepresentation().equals(representation)) {
+					  indices.add(new Pair<Integer, Integer>(i, j));
+				  }
+			  }
+		  }
+		  return indices;  
+	  }
 	  
 	  
 	  public static Location representationToLocation(String representation) {
