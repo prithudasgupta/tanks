@@ -4,16 +4,24 @@ let canvas;
 let TILE_SIZE = ($(window).height() / 16);
 let BOARD_WIDTH = 24;
 let BOARD_HEIGHT = 16;
-let TANK_WIDTH = TILE_SIZE * 0.8;
-let TANK_HEIGHT = TILE_SIZE * 0.6;
+let TANK_WIDTH = TILE_SIZE * 0.6;
+let TANK_HEIGHT = TILE_SIZE * 0.4;
 
 
-class block {
+class Tank {
+    constructor() {
+        this.X = null;
+        this.Y = null;
+        this.deg = null;
+    }
+}
+
+class Block {
     constructor(type) {
         if(type === "wall") {
             this.color = "GREY";
         } else {
-            this.color = "BLUE";
+            this.color = "BROWN";
         }
         this.height =  ($(window).height() / 16);
         this.width = ($(window).height() / 16);
@@ -25,31 +33,28 @@ let map = [];
 for (let row = 0; row < 16; row++) {
     map[row] = [];
     for (let col = 0; col < 24; col++) {
-        if(row == 0 || row == 15 || col == 0 || col == 23) {
-            map[row][col] = new block("wall");
-        } else {
-            map[row][col] = new block("free");
-        }
+        map[row][col] = 0;
     }
 }
 
-function paintMap() {
+function populateMap(row, col, type) {
+    map[row][col] = new Block(type);
+}
+
+function paintMap(mapToPrint) {
+    ctx.clearRect(0, 0, 24*TILE_SIZE, 16*TILE_SIZE);
     for (let row = 0; row < 16; row++) {
         for (let col = 0; col < 24; col++) {
             let x = col * TILE_SIZE;
             let y = row * TILE_SIZE;
-            ctx.fillStyle = map[row][col].color;
+            ctx.fillStyle = mapToPrint[row][col].color;
             ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
         }
     }
 }
 
 
-
 $(document).ready(() => {
-
-    
-
 
     $(document).on("keyup", function() {
         // rotation event
@@ -74,24 +79,47 @@ $(document).ready(() => {
            else {
                direction = 3;
            }
-           $.post('/', {'direction': direction}, responseJSON => {
-               const respObject = JSON.parse(responseJSON);
-
-
+           $.post('/user', {'direction': direction, "x": user.X, "y": user.Y, "deg":user.deg}, responseJSON => {
+               const tank = JSON.parse(responseJSON);
+               user.Y = tank.location.coordinates[1];
+               user.X = tank.location.coordinates[0];
+               paintMap(map);
+               ctx.fillStyle = "BLACK";
+               console.log(tank.angleForward);
+               ctx.fillRect(user.X, user.Y, TANK_WIDTH, TANK_HEIGHT);
            });
        }
-
-
-
-
     });
 
     // Setting up the canvas.
     canvas = $('#canvas')[0];
     canvas.width = BOARD_WIDTH * TILE_SIZE;
     canvas.height = BOARD_HEIGHT * TILE_SIZE;
+    let user = new Tank();
 
     // TODO: Set up the canvas context.
     ctx = canvas.getContext("2d");
-    paintMap();
+
+    $.post('/map', " ", responseJSON => {
+        const respObject = JSON.parse(responseJSON);
+        for (let row = 0; row < 16; row++) {
+            for (let col = 0; col < 24; col++) {
+                if (respObject[row][col] === "w") {
+                    populateMap(row, col, "wall");
+                } else {
+                    populateMap(row, col, "free");
+                    if (user.X === null) {
+                        user.X = col * TILE_SIZE;
+                        user.Y = row * TILE_SIZE;
+                        user.deg = 0;
+                    }
+                }
+            }
+        }
+        paintMap(map);
+        ctx.fillStyle = "BLACK";
+        ctx.fillRect(user.X, user.Y, TANK_WIDTH, TANK_HEIGHT);
+    });
+
+
 });

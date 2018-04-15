@@ -3,6 +3,7 @@ package edu.brown.cs.bdGaMbPp.Main;
 import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.bdGaMbPp.Handlers.MapHandler;
+import edu.brown.cs.bdGaMbPp.Handlers.UserTankHandler;
 import edu.brown.cs.bdGaMbPp.Map.MapBuilder;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
@@ -63,11 +64,6 @@ public final class Main {
     }
 
 
-    MapBuilder builder = new MapBuilder();
-    Character[][] m = builder.createMap();
-    builder.printMap(m);
-
-
   }
 
   /**
@@ -106,6 +102,8 @@ public final class Main {
     Spark.get("/test", new TestHandler(), freeMarker);
 
     Spark.post("/map", new MapHandler());
+
+    Spark.post("/user", new UserTankHandler());
   }
 
 
