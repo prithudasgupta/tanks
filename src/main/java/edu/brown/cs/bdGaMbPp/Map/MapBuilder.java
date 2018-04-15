@@ -1,53 +1,15 @@
 package edu.brown.cs.bdGaMbPp.Map;
 
-import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
 import edu.brown.cs.bdGaMbPp.Collect.Pair;
-import edu.brown.cs.bdGaMbPp.Tank.Tank;
-import edu.brown.cs.bdGaMbPp.Tank.UserTank;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
-public final class MapBuilder {
-	
-	private static final int ROW_SIZE = 16;
-	private static final int COLUMN_SIZE = 24;
-    private static final int LEAST_WALL = 4;
-    
-    private GameMap map;
-    
-   public static GameMap newMap() {
-	   List<List<Location>> initialMap = initalizeMap();
-	   //need to continue
-	   
-	   return null;
-   }
-    
-   public static GameMap reuseMap(GameMap oldMap) {
-    		return new GameMap(oldMap);
-   }
-   
-   public static GameMap reuseMap(List<List<String>> oldMapRepresentaion) {
-	   return GameMap.representationToMap(oldMapRepresentaion);
-	   
-	   
-   } 
-   
-   private static List<List<Location>> initalizeMap(){
-	   List<List<Location>> initial = new ArrayList<List<Location>>();
-	   for (int i = 0; i < ROW_SIZE; i++) {
-		   List<Location> row = new ArrayList<Location>();
-		   for (int j = 0; j < COLUMN_SIZE; j++) {
-			   row.add(new BreakableWall());
-		   }
-		   initial.add(row);
-	   }
-	   return initial;
-   }
+public class MapBuilder {
+    private Integer leastwall;
+    public MapBuilder(){
+        leastwall = 4;
+    }
 
     public Character[][] createMap(){
         Character[][] map = new Character[16][24];
@@ -58,55 +20,91 @@ public final class MapBuilder {
                 map[i][j] = 'w';
             }
         }
-        Pair<Pair<Integer,Integer>,Pair<Integer,Integer>> curr = new Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>(new Pair(0, 16),new Pair(0, 24));
-        Queue<Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>> q = new LinkedList<Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>>();
+        Pair<Pair<Integer,Integer>,Pair<Integer,Integer>> curr =
+                new Pair<Pair<Integer,Integer>,
+                        Pair<Integer,Integer>>(new Pair(0, 16),new Pair(0, 24));
+        Queue<Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>> q =
+                new LinkedList<>();
         q.add(curr);
         int rand;
-        int start;
-        int end;
+        int rowstart;
+        int rowend;
+        int colstart;
+        int colend;
         int iter = 0;
+
+        boolean twowide;
         while(!q.isEmpty()){
-           curr = q.remove();
-           switch(iter % 2){
-               case 0:
-                   start = curr.getFirst().getFirst();
-                   end = curr.getFirst().getSecond();
-                   rand = (int)(curr.getSecond().getSecond() - curr.getSecond().getFirst());
-                   for(i = start; i < end; i ++){
-                       if(map[i][rand] == 'w' && this.isValid(map, i, rand, "col")){
-                           map[i][rand] = 'b';
-                       }
-                   }
-                   if(curr.getSecond().getFirst() != rand){
-                       q.add(new Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>(new Pair<Integer, Integer>(start,end), new Pair<Integer, Integer>(curr.getSecond().getFirst(), rand)));
-                   }
-                   if(rand != curr.getSecond().getSecond()){
-                       q.add(new Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>(new Pair<Integer, Integer>(start,end), new Pair<Integer, Integer>(rand,curr.getSecond().getSecond())));
+            twowide = false;
+            if(Math.random()*100 < 60){
+                twowide = true;
+            }
+            curr = q.remove();
+            rowstart = curr.getFirst().getFirst();
+            rowend = curr.getFirst().getSecond();
+            colstart = curr.getSecond().getFirst();
+            colend = curr.getSecond().getSecond();
+            switch(iter % 2){
+                case 0:
 
-                   }
+                    rand = (int)(Math.random() * (colend - colstart));
+                    rand += colstart;
+                    for(i = rowstart; i < rowend; i ++){
+                        if(map[i][rand] == 'w' && this.isValid(map, i, rand, "col")){
+                            map[i][rand] = 'b';
+                        }if(twowide){
+                            if(i - 1 >= 0 && map[i-1][rand] == 'w' && this.isValid(map, i-1, rand, "col")){
+                                map[i-1][rand] = 'b';
+                            }else if(i + 1 < 16 && map[i+1][rand] == 'w' && this.isValid(map, i+1, rand, "col")){
+                                map[i+1][rand] = 'b';
+                            }
 
-                   break;
-               case 1:
-                   start = curr.getSecond().getFirst();
-                   end = curr.getSecond().getSecond();
-                   rand = (int)(end - start);
-                   for(i = start; i < end; i ++){
-                       if(map[rand][i] == 'w' && this.isValid(map, rand, i, "row")){
-                           map[rand][i] = 'b';
-                       }
-                   }
-                   if(curr.getFirst().getFirst() != rand){
-                       q.add(new Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>(new Pair<Integer, Integer>(curr.getFirst().getFirst(), rand), new Pair<Integer, Integer>(start,end)));
+                            //count nearby
+                        }else{
+                            //count nearby
+                        }
 
-                   }
-                   if(rand!=curr.getFirst().getSecond()){
-                       q.add(new Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>(new Pair<Integer, Integer>(rand,curr.getFirst().getSecond()), new Pair<Integer, Integer>(start,end)));
+                    }
+                    if(rand - colstart > 3){
+                        q.add(new Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>(new Pair<Integer, Integer>(rowstart,rowend), new Pair<Integer, Integer>(colstart, rand)));
+                    }
+                    if(colend - rand > 3){
+                        q.add(new Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>(new Pair<Integer, Integer>(rowstart,rowend), new Pair<Integer, Integer>(rand,colend)));
 
-                   }
-                   break;
-               default:
-                   System.out.println("ERROR: wrong mod");
-           }
+                    }
+
+                    break;
+                case 1:
+                    rand = (int)(Math.random() * (rowend - rowstart));
+                    rand += rowstart;
+                    System.out.println(rand);
+                    for(i = colstart; i < colend; i ++){
+                        if(map[rand][i] == 'w' && this.isValid(map, rand, i, "row")){
+                            map[rand][i] = 'b';
+                        }
+                        if(twowide){
+                            if(i-1 >= 0 && map[rand][i-1] == 'w' && this.isValid(map, rand, i-1, "row")){
+                                map[rand][i-1] = 'b';
+                            }else if(i+1 < 24 && map[rand][i+1] == 'w' && this.isValid(map, rand, i+1, "row")){
+                                map[rand][i+1] = 'b';
+
+                            }
+                        }
+                    }
+                    if(rand - rowstart > 3){
+
+                        q.add(new Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>(new Pair<Integer, Integer>(rowstart, rand),new Pair<Integer, Integer>(colstart,colend)));
+
+                    }
+                    if(rowend - rand > 3){
+
+                        q.add(new Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>(new Pair<Integer, Integer>(rand,rowend),new Pair<Integer, Integer>(colstart,colend)));
+
+                    }
+                    break;
+                default:
+                    System.out.println("ERROR: wrong mod");
+            }
             iter++;
 
         }
@@ -121,34 +119,36 @@ public final class MapBuilder {
         int i;
         switch(roworcol){
             case "row":
-                for(i = row - LEAST_WALL; i < row + LEAST_WALL ; i ++){
-                    if(map[i][col] == 'w'){
-                        numofblocks ++;
-                    }else{
-                        numofblocks = 0;
+                for(i = row - leastwall; i < row + leastwall ; i ++){
+                    if(i >= 0 && i < 16){
+
+                        if(map[i][col] == 'w'){
+                            numofblocks ++;
+                        }else{
+                            numofblocks = 0;
+                        }
+                        if(numofblocks == leastwall){
+                            return true;
+                        }
                     }
-                    if(numofblocks == LEAST_WALL){
-                        return true;
-                    }
+
                 }
                 break;
             case "col":
-                for(i = col - LEAST_WALL; i < col + LEAST_WALL ; i ++){
-                    if(map[row][i] == 'w'){
-                        numofblocks ++;
-                    }else{
-                        numofblocks = 0;
-                    }
-                    if(numofblocks == LEAST_WALL){
-                        return true;
+                for(i = col - leastwall; i < col + leastwall ; i ++){
+                    if(i >= 0 && i < 24){
+                        if(map[row][i] == 'w'){
+                            numofblocks ++;
+                        }else{
+                            numofblocks = 0;
+                        }
+                        if(numofblocks == leastwall){
+                            return true;
+                        }
                     }
                 }
                 break;
         }
         return false;
-    }
-
-    public GameMap getMap() {
-        return map;
     }
 }
