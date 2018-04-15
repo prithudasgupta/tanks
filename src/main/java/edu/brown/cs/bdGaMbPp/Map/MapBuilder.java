@@ -2,7 +2,9 @@ package edu.brown.cs.bdGaMbPp.Map;
 
 import edu.brown.cs.bdGaMbPp.Collect.Pair;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class MapBuilder {
@@ -10,55 +12,61 @@ public class MapBuilder {
     public MapBuilder(){
         leastwall = 4;
     }
-
-    public Character[][] createMap(){
-        Character[][] map = new Character[16][24];
+    
+    private List<List<Location>> getMapOfWalls(){
+        List<List<Location>> map = new ArrayList<List<Location>>();
         int i;
         int j;
-        for(i = 0 ; i < 16; i ++){
+    	for(i = 0 ; i < 16; i ++){
+        	map.add(new ArrayList<Location>());
             for(j=0;j<24;j++){
-                map[i][j] = 'w';
+                map.get(i).add(new UnbreakableWall());
             }
         }
-        Pair<Pair<Integer,Integer>,Pair<Integer,Integer>> curr =
-                new Pair<Pair<Integer,Integer>,
-                        Pair<Integer,Integer>>(new Pair(0, 16),new Pair(0, 24));
-        Queue<Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>> q =
-                new LinkedList<>();
-        q.add(curr);
+    	return map;
+    }
+
+    public List<List<Location>> createMap(){
+    	//16 rows, 24 cols
+  
+        String upDownLeftRight = "0,16,0,24";
+        Queue<String> q = new LinkedList<>();
+        q.add(upDownLeftRight);
         int rand;
         int rowstart;
         int rowend;
         int colstart;
         int colend;
         int iter = 0;
-
+        List<List<Location>> map = this.getMapOfWalls();
         boolean twowide;
         while(!q.isEmpty()){
             twowide = false;
             if(Math.random()*100 < 60){
                 twowide = true;
             }
-            curr = q.remove();
-            rowstart = curr.getFirst().getFirst();
-            rowend = curr.getFirst().getSecond();
-            colstart = curr.getSecond().getFirst();
-            colend = curr.getSecond().getSecond();
+            String[] coords = q.remove().split(",");
+            rowstart = Integer.parseInt(coords[0]);
+            rowend = Integer.parseInt(coords[1]);
+            colstart = Integer.parseInt(coords[2]);
+            colend = Integer.parseInt(coords[3]);
+            int i;
+            int j;
             switch(iter % 2){
                 case 0:
 
                     rand = (int)(Math.random() * (colend - colstart));
                     rand += colstart;
                     for(i = rowstart; i < rowend; i ++){
-                        if(map[i][rand] == 'w' && this.isValid(map, i, rand, "col")){
-                            map[i][rand] = 'b';
+                        if(map.get(i).get(rand).getRepresentation().equals("u") && this.isValid(map, i, rand, "col")){
+                        	map.get(i).set(rand, new Land());
                         }if(twowide){
-                            if(i - 1 >= 0 && map[i-1][rand] == 'w' && this.isValid(map, i-1, rand, "col")){
-                                map[i-1][rand] = 'b';
-                            }else if(i + 1 < 16 && map[i+1][rand] == 'w' && this.isValid(map, i+1, rand, "col")){
-                                map[i+1][rand] = 'b';
+                            if(i - 1 >= 0 && map.get(i-1).get(rand).getRepresentation().equals("u") && this.isValid(map, i-1, rand, "col")){
+                                map.get(i-1).set(rand, new Land());
+                            }else if(i + 1 < 16 && map.get(i+1).get(rand).getRepresentation().equals("u") && this.isValid(map, i+1, rand, "col")){
+                                map.get(i+1).set(rand, new Land());
                             }
-
+                            
                             //count nearby
                         }else{
                             //count nearby
@@ -66,10 +74,10 @@ public class MapBuilder {
 
                     }
                     if(rand - colstart > 3){
-                        q.add(new Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>(new Pair<Integer, Integer>(rowstart,rowend), new Pair<Integer, Integer>(colstart, rand)));
+                    	q.add(rowstart + "," + rowend + "," + colstart + "," + rand);
                     }
                     if(colend - rand > 3){
-                        q.add(new Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>(new Pair<Integer, Integer>(rowstart,rowend), new Pair<Integer, Integer>(rand,colend)));
+                    	q.add(rowstart + "," + rowend + "," + rand + "," + colend);
 
                     }
 
@@ -78,26 +86,24 @@ public class MapBuilder {
                     rand = (int)(Math.random() * (rowend - rowstart));
                     rand += rowstart;
                     for(i = colstart; i < colend; i ++){
-                        if(map[rand][i] == 'w' && this.isValid(map, rand, i, "row")){
-                            map[rand][i] = 'b';
+                        if(map.get(rand).get(i).getRepresentation().equals("u") && this.isValid(map, rand, i, "row")){
+                            map.get(rand).set(i, new Land());
                         }
                         if(twowide){
-                            if(i-1 >= 0 && map[rand][i-1] == 'w' && this.isValid(map, rand, i-1, "row")){
-                                map[rand][i-1] = 'b';
-                            }else if(i+1 < 24 && map[rand][i+1] == 'w' && this.isValid(map, rand, i+1, "row")){
-                                map[rand][i+1] = 'b';
+                            if(i-1 >= 0 && map.get(rand).get(i-1).getRepresentation().equals("u") && this.isValid(map, rand, i-1, "row")){
+                                map.get(rand).set(i - 1, new Land());
+                            }else if(i+1 < 24 && map.get(rand).get(i+1).getRepresentation().equals("u") && this.isValid(map, rand, i+1, "row")){
+                                map.get(rand).set(i+1, new Land());
 
                             }
                         }
                     }
                     if(rand - rowstart > 3){
-
-                        q.add(new Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>(new Pair<Integer, Integer>(rowstart, rand),new Pair<Integer, Integer>(colstart,colend)));
+                    	q.add(rowstart + "," + rand + "," + colstart + "," + colend);
 
                     }
                     if(rowend - rand > 3){
-
-                        q.add(new Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>(new Pair<Integer, Integer>(rand,rowend),new Pair<Integer, Integer>(colstart,colend)));
+                    	q.add(rand + "," + rowend + "," + colstart + "," + colend);
 
                     }
                     break;
@@ -112,8 +118,10 @@ public class MapBuilder {
 
         return map;
     }
+    
+    
 
-    public boolean isValid(Character[][] map, int row, int col, String roworcol){
+    /*private boolean isValid(Character[][] map, int row, int col, String roworcol){
         int numofblocks = 0;
         int i;
         switch(roworcol){
@@ -149,13 +157,52 @@ public class MapBuilder {
                 break;
         }
         return false;
+    }*/
+    
+    private boolean isValid(List<List<Location>> map, int row, int col, String roworcol){
+        int numofblocks = 0;
+        int i;
+        switch(roworcol){
+            case "row":
+                for(i = row - leastwall; i < row + leastwall ; i ++){
+                    if(i >= 0 && i < 16){
+                    	
+                        if(map.get(i).get(col).getRepresentation().equals("u")){
+                            numofblocks ++;
+                        }else{
+                            numofblocks = 0;
+                        }
+                        if(numofblocks == leastwall){
+                            return true;
+                        }
+                    }
+
+                }
+                break;
+            case "col":
+                for(i = col - leastwall; i < col + leastwall ; i ++){
+                    if(i >= 0 && i < 24){
+                    	
+                        if(map.get(row).get(i).getRepresentation().equals("u")){
+                            numofblocks ++;
+                        }else{
+                            numofblocks = 0;
+                        }
+                        if(numofblocks == leastwall){
+                            return true;
+                        }
+                    }
+                }
+                break;
+        }
+        return false;
     }
 
 
-    public void printMap(Character[][] map) {
+    public void printMap(List<List<Location>> map) {
         for(int i = 0 ; i < 16; i ++){
             for(int j=0;j<24;j++){
-                System.out.print(map[i][j].toString());
+                System.out.print(map.get(i).get(j).getRepresentation());
                 System.out.print(" ");
             }
             System.out.print("\n");
