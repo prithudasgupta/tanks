@@ -1,0 +1,82 @@
+﻿Gameplay:
+* The user’s tank will spawn, and the user has to destroy all AI bots. 
+* There will be destructible walls that the user can break if he/she shot at the wall
+* There might be potholes in the game, the user cannot cross the pothole, but can shoot over them. 
+* Depending on the map and difficulty, the AI bots will have different behaviours. 
+* If the user is shot by an enemy tank, the game ends and they lose
+* The user will be able to advance to the next level by destroying all enemy tanks
+Modes:
+Campaign: With 20 predetermined levels
+* User will play 20 levels where each 5 levels played, difficulty is raised. 
+   * The first 5 levels act like a tutorial to teach the user how to play the game, AI bots will be stationary during those levels
+   * The second 5 levels bots can move vertically
+   * The third 5 levels bots have full motion
+   * The fourth 5 levels bots will be at maximum difficulty with difficult tank AI
+* User will begin with only one level unlocked when account created
+* After each level is completed, the next level is unlocked
+* Users will be able to play level 1 to whatever level they unlocked whenever these please
+* Campaign is local only
+Map Creator: Create your own map to publish
+* A list of currently available maps will be displayed, and there will be two options
+* Create new map: 
+   * User will be prompted to place blocks as wanted to create a unique map. In addition, the user can put AI bots wherever he wants in the map. 
+   * User can build map block by block, or can select a row/column and place blocks in there.
+   * Once the user is done, he/she can name and save the map and will be published publicly for all users 
+* Edit map: 
+   * User can click on a map and edit it, then he can save it as new or     replace the old map.        
+Survival: an unlimited round mode
+* User will play in randomly generated maps for as long as he pleases.
+* Each map will get progressively more difficult
+* Each user should try to survive as long as possible
+* Each user’s best round will be published to online leaderboard
+Online: 
+* User must create an account to play
+   * Username and password will be stored in database
+* Prompt user to add friends
+* User can challenge friends to turn based multiplayer
+   * A series of three predetermined maps will be generated
+   * Each user will try to complete each level as fast as possible without dying
+   * We will see who wins each round by completing each level in less time
+   * The winner of the total game is the winner of the best of three time trial
+        Leaderboard:
+* Using SQL, we will rank users based on highest survival round reached
+* For each unique map we will rank users based on number of wins
+* We will rank each player by total multiplayer wins
+Options: 
+* Allow user to change movement from w-s-a-d to the arrows up-down-left-right
+* Allow user to toggle shooting key between space and mouse click or both
+
+
+GUI:
+        Homepage:
+* Once loaded, the letters T A N K S will drop from the top and show as the main title of the page
+* In addition, tanks will be moving in the background (aesthetic) 
+* On startup, the available options will be: Cam        paign, Survival, Map Creator, Leaderboards, and Multiplayer
+* A button that looks similar to    will show at the top right, once clicked, a small page will pop on the same page (no url redirection) and it will allow the user to add a friend, see list of friends, and send messages to friends (maybe). 
+        Campaign:
+   * List of twenty levels will be displayed, if not unlocked yet they will be greyed out
+   * User can click on any level to play that level
+   * Beating the highest current level will unlock the next level and ungray it
+Map Creator:
+   * On the left side, an empty grid will be shown
+   * On the right side, block options will be displayed (wall or a tank) and the user can drag a block option and place it in a block
+        Survival:
+   * There will be a button that the user can click to start survival
+   * User will continuously face waves of tanks until they die
+        Online:
+   * Starting a game
+   * The user can look at their friends list and invite friends to play
+   * That initial user will play their first randomly generated map which will then be sent to the other player
+   * Receiving a game
+   * The other user will receive a game notification in their inbox
+   * They will view how long the other user took to beat the level
+   * They will then play that level
+   * The winner of that level will then be displayed based on results
+   * The second player will now play the new map for the next round
+   * This will be sent to the first player to play their turn
+Leaderboard:
+   * A series of tables that the user can toggle through and sort by category
+   * Each table will have a heading based on what it is displaying
+   * There will be a side menu where the user can choose which leaderboard will be displayed
+Options:
+   * The different button layouts will be displayed and the user can toggle between them in this menu

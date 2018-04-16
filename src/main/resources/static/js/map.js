@@ -88,7 +88,7 @@ $(document).ready(() => {
                paintMap(map);
 
                ctx.fillStyle = "BLACK";
-               ctx.moveTo(user.X + TANK_WIDTH/2, user.Y + TANK_HEIGHT/2);
+               ctx.translate(user.X + TANK_WIDTH/2, user.Y + TANK_HEIGHT/2);
                ctx.rotate(user.deg);
                ctx.fillRect(user.X, user.Y, TANK_WIDTH, TANK_HEIGHT);
                ctx.resetTransform();
