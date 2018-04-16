@@ -9,10 +9,9 @@ public class StationaryEnemyTank implements Tank{
 	private Angle angleForward;
 	private Angle launcherAngle;
 	private boolean isAlive;
+	private Direction [] directions = Direction.values();
 	
-	private static final double MOVE_SPEED = .01;
 	private static final double ROTATE_SPEED = .01;
-	private static final double EPSILON = .01;
 	
 	public StationaryEnemyTank(Coordinate startCoord, double startDegrees) {
 		location = startCoord;
@@ -24,31 +23,26 @@ public class StationaryEnemyTank implements Tank{
 
 	@Override
 	public void move(Direction d) {
-			
+		//cannot move
 	}
-
+	
 	@Override
-	public void rotateTank(Direction d) {
-		if (d.equals(Direction.LEFT)) {
-			angleForward.rotateCounterClockwise();
-			
-		}
-		else if (d.equals(Direction.RIGHT)) {
-			angleForward.rotateClockwise();
-		}
-		
+	public void move() {
+		//cannot move	
 	}
-
-	public void rotateLauncher(Coordinate mouseCoord) {
-		double tankCoordX = location.getCoordinate(0);
-		double tankCoordY = location.getCoordinate(1);
-		double mouseCoordX = mouseCoord.getCoordinate(0);
-		double mouseCoordY = mouseCoord.getCoordinate(1);
+	
+	
+	public void rotateLauncher() {
 		
-		if (Math.abs(tankCoordX - mouseCoordX) > EPSILON) {
-			launcherAngle.setAngle(Math.toDegrees(Math.atan((mouseCoordY-tankCoordY)/(mouseCoordX-tankCoordX))));
+		Direction curr = directions[(int)(Math.random() * directions.length)];
+		
+		if (curr == Direction.LEFT) {
+			launcherAngle.rotateClockwise();
 		}
 		
+		else if(curr == Direction.RIGHT) {
+			launcherAngle.rotateClockwise();
+		}
 	}
 
 	@Override
@@ -61,5 +55,16 @@ public class StationaryEnemyTank implements Tank{
 	@Override
 	public Coordinate getCoord() {
 		return location;
+	}
+	
+	@Override
+	public Angle getAngleForward() {
+		return angleForward;
+	}
+
+
+	@Override
+	public Angle getLauncherAngle() {
+		return launcherAngle;
 	}
 }
