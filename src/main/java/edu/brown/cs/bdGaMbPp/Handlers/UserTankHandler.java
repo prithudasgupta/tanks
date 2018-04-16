@@ -32,7 +32,6 @@ public class UserTankHandler implements Route{
     Coordinate cur = new Coordinate(x, y);
     UserTank tank = new UserTank(cur, curDeg);
     tank.move(d);
-
     return GSON.toJson(tank);
   }
 }
