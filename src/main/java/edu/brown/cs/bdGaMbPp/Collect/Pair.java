@@ -37,6 +37,16 @@ public class Pair<F, S> {
   public S getSecond() {
     return second;
   }
+  
+  public String toString() {
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("(");
+	    sb.append(this.first);
+	    sb.append(", ");
+	    sb.append(this.second);
+	    sb.append(")");
+	    return sb.toString();
+	  }
 
   @Override
   public boolean equals(Object o) {

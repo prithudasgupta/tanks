@@ -27,8 +27,8 @@ public class Coordinate {
    *          List of doubles representing value of each dimension
    */
   public Coordinate(List<Double> theCoordinates) {
+	coordinates = theCoordinates;
     numDimmensions = coordinates.size();
-    coordinates = theCoordinates;
   }
   
   public Coordinate(double x) {

@@ -45,7 +45,7 @@ public class UserTank implements Tank{
 		double mouseCoordY = mouseCoord.getCoordinate(1);
 		
 		if (Math.abs(tankCoordX - mouseCoordX) > EPSILON) {
-			launcherAngle.setAngle(Math.toDegrees(Math.atan((mouseCoordY-tankCoordY)/(mouseCoordX-tankCoordX))));
+			launcherAngle.setDegrees(Math.toDegrees(Math.atan((mouseCoordY-tankCoordY)/(mouseCoordX-tankCoordX))));
 		}
 		
 	}
