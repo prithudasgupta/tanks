@@ -83,10 +83,15 @@ $(document).ready(() => {
                const tank = JSON.parse(responseJSON);
                user.Y = tank.location.coordinates[1];
                user.X = tank.location.coordinates[0];
+               user.deg = tank.angleForward.degrees;
+
                paintMap(map);
+
                ctx.fillStyle = "BLACK";
-               console.log(tank.angleForward);
+               ctx.moveTo(user.X + TANK_WIDTH/2, user.Y + TANK_HEIGHT/2);
+               ctx.rotate(user.deg);
                ctx.fillRect(user.X, user.Y, TANK_WIDTH, TANK_HEIGHT);
+               ctx.resetTransform();
            });
        }
     });

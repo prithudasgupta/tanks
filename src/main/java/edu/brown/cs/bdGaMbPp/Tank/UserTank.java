@@ -26,8 +26,7 @@ public class UserTank implements Tank{
 	public void move(Direction d) {
 		if (d.equals(Direction.FORWARD)) {
 			location.forwardByAngle(angleForward, MOVE_SPEED);
-		}
-		else if (d.equals(Direction.BACKWARD)) {
+		} else if (d.equals(Direction.BACKWARD)) {
 			location.backwardByAngle(angleForward, MOVE_SPEED);
 		}
 		else if (d.equals(Direction.LEFT)) {
