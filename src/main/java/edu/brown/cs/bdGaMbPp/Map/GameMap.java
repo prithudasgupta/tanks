@@ -13,12 +13,12 @@ public class GameMap {
 	  
 	  public GameMap(List<List<Location>> locations) {
 		  tiles = locations;
-		  length = locations.size();
-		  if (length > 0) {
-			  width = locations.get(0).size();
+		  width = locations.size();
+		  if (width > 0) {
+			  length = locations.get(0).size();
 		  }
 		  else {
-			  width = 0;
+			  length = 0;
 		  }
 	  }
 	  
@@ -37,12 +37,12 @@ public class GameMap {
 		  }
 		  
 		  tiles = newLocations;
-		  length = newLocations.size();
-		  if (length > 0) {
-			  width = newLocations.get(0).size();
+		  width = newLocations.size();
+		  if (width > 0) {
+			  length = newLocations.get(0).size();
 		  }
 		  else {
-			  width = 0;
+			  length = 0;
 		  }
 		  
 	  }
@@ -69,8 +69,8 @@ public class GameMap {
 	  
 	  public List<Pair<Integer, Integer>> indicesByType(String representation){
 		  List<Pair<Integer, Integer>> indices = new ArrayList<Pair<Integer, Integer>>();
-		  for (int i = 0; i < length; i++) {
-			  for (int j = 0; j < width; j++) {
+		  for (int i = 0; i < width; i++) {
+			  for (int j = 0; j < length; j++) {
 				  if (this.get(i, j).getRepresentation().equals(representation)) {
 					  indices.add(new Pair<Integer, Integer>(i, j));
 				  }

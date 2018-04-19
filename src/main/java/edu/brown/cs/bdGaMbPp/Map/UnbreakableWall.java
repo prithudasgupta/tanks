@@ -18,7 +18,7 @@ public class UnbreakableWall implements Location{
 
 	@Override
 	public boolean isShootable() {
-		return false;
+		return true;
 	}
 
 	@Override
