@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Queue;
 
 public class MapBuilder {
-    private Integer leastwall;
+    private static final double BREAKABLE_LIMIT = .4;
+	private static final double POTHOLE_LIMIT = .1;
+	private Integer leastwall;
     public MapBuilder(){
         leastwall = 4;
     }
@@ -113,11 +115,47 @@ public class MapBuilder {
             iter++;
 
         }
-
-        return new GameMap(map);
+        
+        return new GameMap(addPotholesandBreakable(map));
     }
     
-    
+    private static List<List<Location>> addPotholesandBreakable(List<List<Location>> locs) {
+    		List<List<Location>> converted = new ArrayList<List<Location>>();
+    		for (int i = 0; i < locs.size(); i++) {
+    			List<Location> currentRow = locs.get(i);
+    			List<Location> newRow = new ArrayList<Location>();
+    			for (int j = 0; j < currentRow.size(); j++) {
+    				if (i == 0 || j == 0) {
+    					newRow.add(new UnbreakableWall());
+    				}
+    				else if(i == locs.size() - 1 || j == currentRow.size() - 1) {
+    					newRow.add(new UnbreakableWall());
+    				}
+    				else {
+    					if (currentRow.get(j).getRepresentation().equals("u")) {
+    						double breakableTest = Math.random();
+    						if (breakableTest < BREAKABLE_LIMIT) {
+    							newRow.add(new BreakableWall());
+    						}
+    						else {
+    							newRow.add(new UnbreakableWall());
+    						}
+    					}
+    					else if (currentRow.get(j).getRepresentation().equals("l")) {
+    						double potholeTest = Math.random();
+    						if (potholeTest < POTHOLE_LIMIT) {
+    							newRow.add(new Pothole());
+    						}
+    						else {
+    							newRow.add(new Land());
+    						}
+    					}
+    				}
+    			}
+    			converted.add(newRow);	
+    		}
+    		return converted;
+    }
 
     /*private boolean isValid(Character[][] map, int row, int col, String roworcol){
         int numofblocks = 0;

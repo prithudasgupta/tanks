@@ -18,10 +18,17 @@ class Tank {
 
 class Block {
     constructor(type) {
-        if(type === "wall") {
-            this.color = "GREY";
-        } else {
+        if(type === "u") {
+            this.color = "YELLOW";
+        } 
+        else if(type === "b"){
             this.color = "BROWN";
+        }
+        else if(type === "l"){
+            this.color = "GREEN";
+        }
+        else if(type === "p"){
+            this.color = "GREY";
         }
         this.height =  ($(window).height() / 16);
         this.width = ($(window).height() / 16);
@@ -56,7 +63,7 @@ function paintMap(mapToPrint) {
 
 $(document).ready(() => {
 
-    $(document).on("keyup", function() {
+    $(document).on("keydown", function() {
         // rotation event
        if (event.which === 65 || event.which === 68 || event.which === 87 || event.which === 83) {
            let direction;
@@ -109,16 +116,14 @@ $(document).ready(() => {
         const respObject = JSON.parse(responseJSON);
         for (let row = 0; row < 16; row++) {
             for (let col = 0; col < 24; col++) {
-                if (respObject[row][col] === "u") {
-                    populateMap(row, col, "wall");
-                } else {
-                    populateMap(row, col, "free");
+                
+                    populateMap(row, col, respObject[row][col]);
                     if (user.X === null) {
                         user.X = col * TILE_SIZE;
                         user.Y = row * TILE_SIZE;
                         user.deg = 0;
                     }
-                }
+                
             }
         }
         paintMap(map);
