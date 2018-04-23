@@ -1,9 +1,11 @@
 package edu.brown.cs.bdGaMbPp.Collect;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+
 
 /**
  * A coordinate class which represents an n dimensional space and n values in
@@ -16,6 +18,7 @@ public class Coordinate {
 
   private int numDimmensions;
   private List<Double> coordinates;
+  private static final double EPSILON = .0001;
 
   /**
    * Construct a Coordinate using the a list of length numDimmensions
@@ -27,8 +30,8 @@ public class Coordinate {
    *          List of doubles representing value of each dimension
    */
   public Coordinate(List<Double> theCoordinates) {
+	coordinates = theCoordinates;
     numDimmensions = coordinates.size();
-    coordinates = theCoordinates;
   }
   
   public Coordinate(double x) {
@@ -138,6 +141,26 @@ public class Coordinate {
     }
     sb.append(')');
     return sb.toString();
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+	  if (o == this) {
+	      return true;
+	    }
+	    if (!(o instanceof Coordinate)) {
+	      return false;
+	    }
+	    Coordinate other = (Coordinate) o;
+	    if (this.getNumDimmensions() == other.getNumDimmensions()) {
+	    		for (int i = 0; i < this.getNumDimmensions(); i++) {
+	    			if (Math.abs(this.getCoordinate(i) - other.getCoordinate(i)) > EPSILON) {
+	    				return false;
+	    			}
+	    		}
+	    		return true;
+	    }
+	    return false;
   }
 }
 

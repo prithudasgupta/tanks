@@ -8,16 +8,16 @@ public class UserTank implements Tank{
 	private Coordinate location;
 	private Angle angleForward;
 	private Angle launcherAngle;
+	private double movementSpeed;
 	private boolean isAlive;
 	
-	private static final double MOVE_SPEED = 1;
-	private static final double ROTATE_SPEED = 5;
 	private static final double EPSILON = .01;
 	
-	public UserTank(Coordinate startCoord, double startDegrees) {
+	public UserTank(Coordinate startCoord, double startDegrees, double movement, double rotate) {
 		location = startCoord;
-		angleForward = new Angle(startDegrees, ROTATE_SPEED);
-		launcherAngle = new Angle(startDegrees, ROTATE_SPEED);
+		movementSpeed = movement;
+		angleForward = new Angle(startDegrees, rotate);
+		launcherAngle = new Angle(startDegrees, rotate);
 		isAlive = true;
 	}
 	
@@ -25,9 +25,9 @@ public class UserTank implements Tank{
 	@Override
 	public void move(Direction d) {
 		if (d.equals(Direction.FORWARD)) {
-			location.forwardByAngle(angleForward, MOVE_SPEED);
+			location.forwardByAngle(angleForward, movementSpeed);
 		} else if (d.equals(Direction.BACKWARD)) {
-			location.backwardByAngle(angleForward, MOVE_SPEED);
+			location.backwardByAngle(angleForward, movementSpeed);
 		}
 		else if (d.equals(Direction.LEFT)) {
 			angleForward.rotateCounterClockwise();
@@ -45,7 +45,7 @@ public class UserTank implements Tank{
 		double mouseCoordY = mouseCoord.getCoordinate(1);
 		
 		if (Math.abs(tankCoordX - mouseCoordX) > EPSILON) {
-			launcherAngle.setAngle(Math.toDegrees(Math.atan((mouseCoordY-tankCoordY)/(mouseCoordX-tankCoordX))));
+			launcherAngle.setDegrees(Math.toDegrees(Math.atan((mouseCoordY-tankCoordY)/(mouseCoordX-tankCoordX))));
 		}
 		
 	}
@@ -81,5 +81,22 @@ public class UserTank implements Tank{
 		return launcherAngle;
 	}
 
+
+	@Override
+	public Coordinate potenitalMove(Direction d) {
+		
+		double x = location.getCoordinate(0);
+		double y = location.getCoordinate(1);
+		
+		if (d == Direction.FORWARD) {
+			 x = location.getCoordinate(0) + (movementSpeed * angleForward.getCos());
+			 y = location.getCoordinate(1) + (movementSpeed * angleForward.getSin());
+		}
+		else if (d == Direction.BACKWARD) {
+			 x = location.getCoordinate(0) + (movementSpeed * angleForward.getCos());
+			 y = location.getCoordinate(1) + (movementSpeed * angleForward.getSin());
+		}
+		return new Coordinate(x, y);
+	}
 	
 }

@@ -9,9 +9,8 @@ public class StationaryEnemyTank implements Tank{
 	private Angle angleForward;
 	private Angle launcherAngle;
 	private boolean isAlive;
-	private Direction [] directions = Direction.values();
 	
-	private static final double ROTATE_SPEED = .01;
+	private static final double ROTATE_SPEED = 1;
 	
 	public StationaryEnemyTank(Coordinate startCoord, double startDegrees) {
 		location = startCoord;
@@ -34,13 +33,13 @@ public class StationaryEnemyTank implements Tank{
 	
 	public void rotateLauncher() {
 		
-		Direction curr = directions[(int)(Math.random() * directions.length)];
+		int rand = (int)(Math.random() * 2);
 		
-		if (curr == Direction.LEFT) {
-			launcherAngle.rotateClockwise();
+		if (rand == 0) {
+			launcherAngle.rotateCounterClockwise();
 		}
 		
-		else if(curr == Direction.RIGHT) {
+		else if(rand == 1) {
 			launcherAngle.rotateClockwise();
 		}
 	}
@@ -66,5 +65,12 @@ public class StationaryEnemyTank implements Tank{
 	@Override
 	public Angle getLauncherAngle() {
 		return launcherAngle;
+	}
+
+
+	@Override
+	public Coordinate potenitalMove(Direction d) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

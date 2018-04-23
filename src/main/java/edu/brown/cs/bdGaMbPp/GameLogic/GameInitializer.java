@@ -20,7 +20,7 @@ public final class GameInitializer {
 		
 		List<Pair<Integer, Integer>> landIndices = newMap.indicesByType("l");
 		Pair<Integer, Integer> userTankStart = landIndices.get((int)(Math.random() * landIndices.size()));
-		Tank user = new UserTank(convertToCoordinate(userTankStart), (Math.random() * 360));
+		Tank user = new UserTank(convertToCoordinate(userTankStart), (Math.random() * 360), 0.01, 0.01);
 		List<Tank> enemies = createTanks(difficulty, newMap);
 		
 		return new Game(newMap, user, enemies);
