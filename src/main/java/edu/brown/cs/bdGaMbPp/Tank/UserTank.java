@@ -10,8 +10,8 @@ public class UserTank implements Tank{
 	private Angle launcherAngle;
 	private boolean isAlive;
 	
-	private static final double MOVE_SPEED = .01;
-	private static final double ROTATE_SPEED = .01;
+	private static final double MOVE_SPEED = 1;
+	private static final double ROTATE_SPEED = 5;
 	private static final double EPSILON = .01;
 	
 	public UserTank(Coordinate startCoord, double startDegrees) {
