@@ -66,4 +66,11 @@ public class StationaryEnemyTank implements Tank{
 	public Angle getLauncherAngle() {
 		return launcherAngle;
 	}
+
+
+	@Override
+	public Coordinate potenitalMove(Direction d) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

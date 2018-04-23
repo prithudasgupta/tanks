@@ -82,5 +82,22 @@ public class UserTank implements Tank{
 		return launcherAngle;
 	}
 
+
+	@Override
+	public Coordinate potenitalMove(Direction d) {
+		
+		double x = location.getCoordinate(0);
+		double y = location.getCoordinate(1);
+		
+		if (d == Direction.FORWARD) {
+			 x = location.getCoordinate(0) + (movementSpeed * angleForward.getCos());
+			 y = location.getCoordinate(1) + (movementSpeed * angleForward.getSin());
+		}
+		else if (d == Direction.BACKWARD) {
+			 x = location.getCoordinate(0) + (movementSpeed * angleForward.getCos());
+			 y = location.getCoordinate(1) + (movementSpeed * angleForward.getSin());
+		}
+		return new Coordinate(x, y);
+	}
 	
 }
