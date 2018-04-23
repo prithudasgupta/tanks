@@ -1,6 +1,6 @@
 #canvas {
   position:absolute;
   background-color: #b3d4fc;
-  width:100%;
-  height:100%;
+  width: 1080px; /*24 columns of tiles that are 45px wide */
+  height: 720px; /*16 rows of tiles that are 45px high*/
 }

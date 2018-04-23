@@ -20,30 +20,30 @@ import edu.brown.cs.bdGaMbPp.Map.MapBuilder;
 
 public class MapBuilderTest {
 
-	@Test
-	public void testTraversableRoad() {
-		MapBuilder builder = new MapBuilder();
-		GameMap map;
-		for(int k = 0; k < 10 ; k++) {
-			map = builder.createMap(.2, .2);
-			Pair<Integer,Integer> initial = null;
-			for(int i = 0 ; i < map.getWidth(); i ++){
-				for(int j =0;j<map.getLength();j++){
-					if(map.get(i,j).toString().equals("l")) {
-						initial = new Pair<Integer,Integer>(i, j);
-					}
-				}
-			}
-			int actualFreeBlocks = this.getNumberOfFreeBlocks(map, initial);
-			int ourFreeBlocks = 0;
-			ourFreeBlocks += map.indicesByType("l").size();
-			ourFreeBlocks += map.indicesByType("b").size();
-			assertEquals(ourFreeBlocks, actualFreeBlocks);	
-		}
-
-
-
-	}
+//	@Test
+//	public void testTraversableRoad() {
+//		MapBuilder builder = new MapBuilder();
+//		GameMap map;
+//		for(int k = 0; k < 10 ; k++) {
+//			map = builder.createMap(.2, .2);
+//			Pair<Integer,Integer> initial = null;
+//			for(int i = 0 ; i < map.getWidth(); i ++){
+//				for(int j =0;j<map.getLength();j++){
+//					if(map.get(i,j).toString().equals("l")) {
+//						initial = new Pair<Integer,Integer>(i, j);
+//					}
+//				}
+//			}
+//			int actualFreeBlocks = this.getNumberOfFreeBlocks(map, initial);
+//			int ourFreeBlocks = 0;
+//			ourFreeBlocks += map.indicesByType("l").size();
+//			ourFreeBlocks += map.indicesByType("b").size();
+//			assertEquals(ourFreeBlocks, actualFreeBlocks);
+//		}
+//
+//
+//
+//	}
 
 	public List<Pair<Integer,Integer>> getNeighbors(Pair<Integer,Integer> curr, GameMap map){
 		List<Pair<Integer,Integer>> output = new ArrayList<Pair<Integer,Integer>>();
