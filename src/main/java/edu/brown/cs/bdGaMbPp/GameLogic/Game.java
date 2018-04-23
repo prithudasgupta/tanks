@@ -1,5 +1,4 @@
 package edu.brown.cs.bdGaMbPp.GameLogic;
-
 import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
 import edu.brown.cs.bdGaMbPp.Map.GameMap;
 import edu.brown.cs.bdGaMbPp.Map.MapBuilder;
@@ -29,16 +28,20 @@ public class Game {
     return user;
   }
   
-  public void moveUser(Direction dirr) {
+  public void moveUser(Direction dirr, double height, double width) {
 	  Coordinate updatedCoord = user.potenitalMove(dirr);
-	  if (map.get((int)updatedCoord.getCoordinate(0), (int)updatedCoord.getCoordinate(1)).getRepresentation().equals("l")){
-		  user.move(dirr);
-	  }  
+	  List<Coordinate> corners = user.getCorners(height, width, updatedCoord);
+	  for (int i = 0; i < corners.size(); i++) {
+		  if (!map.get((int)(corners.get(i).getCoordinate(1)), (int)(corners.get(i).getCoordinate(0))).getRepresentation().equals("l")) {
+			  break;
+		  }
+		  if (i == corners.size() - 1) {
+			  user.move(dirr);
+		  }
+	  }
   }
   
   public List<List<String>> getRepresentations(){
     return map.getRepresentations();
   }
-
-
 }

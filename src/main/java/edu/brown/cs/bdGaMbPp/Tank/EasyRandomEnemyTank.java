@@ -94,10 +94,9 @@ public class EasyRandomEnemyTank implements Tank{
 		return null;
 	}
 
-
-  @Override
-  public List<Coordinate> getCorners(double height, double width) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+@Override
+public List<Coordinate> getCorners(double height, double width, Coordinate newCenter) {
+	// TODO Auto-generated method stub
+	return null;
+}
 }

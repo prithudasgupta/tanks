@@ -21,7 +21,7 @@ public interface Tank {
 	
 	Coordinate potenitalMove(Direction d);
 	
-	List<Coordinate> getCorners(double height, double width);
+	List<Coordinate> getCorners(double height, double width, Coordinate newCenter);
 }
 
 

@@ -18,10 +18,8 @@ class Point {
 
 class Tank {
     constructor() {
-        this.TopLeft = new Point();
-        this.TopRight = new Point();
-        this.BottomLeft = new Point();
-        this.BottomRight = new Point();
+        this.X;
+        this.Y;
         this.deg = null;
     }
 }
@@ -84,27 +82,32 @@ $(document).ready(() => {
            // a
            if (event.which === 65) {
                // left
-               direction = 0;
-           }
-           // d
-           else if (event.which === 68) {
-               // right
                direction = 1;
            }
+           // d
+           if (event.which === 68) {
+               // right
+               direction = 0;
+           }
            // w
-           else if (event.which === 87) {
+           if (event.which === 87) {
                // forward
                direction = 2
            }
            // s
-           else {
+           if (event.which === 83) {
                direction = 3;
            }
-           $.post('/user', {'direction': direction, "x": user.X, "y": user.Y, "deg":user.deg}, responseJSON => {
-               const tank = JSON.parse(responseJSON);
-               user.Y = tank.location.coordinates[1];
-               user.X = tank.location.coordinates[0];
-               user.deg = tank.angleForward.degrees;
+           console.log(direction);
+           $.post('/game', {'direction': direction, "height": 0.6, "width": 0.4}, responseJSON => {
+               const responseObject = JSON.parse(responseJSON);
+               
+               
+               user.Y = (responseObject.game.user.location.coordinates[1]  -.25) * TILE_SIZE;
+               user.X = (responseObject.game.user.location.coordinates[0] - 0.3) * TILE_SIZE;
+               user.deg = responseObject.game.user.angleForward.degrees;
+               
+               console.log(user.deg);
 
                ctx.fillStyle = "BLACK";
                ctx.fillRect(user.X, user.Y, TANK_WIDTH, TANK_HEIGHT);
@@ -167,18 +170,14 @@ $(document).ready(() => {
             for (let col = 0; col < 24; col++) {
                 
                     populateMap(row, col, respObject.representations[row][col]);
-                    
-                    if (user.X === null) {
-                    	
-                    		user.TopLeft = new Point(col * TILE_SIZE, row * TILE_SIZE);
-                        user.deg = 0;
-                    }
-                
             }
         }
         paintMap(map);
         ctx.fillStyle = "BLACK";
-        ctx.fillRect(user.TopLeft.X, user.TopRight.Y, TANK_WIDTH, TANK_HEIGHT);
+        
+        user.X = (respObject.game.user.location.coordinates[0] - .3) * TILE_SIZE;
+        user.Y = (respObject.game.user.location.coordinates[1] - .25) * TILE_SIZE;
+        ctx.fillRect(user.X, user.Y, TANK_WIDTH, TANK_HEIGHT);
     });
 
 

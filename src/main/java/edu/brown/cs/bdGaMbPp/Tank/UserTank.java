@@ -16,14 +16,32 @@ public class UserTank implements Tank{
 	
 	private static final double EPSILON = .01;
 	
-	public UserTank(Coordinate startCoord, double startDegrees, double movement, double rotate) {
+	public UserTank(Coordinate startCoord, double movement, double rotate) {
 		location = startCoord;
 		movementSpeed = movement;
-		angleForward = new Angle(startDegrees, rotate);
-		launcherAngle = new Angle(startDegrees, rotate);
+		angleForward = new Angle(0, rotate);
+		launcherAngle = new Angle(0, rotate);
 		isAlive = true;
 	}
 	
+
+	private List<Coordinate> initalizeCorners(Coordinate startCoord, double height, double width) {
+		double centerX = location.getCoordinate(0);
+		double centerY = location.getCoordinate(1);
+		
+		Coordinate topLeft = new Coordinate(centerX - (width / 2), centerY - (height / 2));
+		Coordinate topRight = new Coordinate(centerX + (width / 2), centerY - (height / 2));
+		Coordinate bottomLeft = new Coordinate(centerX - (width / 2), centerY + (height / 2));
+		Coordinate bottomRight = new Coordinate(centerX + (width / 2), centerY + (height / 2));
+		
+		List<Coordinate> newCoords = new ArrayList<Coordinate>();
+		newCoords.add(topLeft);
+		newCoords.add(topRight);
+		newCoords.add(bottomLeft);
+		newCoords.add(bottomRight);
+		return newCoords;
+	}
+
 
 	@Override
 	public void move(Direction d) {
@@ -34,7 +52,6 @@ public class UserTank implements Tank{
 		}
 		else if (d.equals(Direction.LEFT)) {
 			angleForward.rotateCounterClockwise();
-			
 		}
 		else if (d.equals(Direction.RIGHT)) {
 			angleForward.rotateClockwise();
@@ -104,14 +121,20 @@ public class UserTank implements Tank{
 
 
   @Override
-  public List<Coordinate> getCorners(double height, double width) {
+  public List<Coordinate> getCorners(double height, double width, Coordinate newCenter) {
     
     List<Coordinate> corners = new ArrayList<Coordinate>();
     
-    Coordinate TopLeft = new Coordinate(location.getCoordinate(0) - 0.5*angleForward.getCos()*width, location.getCoordinate(1) - 0.5*angleForward.getSin()*height);
-    Coordinate TopRight = new Coordinate(location.getCoordinate(0) + 0.5*angleForward.getCos()*width, location.getCoordinate(1) - 0.5*angleForward.getSin()*height);
-    Coordinate BottomLeft = new Coordinate(location.getCoordinate(0) - 0.5*angleForward.getCos()*width, location.getCoordinate(1) + 0.5*angleForward.getSin()*height);
-    Coordinate BottomRight = new Coordinate(location.getCoordinate(0) + 0.5*angleForward.getCos()*width, location.getCoordinate(1) + 0.5*angleForward.getSin()*height);
+    double hypotenuse = Math.sqrt(Math.pow(width/2, 2) + Math.pow(height/2, 2));
+    double currDegrees = angleForward.getDegrees() + 45;
+    
+    double sine = Math.sin(currDegrees * (Math.PI / 180));
+    double cosine = Math.cos(currDegrees * (Math.PI / 180));
+    
+    Coordinate TopLeft = new Coordinate(newCenter.getCoordinate(0) - hypotenuse*cosine, newCenter.getCoordinate(1) - hypotenuse*sine);
+    Coordinate TopRight = new Coordinate(newCenter.getCoordinate(0) + hypotenuse*cosine, newCenter.getCoordinate(1) - hypotenuse*sine);
+    Coordinate BottomLeft = new Coordinate(newCenter.getCoordinate(0) - hypotenuse*cosine, newCenter.getCoordinate(1) - hypotenuse*sine);
+    Coordinate BottomRight = new Coordinate(newCenter.getCoordinate(0) + hypotenuse*cosine, newCenter.getCoordinate(1) + hypotenuse*sine);
     
     corners.add(TopLeft);
     corners.add(TopRight);

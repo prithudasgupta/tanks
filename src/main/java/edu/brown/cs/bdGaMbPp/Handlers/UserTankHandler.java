@@ -30,7 +30,7 @@ public class UserTankHandler implements Route{
     Double y = Double.parseDouble(qm.value("y"));
     Double curDeg = Double.parseDouble(qm.value("deg"));
     Coordinate cur = new Coordinate(x, y);
-    UserTank tank = new UserTank(cur, curDeg, 0.1, 0.1);
+    UserTank tank = new UserTank(cur, 0.01, 0.1);
     tank.move(d);
     return GSON.toJson(tank);
   }
