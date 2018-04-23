@@ -1,5 +1,8 @@
 package edu.brown.cs.bdGaMbPp.Tank;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.brown.cs.bdGaMbPp.Collect.Angle;
 import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
 
@@ -98,5 +101,24 @@ public class UserTank implements Tank{
 		}
 		return new Coordinate(x, y);
 	}
+
+
+  @Override
+  public List<Coordinate> getCorners(double height, double width) {
+    
+    List<Coordinate> corners = new ArrayList<Coordinate>();
+    
+    Coordinate TopLeft = new Coordinate(location.getCoordinate(0) - 0.5*angleForward.getCos()*width, location.getCoordinate(1) - 0.5*angleForward.getSin()*height);
+    Coordinate TopRight = new Coordinate(location.getCoordinate(0) + 0.5*angleForward.getCos()*width, location.getCoordinate(1) - 0.5*angleForward.getSin()*height);
+    Coordinate BottomLeft = new Coordinate(location.getCoordinate(0) - 0.5*angleForward.getCos()*width, location.getCoordinate(1) + 0.5*angleForward.getSin()*height);
+    Coordinate BottomRight = new Coordinate(location.getCoordinate(0) + 0.5*angleForward.getCos()*width, location.getCoordinate(1) + 0.5*angleForward.getSin()*height);
+    
+    corners.add(TopLeft);
+    corners.add(TopRight);
+    corners.add(BottomLeft);
+    corners.add(BottomRight);
+    
+    return corners;
+  }
 	
 }

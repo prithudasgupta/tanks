@@ -1,5 +1,7 @@
 package edu.brown.cs.bdGaMbPp.Tank;
 
+import java.util.List;
+
 import edu.brown.cs.bdGaMbPp.Collect.Angle;
 import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
 
@@ -91,4 +93,11 @@ public class EasyRandomEnemyTank implements Tank{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+  @Override
+  public List<Coordinate> getCorners(double height, double width) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

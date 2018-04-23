@@ -70,6 +70,10 @@ function paintMap(mapToPrint) {
     }
 }
 
+function blocksToCanvas(row, col){
+	return new Point(row*TILE_SIZE, col*TILE_SIZE);
+}
+
 
 $(document).ready(() => {
 
@@ -146,13 +150,24 @@ $(document).ready(() => {
 
     // TODO: Set up the canvas context.
     ctx = canvas.getContext("2d");
+    
+    let refresh = 0;
+    if(performance.navigation.type == 1){
+    		
+    		refresh = 1;
+    	
+    }
+    
+    let postParams = {"refresh": refresh};
 
-    $.post('/map', " ", responseJSON => {
+    $.post('/game', postParams, responseJSON => {
         const respObject = JSON.parse(responseJSON);
+        console.log(respObject);
         for (let row = 0; row < 16; row++) {
             for (let col = 0; col < 24; col++) {
                 
-                    populateMap(row, col, respObject[row][col]);
+                    populateMap(row, col, respObject.representations[row][col]);
+                    
                     if (user.X === null) {
                     	
                     		user.TopLeft = new Point(col * TILE_SIZE, row * TILE_SIZE);
@@ -163,7 +178,7 @@ $(document).ready(() => {
         }
         paintMap(map);
         ctx.fillStyle = "BLACK";
-        ctx.fillRect(user.X, user.Y, TANK_WIDTH, TANK_HEIGHT);
+        ctx.fillRect(user.TopLeft.X, user.TopRight.Y, TANK_WIDTH, TANK_HEIGHT);
     });
 
 

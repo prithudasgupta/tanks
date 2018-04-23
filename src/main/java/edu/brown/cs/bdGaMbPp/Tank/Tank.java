@@ -1,5 +1,7 @@
 package edu.brown.cs.bdGaMbPp.Tank;
 
+import java.util.List;
+
 import edu.brown.cs.bdGaMbPp.Collect.Angle;
 import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
 
@@ -18,6 +20,8 @@ public interface Tank {
 	Angle getLauncherAngle();
 	
 	Coordinate potenitalMove(Direction d);
+	
+	List<Coordinate> getCorners(double height, double width);
 }
 
 
