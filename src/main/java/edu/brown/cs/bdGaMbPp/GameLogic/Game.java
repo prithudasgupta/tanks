@@ -36,7 +36,9 @@ public class Game {
 	  }  
   }
   
-  
+  public List<List<String>> getRepresentations(){
+    return map.getRepresentations();
+  }
 
 
 }

@@ -152,7 +152,7 @@ public class MapBuilder {
 
 		}
 
-		map = this.addBreakablesAndPotHoles(map, listOfLandCoords, potHoleProb, breakableWallProb);
+		//map = this.addBreakablesAndPotHoles(map, listOfLandCoords, potHoleProb, breakableWallProb);
 		return map;
 
 	}
