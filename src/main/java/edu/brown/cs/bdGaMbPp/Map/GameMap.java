@@ -70,7 +70,7 @@ public class GameMap {
 	  public List<Pair<Integer, Integer>> indicesByType(String representation){
 		  List<Pair<Integer, Integer>> indices = new ArrayList<Pair<Integer, Integer>>();
 		  for (int i = 0; i < width; i++) {
-			  for (int j = 0; j < length; j++) {
+			  for (int j = 0; j < length ; j++) {
 				  if (this.get(i, j).getRepresentation().equals(representation)) {
 					  indices.add(new Pair<Integer, Integer>(i, j));
 				  }

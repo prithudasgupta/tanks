@@ -49,6 +49,8 @@ public final class Main {
     this.args = args;
   }
   private void run() {
+	  MapBuilder builder = new MapBuilder();
+	  builder.createMap(.2, .2);
     // Parse command line arguments
     OptionParser parser = new OptionParser();
     parser.accepts("gui");
