@@ -3,9 +3,11 @@ package edu.brown.cs.bdGaMbPp.Map;
 import edu.brown.cs.bdGaMbPp.Collect.Pair;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 public class MapBuilder {
 	private Integer numOfRows;
@@ -77,13 +79,13 @@ public class MapBuilder {
 							map.get(i-1).set(rand, new Land());
 							if(!listOfLandCoords.contains(i-1 + "," + rand)) {
 
-								listOfLandCoords.add(i-1 + "," + rand);
+								listOfLandCoords.add((i-1) + "," + rand);
 							}
 
 						}else if(i + 1 < numOfRows - 1 && map.get(i+1).get(rand).getRepresentation().equals("u") && this.isValid(map, i+1, rand, "col")){
 							map.get(i+1).set(rand, new Land());
 							if(!listOfLandCoords.contains(i+1 + "," + rand)) {
-								listOfLandCoords.add(i+1 + "," + rand);
+								listOfLandCoords.add((i+1) + "," + rand);
 							}
 
 						}
@@ -124,8 +126,8 @@ public class MapBuilder {
 
 						}else if(i+1 < numOfCols - 1 && map.get(rand).get(i+1).getRepresentation().equals("u") && this.isValid(map, rand, i+1, "row")){
 							map.get(rand).set(i+1, new Land());
-							if(!listOfLandCoords.contains(rand + "," + i+1)) {
-								listOfLandCoords.add(rand + "," + i+1);
+							if(!listOfLandCoords.contains(rand + "," + (i+1))) {
+								listOfLandCoords.add(rand + "," + (i+1));
 
 							}
 
@@ -156,8 +158,8 @@ public class MapBuilder {
 	}
 	public GameMap createMap(double potHoleProb, double breakableWallProb){
 		//16 rows, 24 cols
-		if(potHoleProb + breakableWallProb >= 100) {
-			System.out.println("ERROR: the sum of potHoleProb breakableWallProb are >= 100");
+		if(potHoleProb + breakableWallProb >= 1) {
+			System.out.println("ERROR: the sum of potHoleProb breakableWallProb are >= 1");
 			return null;
 		}
 		List<List<Location>> map = this.getMapAsList(potHoleProb,breakableWallProb);
@@ -165,6 +167,19 @@ public class MapBuilder {
 		return new GameMap(map);
 	}
 
+	private boolean shouldPlacePot(List<List<Location>> map, Pair<Integer,Integer> curr) {
+		int oldNumOfFree = this.getNumberOfFreeBlocks(map, curr);
+		map.get(curr.getFirst()).set(curr.getSecond(), new Pothole());
+		List<Pair<Integer, Integer>> neighbors = this.getNeighbors(curr, map);
+		for(Pair<Integer, Integer> neighbor: neighbors) {
+			if(this.getNumberOfFreeBlocks(map, neighbor) != (oldNumOfFree -1)) {
+				return false;
+			}
+		}
+		return true;
+
+
+	}
 	private List<List<Location>> addBreakablesAndPotHoles(List<List<Location>> map, List<String> landCoords, double potHoleProb, double breakableWallProb) {
 		for(String coord: landCoords) {
 			String[] rowCol = coord.split(",");
@@ -172,9 +187,12 @@ public class MapBuilder {
 			int col = Integer.parseInt(rowCol[1]);
 			Double random = Math.random();
 			if(random <= potHoleProb) {
-				map.get(row).set(col, new Pothole());
+				/*if(this.shouldPlacePot(map, new Pair<Integer,Integer>(row, col))) {
+					map.get(row).set(col, new Pothole());
+				}*/
+				
 			}else if(random <= potHoleProb + breakableWallProb) {
-				map.get(row).set(col, new UnbreakableWall());
+				map.get(row).set(col, new BreakableWall());
 
 			}
 
@@ -221,7 +239,50 @@ public class MapBuilder {
 		return false;
 	}
 
+	public int getNumberOfFreeBlocks(List<List<Location>> map, Pair<Integer,Integer> initial) {
+		Set<Pair<Integer,Integer>> checked = new HashSet<Pair<Integer,Integer>>();
+		Queue<Pair<Integer,Integer>> q = new LinkedList<Pair<Integer,Integer>>();
+		q.add(initial);
+		checked.add(initial);
 
+		while(!q.isEmpty()) {
+			Pair<Integer,Integer> curr = q.remove();
+			List<Pair<Integer,Integer>> neighbors = this.getNeighbors(curr, map);
+			for(Pair<Integer,Integer> neighbor: neighbors) {
+				if(!checked.contains(neighbor)) {
+					checked.add(neighbor);
+					q.add(neighbor);
+				}
+			}
+
+		}
+
+		return checked.size();
+
+	}
+	private List<Pair<Integer,Integer>> getNeighbors(Pair<Integer,Integer> curr, List<List<Location>> map){
+		List<Pair<Integer,Integer>> output = new ArrayList<Pair<Integer,Integer>>();
+		int row = (int) curr.getFirst();
+		int col = (int) curr.getSecond();
+		for(int rowdiff = -1; rowdiff <=1; rowdiff+=2) {
+			if(row + rowdiff >=0 && row + rowdiff < map.size() && (map.get(row + rowdiff).get(col).toString().equals("b") || map.get(row + rowdiff).get(col).toString().equals("l"))){
+				Pair<Integer,Integer> neighbor = new Pair<Integer,Integer>(row + rowdiff,col);
+				output.add(neighbor);
+			}
+		}
+		for(int coldiff = -1; coldiff <=1; coldiff+=2) {
+
+			if(col + coldiff >= 0 && col + coldiff < map.get(0).size() && (map.get(row).get(col + coldiff).toString().equals("b") || map.get(row).get(col + coldiff).toString().equals("l"))) {
+				Pair<Integer,Integer> neighbor = new Pair<Integer,Integer>(row,col + coldiff);
+				output.add(neighbor);
+			}
+		}
+		return output;
+
+
+
+
+	}
 	public void printMap(List<List<Location>> map) {
 		for(int i = 0 ; i < numOfRows; i ++){
 			for(int j=0;j<numOfCols;j++){
