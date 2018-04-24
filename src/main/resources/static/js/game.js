@@ -1,6 +1,4 @@
-// TODO: firing bullets
 // TODO: enemy tanks
-// TODO: movement
 
 
 // let canvas;
@@ -12,6 +10,13 @@ let aKey, sKey, wKey, dKey, space;
 let ready = false;
 let mousX, mousY, rot;
 let bullets = [];
+let treads = [];
+
+class Bullet{
+    constructor(sprite) {
+        this.sprite = sprite;
+    }
+}
 
 // add event listeners for movement of the user tank
 
@@ -128,7 +133,8 @@ scene.loadImages(["/sprites/wall.png", "/sprites/freeSpace.png"], function()  {
 });
 
 // load in the player
-scene.loadImages(["/sprites/tank.png","/sprites/tank_cannon.png", "/sprites/bullet.png"], function() {
+scene.loadImages(["/sprites/tank.png","/sprites/tank_cannon.png", "/sprites/bullet.png", "/sprites/tTreads.png"],
+    function() {
     let userTank = canvasbg.Sprite("/sprites/tank.png");
     let cannon = canvasbg.Sprite("/sprites/tank_cannon.png")
     // put in location
@@ -150,16 +156,32 @@ let count = 0;
 let lastTime;
 console.log(walls);
 
+function forwardByAngle(angRads) {
+    let x = 5 * Math.cos(angRads);
+    let y = 5 * Math.sin(angRads);
+    return [x,y];
+}
 
-//TODO: I need the function for rotation direction for angle of bullot fire
+function backwardByAngle(angRads) {
+    let x = -(5 * Math.cos(angRads));
+    let y = -(5 * Math.sin(angRads));
+    return [x,y];
+}
+
+
 function fire() {
     if (ready) {
-        let bullet = canvasbg.Sprite("/sprites/bullet.png");
+        let b = canvasbg.Sprite("/sprites/bullet.png");
+        console.log(b);
         // make sure that it is to size
         // put in location
-        bullet.move(user.x, user.y);
+        b.move(user.x + 5, user.y + 4);
         // update it
-        bullet.update();
+        b.update();
+        // create an object for storage with bullet trajectory
+        let bullet = new Bullet(b);
+        bullet.movDir = forwardByAngle(uCannon.angle);
+        console.log(bullet.movDir);
         bullets.push(bullet);
     }
 }
@@ -168,18 +190,41 @@ function updateBullet() {
     if (ready) {
         for(let b in bullets) {
             let bullet = bullets[b];
-            bullet.move(5,0);
-            if (bullet.collidesWithArray(walls)) {
-                bullet.remove();
+            let cord = bullet.movDir;
+            bullet.sprite.move(cord[0],cord[1]);
+            if (bullet.sprite.collidesWithArray(walls)) {
+                bullet.sprite.remove();
                 bullets.splice(b,1);
             } else {
-                bullet.update();
+                bullet.sprite.update();
             }
 
 
         }
     }
 
+}
+
+function placeTread(x , y, ang) {
+    // first create tread and place it
+    let tread = canvasbg.Sprite("/sprites/tTreads.png");
+    // make sure that it is to size
+    // put in location
+    tread.move(x, y);
+    tread.rotate(ang);
+    // update it
+    tread.update();
+    treads.push(tread);
+    // remove treads if too many
+    while (treads.length > 4) {
+        let over = treads.pop();
+        over.remove();
+    }
+    for (let i in treads) {
+        let tred = treads[i];
+        tred.setOpacity(1 - (i * 0.2));
+        tred.update();
+    }
 }
 
 function simpleMove() {
@@ -189,9 +234,10 @@ function simpleMove() {
         if (user.collidesWithArray(walls)) {
             user.move(0,5);
             uCannon.move(0,5);
+        } else {
+            user.update();
+            uCannon.update();
         }
-        user.update();
-        uCannon.update();
     }
     if(sKey) {
         user.move(0,5);
@@ -199,9 +245,11 @@ function simpleMove() {
         if (user.collidesWithArray(walls)) {
             user.move(0,-5);
             uCannon.move(0,-5);
+        } else {
+
+            user.update();
+            uCannon.update();
         }
-        user.update();
-        uCannon.update();
     }
     if(aKey) {
         user.move(-5,0);
@@ -233,21 +281,34 @@ function simpleMove() {
     }
 }
 
-// TODO: Prithu implement rotation and movement (Collision is already there)
+
 function userMove() {
     if (wKey) {
-        user.move(5,0);
+        let mov = forwardByAngle(user.angle);
+        user.move(mov[0], mov[1]);
+        uCannon.move(mov[0], mov[1]);
         if (user.collidesWithArray(walls)) {
-            user.move(-5,0);
+            // if there is a collision revert back to old location
+            user.move(-mov[0], -mov[1]);
+            uCannon.move(-mov[0], -mov[1]);
+        } else {
+            uCannon.update();
+            user.update();
+            placeTread(user.x-mov[0], user.y-mov[1], user.angle);
         }
-        user.update();
     }
     if(sKey) {
-        user.move(-5,0);
+        let mov = backwardByAngle(user.angle);
+        user.move(mov[0], mov[1]);
+        uCannon.move(mov[0], mov[1]);
         if (user.collidesWithArray(walls)) {
-            user.move(5,0);
+            user.move(-mov[0], -mov[1]);
+            uCannon.move(-mov[0], -mov[1]);
+        } else {
+            uCannon.update();
+            user.update();
+            placeTread(user.x-mov[0], user.y-mov[1], user.angle);
         }
-        user.update();
     }
     if(aKey) {
         user.rotate(-0.02);
@@ -282,7 +343,7 @@ function main() {
     // update(timeChange);
     // // redraw all the objects
     // render();
-    simpleMove();
+    userMove();
     if (space) {
         fire();
     }

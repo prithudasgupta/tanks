@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/css/main.css">
     <link rel="image" href="/sprites/tank.png">
     <link rel="image" href="/sprites/bullet.png">
+    <link rel="image" href="/sprites/tTreads.png">
     <link rel="image" href="/sprites/tank_cannon.png">
     <link rel="image" href="/sprites/wall.png">
     <link rel="image" href="/sprites/freeSpace.png">
