@@ -1,4 +1,9 @@
-// TODO: enemy tanks
+// TODO:
+// Enemy tanks
+// Load in screen and process to get to the first campaign levels
+// a system to load each game individually
+// A start screen for the game
+    // a way to pause and end the game.
 
 
 // let canvas;
