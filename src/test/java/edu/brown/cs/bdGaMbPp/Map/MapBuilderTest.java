@@ -15,53 +15,59 @@ import org.junit.Test;
 
 import edu.brown.cs.bdGaMbPp.Collect.Pair;
 import edu.brown.cs.bdGaMbPp.Map.GameMap;
-import edu.brown.cs.bdGaMbPp.Map.Location;
 import edu.brown.cs.bdGaMbPp.Map.MapBuilder;
 
 public class MapBuilderTest {
 
-//	@Test
-//	public void testTraversableRoad() {
-//		MapBuilder builder = new MapBuilder();
-//		GameMap map;
-//		for(int k = 0; k < 10 ; k++) {
-//			map = builder.createMap(.2, .2);
-//			Pair<Integer,Integer> initial = null;
-//			for(int i = 0 ; i < map.getWidth(); i ++){
-//				for(int j =0;j<map.getLength();j++){
-//					if(map.get(i,j).toString().equals("l")) {
-//						initial = new Pair<Integer,Integer>(i, j);
-//					}
-//				}
-//			}
-//			int actualFreeBlocks = this.getNumberOfFreeBlocks(map, initial);
-//			int ourFreeBlocks = 0;
-//			ourFreeBlocks += map.indicesByType("l").size();
-//			ourFreeBlocks += map.indicesByType("b").size();
-//			assertEquals(ourFreeBlocks, actualFreeBlocks);
-//		}
-//
-//
-//
-//	}
+	@Test
+	public void testTraversableRoad() {
+		MapBuilder builder = new MapBuilder();
+		GameMap map;
+		for(int k = 0; k < 50 ; k++) {
+			map = builder.createMap(.2, .2);
+			System.out.println(map.toString());
+			Pair<Integer,Integer> initial = null;
+			for(int i = 0 ; i < map.getWidth(); i ++){
+				for(int j =0;j<map.getLength();j++){
+					if(map.get(i,j).toString().equals("l")) {
+						initial = new Pair<Integer,Integer>(i, j);
+					}
+				}
+			}
+			int actualFreeBlocks = this.getNumberOfFreeBlocks(map, initial);
+			int ourFreeBlocks = 0;
+			ourFreeBlocks += map.indicesByType("l").size();
+			ourFreeBlocks += map.indicesByType("b").size();
+			assertEquals(ourFreeBlocks, actualFreeBlocks);
+		}
+
+
+
+	}
 
 	public List<Pair<Integer,Integer>> getNeighbors(Pair<Integer,Integer> curr, GameMap map){
 		List<Pair<Integer,Integer>> output = new ArrayList<Pair<Integer,Integer>>();
-		int row = (int) curr.getFirst();
-		int col = (int) curr.getSecond();
+		//System.out.println("here");
+		int row = curr.getFirst();
+		int col = curr.getSecond();
 		for(int rowdiff = -1; rowdiff <=1; rowdiff+=2) {
-
-			if(row + rowdiff >=0 && row + rowdiff < map.getWidth() && (map.get(row + rowdiff,col).toString().equals("b") || map.get(row + rowdiff,col).toString().equals("l"))){
+			String representation = map.get(row + rowdiff,col).toString();
+			if(row + rowdiff >=0 && row + rowdiff < map.getWidth() && (representation.equals("b") || representation.equals("l"))){
 				Pair<Integer,Integer> neighbor = new Pair<Integer,Integer>(row + rowdiff,col);
 				output.add(neighbor);
-			}
+			}//else {
+				//System.out.println("test 1 " + representation);
+			//}
 		}
 		for(int coldiff = -1; coldiff <=1; coldiff+=2) {
-
-			if(col + coldiff >= 0 && col + coldiff < map.getLength() && (map.get(row,col + coldiff).toString().equals("b") || map.get(row,col + coldiff).toString().equals("l"))) {
+			String representation = map.get(row,col + coldiff).toString();
+			if(col + coldiff >= 0 && col + coldiff < map.getLength() && (representation.equals("b") || representation.equals("l"))) {
 				Pair<Integer,Integer> neighbor = new Pair<Integer,Integer>(row,col + coldiff);
 				output.add(neighbor);
-			}
+			}//else {
+				//System.out.println("test 2 " + representation);
+
+			//}
 		}
 		return output;
 
@@ -76,7 +82,9 @@ public class MapBuilderTest {
 		checked.add(initial);
 
 		while(!q.isEmpty()) {
+
 			Pair<Integer,Integer> curr = q.remove();
+		
 			List<Pair<Integer,Integer>> neighbors = this.getNeighbors(curr, map);
 			for(Pair<Integer,Integer> neighbor: neighbors) {
 				if(!checked.contains(neighbor)) {

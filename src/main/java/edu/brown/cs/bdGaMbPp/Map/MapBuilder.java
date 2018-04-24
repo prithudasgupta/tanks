@@ -2,6 +2,10 @@ package edu.brown.cs.bdGaMbPp.Map;
 
 import edu.brown.cs.bdGaMbPp.Collect.Pair;
 
+import static org.junit.Assert.assertEquals;
+
+import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -52,10 +56,11 @@ public class MapBuilder {
 		int colend;
 		List<List<Location>> map = this.getMapOfWalls();
 		boolean twoWide;
-		List<String> listOfLandCoords = new ArrayList<String>();
-
+		List<Pair<Integer,Integer>> listOfLandCoords = new ArrayList<Pair<Integer,Integer>>();
+		System.out.println("start");
 		while(!q.isEmpty()){
-
+			this.printMap(map);
+			System.out.println("");
 			twoWide = this.withProbability(.6);
 			String[] coords = q.remove().split(",");
 			rowstart = Integer.parseInt(coords[0]);
@@ -70,22 +75,25 @@ public class MapBuilder {
 				for(int i = rowstart; i < rowend; i ++){
 					if(map.get(i).get(rand).getRepresentation().equals("u") && this.isValid(map, i, rand, "col")){
 						map.get(i).set(rand, new Land());
-						if(!listOfLandCoords.contains(i + "," + rand)) {
-							listOfLandCoords.add(i + "," + rand);
+						Pair<Integer,Integer> pair = new Pair<Integer,Integer>(i, rand);
+						if(!listOfLandCoords.contains(pair)){
+							listOfLandCoords.add(pair);
 
 						}
 					}if(twoWide){
 						if(i - 1 >= 1 && map.get(i-1).get(rand).getRepresentation().equals("u") && this.isValid(map, i-1, rand, "col")){
 							map.get(i-1).set(rand, new Land());
-							if(!listOfLandCoords.contains(i-1 + "," + rand)) {
+							Pair<Integer,Integer> pair = new Pair<Integer,Integer>(i-1,rand);
+							if(!listOfLandCoords.contains(pair)) {
 
-								listOfLandCoords.add((i-1) + "," + rand);
+								listOfLandCoords.add(pair);
 							}
 
 						}else if(i + 1 < numOfRows - 1 && map.get(i+1).get(rand).getRepresentation().equals("u") && this.isValid(map, i+1, rand, "col")){
 							map.get(i+1).set(rand, new Land());
-							if(!listOfLandCoords.contains(i+1 + "," + rand)) {
-								listOfLandCoords.add((i+1) + "," + rand);
+							Pair<Integer,Integer> pair = new Pair<Integer,Integer>(i+1,rand);
+							if(!listOfLandCoords.contains(pair)) {
+								listOfLandCoords.add(pair);
 							}
 
 						}
@@ -108,8 +116,9 @@ public class MapBuilder {
 				for(int i = colstart; i < colend; i ++){
 					if(map.get(rand).get(i).getRepresentation().equals("u") && this.isValid(map, rand, i, "row")){
 						map.get(rand).set(i, new Land());
-						if(!listOfLandCoords.contains(rand + "," + i)) {
-							listOfLandCoords.add(rand + "," + i);
+						Pair<Integer,Integer> pair = new Pair<Integer,Integer>(rand,i);
+						if(!listOfLandCoords.contains(pair)) {
+							listOfLandCoords.add(pair);
 
 						}
 
@@ -118,16 +127,18 @@ public class MapBuilder {
 					if(twoWide){
 						if(i-1 >= 1 && map.get(rand).get(i-1).getRepresentation().equals("u") && this.isValid(map, rand, i-1, "row")){
 							map.get(rand).set(i - 1, new Land());
-							if(!listOfLandCoords.contains(rand + "," + (i-1))) {
-								listOfLandCoords.add(rand + "," + (i-1));
+							Pair<Integer,Integer> pair = new Pair<Integer,Integer>(rand,i-1);
+							if(!listOfLandCoords.contains(pair)) {
+								listOfLandCoords.add(pair);
 
 							}
 
 
 						}else if(i+1 < numOfCols - 1 && map.get(rand).get(i+1).getRepresentation().equals("u") && this.isValid(map, rand, i+1, "row")){
 							map.get(rand).set(i+1, new Land());
-							if(!listOfLandCoords.contains(rand + "," + (i+1))) {
-								listOfLandCoords.add(rand + "," + (i+1));
+							Pair<Integer,Integer> pair = new Pair<Integer,Integer>(rand,i+1);
+							if(!listOfLandCoords.contains(pair)) {
+								listOfLandCoords.add(pair);
 
 							}
 
@@ -152,10 +163,32 @@ public class MapBuilder {
 
 		}
 
-		//map = this.addBreakablesAndPotHoles(map, listOfLandCoords, potHoleProb, breakableWallProb);
+		map = this.addBreakables(map, listOfLandCoords, breakableWallProb);
+		map = this.addPotHoles(map, listOfLandCoords, potHoleProb);
+
 		return map;
 
 	}
+	
+	private List<List<Location>> addPotHoles(List<List<Location>> map, List<Pair<Integer, Integer>> listOfLandCoords,
+			double potHoleProb) {
+		for(int i = 1; i < numOfRows -1 ; i++) {
+			for(int j = 1; j < numOfCols - 1; j++) {
+				Pair<Integer, Integer> hopefullyWall = new Pair<Integer, Integer>(i,j);
+				if(!listOfLandCoords.contains(hopefullyWall)){
+					//if it is not in the list, it is a wall
+					Double random = Math.random();
+					if(potHoleProb <= random) {
+						map.get(i).set(j, new Pothole());
+						//switch wall to pothole
+					}
+					
+				}
+			}
+		}
+		return map;
+	}
+
 	public GameMap createMap(double potHoleProb, double breakableWallProb){
 		//16 rows, 24 cols
 		if(potHoleProb + breakableWallProb >= 1) {
@@ -180,27 +213,21 @@ public class MapBuilder {
 
 
 	}
-	private List<List<Location>> addBreakablesAndPotHoles(List<List<Location>> map, List<String> landCoords, double potHoleProb, double breakableWallProb) {
-		for(String coord: landCoords) {
-			String[] rowCol = coord.split(",");
-			int row = Integer.parseInt(rowCol[0]);
-			int col = Integer.parseInt(rowCol[1]);
+	private List<List<Location>> addBreakables(List<List<Location>> map, List<Pair<Integer, Integer>> landCoords, double breakableWallProb) {
+		for(Pair<Integer, Integer> coord: landCoords) {
+			int row = coord.getFirst();
+			int col = coord.getSecond();
 			Double random = Math.random();
-			if(random <= potHoleProb) {
-				/*if(this.shouldPlacePot(map, new Pair<Integer,Integer>(row, col))) {
-					map.get(row).set(col, new Pothole());
-				}*/
-				
-			}else if(random <= potHoleProb + breakableWallProb) {
+			assertEquals(map.get(row).get(col).getRepresentation(), "l");
+			if(random <= breakableWallProb) {
 				map.get(row).set(col, new BreakableWall());
-
 			}
-
 		}
 		return map;
 
 	}
 	private boolean isValid(List<List<Location>> map, int row, int col, String roworcol){
+		return true;/*
 		int numofblocks = 0;
 		int i;
 		switch(roworcol){
@@ -237,7 +264,7 @@ public class MapBuilder {
 			break;
 		}
 		return false;
-	}
+	*/}
 
 	public int getNumberOfFreeBlocks(List<List<Location>> map, Pair<Integer,Integer> initial) {
 		Set<Pair<Integer,Integer>> checked = new HashSet<Pair<Integer,Integer>>();
@@ -260,22 +287,33 @@ public class MapBuilder {
 		return checked.size();
 
 	}
-	private List<Pair<Integer,Integer>> getNeighbors(Pair<Integer,Integer> curr, List<List<Location>> map){
+	public List<Pair<Integer,Integer>> getNeighbors(Pair<Integer,Integer> curr, List<List<Location>> map){
 		List<Pair<Integer,Integer>> output = new ArrayList<Pair<Integer,Integer>>();
 		int row = (int) curr.getFirst();
 		int col = (int) curr.getSecond();
+		List<String> legal = new ArrayList<String>();
+		legal.add("l");
+		legal.add("b");
 		for(int rowdiff = -1; rowdiff <=1; rowdiff+=2) {
-			if(row + rowdiff >=0 && row + rowdiff < map.size() && (map.get(row + rowdiff).get(col).toString().equals("b") || map.get(row + rowdiff).get(col).toString().equals("l"))){
+			String representation = map.get(row + rowdiff).get(col).toString();
+			if(row + rowdiff >=0 && row + rowdiff < map.size() && legal.contains(representation)){
 				Pair<Integer,Integer> neighbor = new Pair<Integer,Integer>(row + rowdiff,col);
 				output.add(neighbor);
-			}
+			}/*else {
+				System.out.println("builder 1" + representation);
+			}*/
 		}
 		for(int coldiff = -1; coldiff <=1; coldiff+=2) {
+			String representation = map.get(row).get(col + coldiff).toString();
 
-			if(col + coldiff >= 0 && col + coldiff < map.get(0).size() && (map.get(row).get(col + coldiff).toString().equals("b") || map.get(row).get(col + coldiff).toString().equals("l"))) {
+			if(col + coldiff >= 0 && col + coldiff < map.get(0).size() && legal.contains(representation)) {
 				Pair<Integer,Integer> neighbor = new Pair<Integer,Integer>(row,col + coldiff);
 				output.add(neighbor);
-			}
+			}/*else {
+				System.out.println("builder 2" + representation);
+
+				
+			}*/
 		}
 		return output;
 
