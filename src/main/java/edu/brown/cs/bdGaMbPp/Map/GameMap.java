@@ -10,6 +10,7 @@ public class GameMap {
 	  private final List<List<Location>> tiles;
 	  private final int length;
 	  private final int width;
+	  private int id;
 	  
 	  public GameMap(List<List<Location>> locations) {
 		  tiles = locations;
@@ -149,7 +150,7 @@ public class GameMap {
 	    StringBuilder sb = new StringBuilder();
 	    for (List<Location> row : tiles) {
 	      for (Location c : row) {
-	        sb.append(c.toString());
+	        sb.append(c.toString() + " ");
 	      }
 	      sb.append(separator);
 	    }

@@ -105,7 +105,7 @@ public final class Main {
     Spark.get("/home", new HomeHandler(), freeMarker);
     Spark.get("/test", new TestHandler(), freeMarker);
 
-    Spark.post("/game", new GameHandler());
+    Spark.post("/map", new MapHandler());
 
     //Spark.post("/user", new UserTankHandler());
   }

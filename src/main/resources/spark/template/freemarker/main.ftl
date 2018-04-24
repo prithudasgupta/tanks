@@ -15,6 +15,8 @@
     <link rel="image" href="/sprites/tTreads.png">
     <link rel="image" href="/sprites/tank_cannon.png">
     <link rel="image" href="/sprites/wall.png">
+    <link rel="image" href="/sprites/pothole.png">
+    <link rel="image" href="/sprites/breakable.png">
     <link rel="image" href="/sprites/freeSpace.png">
   </head>
   <body>
