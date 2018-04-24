@@ -91,7 +91,7 @@ for (let row = 0; row < 16; row++) {
     }
 }
 
-$.post('/map', {}, responseJSON => {
+$.post('/map', {"url": window.location.href}, responseJSON => {
     const respObject = JSON.parse(responseJSON);
     console.log(respObject);
     for (let row = 0; row < 16; row++) {
