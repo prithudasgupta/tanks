@@ -299,9 +299,7 @@ public class MapBuilder {
 			if(row + rowdiff >=0 && row + rowdiff < map.size() && legal.contains(representation)){
 				Pair<Integer,Integer> neighbor = new Pair<Integer,Integer>(row + rowdiff,col);
 				output.add(neighbor);
-			}/*else {
-				System.out.println("builder 1" + representation);
-			}*/
+			}
 		}
 		for(int coldiff = -1; coldiff <=1; coldiff+=2) {
 			String representation = map.get(row).get(col + coldiff).toString();
@@ -309,11 +307,7 @@ public class MapBuilder {
 			if(col + coldiff >= 0 && col + coldiff < map.get(0).size() && legal.contains(representation)) {
 				Pair<Integer,Integer> neighbor = new Pair<Integer,Integer>(row,col + coldiff);
 				output.add(neighbor);
-			}/*else {
-				System.out.println("builder 2" + representation);
-
-				
-			}*/
+			}
 		}
 		return output;
 
