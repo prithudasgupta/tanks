@@ -150,7 +150,7 @@ public class GameMap {
 	    StringBuilder sb = new StringBuilder();
 	    for (List<Location> row : tiles) {
 	      for (Location c : row) {
-	        sb.append(c.toString());
+	        sb.append(c.toString() + " ");
 	      }
 	      sb.append(separator);
 	    }
