@@ -103,7 +103,7 @@ public final class Main {
 
     Spark.get("/test", new TestHandler(), freeMarker);
 
-    Spark.post("/game", new GameHandler());
+    Spark.post("/map", new MapHandler());
 
     //Spark.post("/user", new UserTankHandler());
   }
