@@ -35,6 +35,15 @@ public class MapBuilder {
 				map.get(i).add(new UnbreakableWall());
 			}
 		}
+		
+		for(int row = 0; row < numOfRows ; row++) {
+			map.get(row).set(0, new Bound());
+			map.get(row).set(numOfCols-1, new Bound());
+		}
+		for(int col = 0; col < numOfCols ; col++) {
+			map.get(0).set(col, new Bound());
+			map.get(numOfRows-1).set(col, new Bound());
+		}
 		return map;
 	}
 	private boolean withProbability(double prob) {
@@ -160,28 +169,53 @@ public class MapBuilder {
 
 		}
 
-		map = this.addPotHoles(map, listOfLandCoords, potHoleProb);
-		map = this.addBreakables(map, listOfLandCoords, breakableWallProb);
+		map = this.addPotHolesAndBreakables(map, listOfLandCoords, potHoleProb, breakableWallProb);
 
 
 		return map;
 
 	}
+	private boolean hasTwoNeighbors(Pair<Integer, Integer> point, List<List<Location>> map) {
+		List<Pair<Integer, Integer>> neighbors = this.getNeighbors(point, map);
+		Set<Integer> checkedRow = new HashSet<Integer>();
+		Set<Integer> checkedCol = new HashSet<Integer>();
+		for(Pair<Integer, Integer> neighbor: neighbors) {
+			if(checkedRow.contains(neighbor.getFirst())) {
+				//there are two land neighbors top and bottom
+				return true;
+			}else {
+				checkedRow.add(neighbor.getFirst());
+			}
+			if(checkedCol.contains(neighbor.getSecond())) {
+				//there are two land neighbors left and right
+				return true;
+			}else {
+				checkedCol.add(neighbor.getSecond());
+			}
+
+			
+		}
+		return false;
+		
+	}
 	
-	private List<List<Location>> addPotHoles(List<List<Location>> map, List<Pair<Integer, Integer>> listOfLandCoords,
-			double potHoleProb) {
+	private List<List<Location>> addPotHolesAndBreakables(List<List<Location>> map, List<Pair<Integer, Integer>> listOfLandCoords,
+			double potHoleProb, double breakableWallProb) {
 
 		for(int i = 1; i < numOfRows -1 ; i++) {
 			for(int j = 1; j < numOfCols - 1; j++) {
 				Pair<Integer, Integer> hopefullyWall = new Pair<Integer, Integer>(i,j);
 				if(!listOfLandCoords.contains(hopefullyWall) ){
 					//if it is not in the list, it is a wall
-					if(this.getNeighbors(hopefullyWall, map).size() >= 2 && this.withProbability(potHoleProb)) {
+					if(this.hasTwoNeighbors(hopefullyWall, map) && this.withProbability(potHoleProb)) {
 						map.get(i).set(j, new Pothole());
 						//if the wall is surrounded by at least 2 neighbors, switch wall to pothole
 					}
 					
-				}
+				}else if (this.hasTwoNeighbors(hopefullyWall, map) && this.withProbability(breakableWallProb)) {
+						map.get(i).set(j, new BreakableWall());
+					}	
+				
 			}
 		}
 		return map;
