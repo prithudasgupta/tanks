@@ -21,6 +21,11 @@
     <link rel="image" href="/sprites/explo1.png">
     <link rel="image" href="/sprites/explo2.png">
     <link rel="image" href="/sprites/explo3.png">
+    <link rel="image" href="/sprites/imm_tank.png">
+    <link rel="image" href="/sprites/tank_space.png">
+    <link rel="image" href="/sprites/one.png">
+    <link rel="image" href="/sprites/two.png">
+    <link rel="image" href="/sprites/three.png">
   </head>
   <body>
 

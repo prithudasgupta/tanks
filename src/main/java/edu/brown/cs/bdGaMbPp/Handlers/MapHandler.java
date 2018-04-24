@@ -20,29 +20,29 @@ public class MapHandler implements Route {
   @Override
   public String handle(Request request, Response response) {
     QueryParamsMap qm = request.queryMap();
-    String url = qm.value("url");
-    String id = convertUrl(url);
+//    String url = qm.value("url");
+//    String id = convertUrl(url);
     GameMap map;
     List<List<String>> representations;
     
-    //get id from url based on webpage structure
-    if (id.equals("-1")) {
-    		map = new MapBuilder().createMap(.1, .1);
-    		representations = map.getRepresentations();
-    		Querier.addMap(convertToDatabase(representations), -1);
-
-    }
-    else {
-    		String data = Querier.getMapById(Integer.parseInt(id));
-    		if (data.equals("")) {
-    			map = new MapBuilder().createMap(.1, .1);
+//    //get id from url based on webpage structure
+//    if (id.equals("-1")) {
+//    		map = new MapBuilder().createMap(.1, .1);
+//    		representations = map.getRepresentations();
+//    		Querier.addMap(convertToDatabase(representations), -1);
+//
+//    }
+//    else {
+//    		String data = Querier.getMapById(Integer.parseInt(id));
+//    		if (data.equals("")) {
+    			map = new MapBuilder().createMap(0.1, 0);
         		representations = map.getRepresentations();
         		Querier.addMap(convertToDatabase(representations), -1);
-    		}
-    		else {
-    			representations = convertFromDatabase(data);
-    		}
-    }
+//    		}
+//    		else {
+//    			representations = convertFromDatabase(data);
+//    		}
+//    }
     
     Gson GSON = new Gson();
     return GSON.toJson(representations);
