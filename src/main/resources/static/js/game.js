@@ -108,7 +108,7 @@ function populateMap(row, col, type) {
 let startX, startY;
 let collideable = [];
 
-// load in the map
+// // load in the map
 setTimeout(scene.loadImages(["/sprites/wall.png", "/sprites/freeSpace.png", "/sprites/pothole.png", "/sprites/breakable.png"],
     function()  {
     for (let row = 0; row < 16; row++) {
@@ -133,6 +133,7 @@ setTimeout(scene.loadImages(["/sprites/wall.png", "/sprites/freeSpace.png", "/sp
                 // update it
                 breakable.update();
                 collideable.push(breakable);
+                nonTrav.push(breakable);
 
             } else if (map[row][col] === "p") {
                 next = canvasbg.Sprite("/sprites/pothole.png");
@@ -232,6 +233,10 @@ function updateBullet() {
                     if (bullet.sprite.collidesWith(collideable[i])) {
                         collideable[i].remove();
                         collideable.splice(i, 1);
+                        let ind = nonTrav.indexOf(collideable[i]);
+                        if (ind >= 0) {
+                            nonTrav.splice(ind, 1);
+                        }
                         bullet.sprite.remove();
                         bullets.splice(b,1);
                         collided = true;
@@ -243,27 +248,11 @@ function updateBullet() {
                 }
             }
 
-            // } else if (bullet.sprite.collidesWithArray(collideable)) {
-            //     bullet.sprite.remove();
-            //     bullets.splice(b,1);
-            // }
-            // else {
-            //     bullet.sprite.update();
-            // }
         }
     }
 
 }
 
-function createExplosion() {
-    let cycle = scene.Cycle([[0, 45, 5],
-        [45, 45, 5],
-        [90, 45, 5]]);
-    let expl = scene.Sprite("/sprites/explosion.png");
-    cycle.addSprite(expl);
-    cycle.update();
-    cycle.next(5).update();
-}
 
 function placeTread(x , y, ang) {
     // first create tread and place it
@@ -360,7 +349,8 @@ function main() {
         fire();
     }
     updateBullet();
-    createExplosion();
+
+
     lastTime = now;
     window.requestAnimationFrame(main);
 
