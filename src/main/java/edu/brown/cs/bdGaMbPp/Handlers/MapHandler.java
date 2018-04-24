@@ -16,7 +16,7 @@ public class MapHandler implements Route {
   public String handle(Request request, Response response) {
     QueryParamsMap qm = request.queryMap();
     Gson GSON = new Gson();
-    GameMap map = new MapBuilder().createMap(.2, .2);
+    GameMap map = new MapBuilder().createMap(.02, .02);
     return GSON.toJson(map.getRepresentations());
   }
 }

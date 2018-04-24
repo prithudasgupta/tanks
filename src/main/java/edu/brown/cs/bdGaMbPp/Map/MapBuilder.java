@@ -166,6 +166,7 @@ public class MapBuilder {
 		map = this.addBreakables(map, listOfLandCoords, breakableWallProb);
 		map = this.addPotHoles(map, listOfLandCoords, potHoleProb);
 
+
 		return map;
 
 	}
@@ -220,6 +221,7 @@ public class MapBuilder {
 			Double random = Math.random();
 			assertEquals(map.get(row).get(col).getRepresentation(), "l");
 			if(random <= breakableWallProb) {
+
 				map.get(row).set(col, new BreakableWall());
 			}
 		}

@@ -10,15 +10,11 @@ let aKey, sKey, wKey, dKey, space;
 let ready = false;
 let mousX, mousY, rot;
 let bullets = [];
+let nonTrav = [];
 let treads = [];
 let USER_SPEED = 3;
-let USER_ROT = 
-
-class Bullet{
-    constructor(sprite) {
-        this.sprite = sprite;
-    }
-}
+let BULLET_SPEED = 5;
+let USER_ROT = 0.02;
 
 
 
@@ -105,41 +101,54 @@ $.post('/map', {}, responseJSON => {
     }
 });
 
-console.log(map);
-
 function populateMap(row, col, type) {
     map[row][col] = type;
 }
 
-console.log(map);
-
 let startX, startY;
+let collideable = [];
 
 // load in the map
-scene.loadImages(["/sprites/wall.png", "/sprites/freeSpace.png"], function()  {
+scene.loadImages(["/sprites/wall.png", "/sprites/freeSpace.png", "/sprites/pothole.png", "/sprites/breakable.png"],
+    function()  {
     for (let row = 0; row < 16; row++) {
         for (let col = 0; col < 24; col++) {
-            if(map[row][col] === "u") {
-                let wall = canvasbg.Sprite("/sprites/wall.png");
-                // make sure that it is to size
-                wall.size(45,45);
+            let next;
+            if (map[row][col] === "u") {
+                next = canvasbg.Sprite("/sprites/wall.png");
+                walls.push(next);
+                nonTrav.push(next);
+            } else if (map[row][col] === "b") {
+                next = canvasbg.Sprite("/sprites/freeSpace.png");
+                next.size(45,45);
                 // put in location
-                wall.move(col*TILE_SIZE, row*TILE_SIZE);
+                next.move(col*TILE_SIZE, row*TILE_SIZE);
                 // update it
-                wall.update();
-                map[row][col] = wall;
-                walls.push(wall);
-            }  else {
-                let free = canvasbg.Sprite("/sprites/freeSpace.png");
-                // make sure that it is to size
-                free.size(45,45);
-                // put in location
-                free.move(col*TILE_SIZE, row*TILE_SIZE);
-                // update it
-                free.update();
-                map[row][col] = free;
+                next.update();
 
-                if (startX === undefined) {
+                let breakable = canvasbg.Sprite("/sprites/breakable.png");
+                breakable.size(45,45);
+                // put in location
+                breakable.move(col*TILE_SIZE, row*TILE_SIZE);
+                // update it
+                breakable.update();
+                collideable.push(breakable);
+
+            } else if (map[row][col] === "p") {
+                next = canvasbg.Sprite("/sprites/pothole.png");
+                nonTrav.push(next);
+            } else {
+                next = canvasbg.Sprite("/sprites/freeSpace.png");
+            }
+            if (map[row][col] !== "b") {
+                // make sure that it is to size
+                next.size(45,45);
+                // put in location
+                next.move(col*TILE_SIZE, row*TILE_SIZE);
+                // update it
+                next.update();
+
+                if (startX === undefined && map[row][col] === "l") {
                     startX = col*TILE_SIZE + 5;
                     startY = row*TILE_SIZE + 5;
                 }
@@ -172,18 +181,23 @@ let count = 0;
 let lastTime;
 console.log(walls);
 
-function forwardByAngle(angRads) {
-    let x = 5 * Math.cos(angRads);
-    let y = 5 * Math.sin(angRads);
+function forwardByAngle(angRads, speed) {
+    let x = speed * Math.cos(angRads);
+    let y = speed * Math.sin(angRads);
     return [x,y];
 }
 
-function backwardByAngle(angRads) {
-    let x = -(5 * Math.cos(angRads));
-    let y = -(5 * Math.sin(angRads));
+function backwardByAngle(angRads, speed) {
+    let x = -(speed * Math.cos(angRads));
+    let y = -(speed * Math.sin(angRads));
     return [x,y];
 }
 
+class Bullet {
+    constructor(sprite) {
+        this.sprite = sprite;
+    }
+}
 
 function fire() {
     if (ready) {
@@ -196,11 +210,12 @@ function fire() {
         b.update();
         // create an object for storage with bullet trajectory
         let bullet = new Bullet(b);
-        bullet.movDir = forwardByAngle(uCannon.angle);
-        console.log(bullet.movDir);
+        bullet.movDir = forwardByAngle(uCannon.angle, BULLET_SPEED);
         bullets.push(bullet);
     }
 }
+
+
 
 function updateBullet() {
     if (ready) {
@@ -210,12 +225,31 @@ function updateBullet() {
             bullet.sprite.move(cord[0],cord[1]);
             if (bullet.sprite.collidesWithArray(walls)) {
                 bullet.sprite.remove();
-                bullets.splice(b,1);
+                bullets.splice(b, 1);
             } else {
-                bullet.sprite.update();
+                let collided = false;
+                for (let i in collideable) {
+                    if (bullet.sprite.collidesWith(collideable[i])) {
+                        collideable[i].remove();
+                        collideable.splice(i, 1);
+                        bullet.sprite.remove();
+                        bullets.splice(b,1);
+                        collided = true;
+                        break;
+                    }
+                }
+                if (!collided) {
+                    bullet.sprite.update();
+                }
             }
 
-
+            // } else if (bullet.sprite.collidesWithArray(collideable)) {
+            //     bullet.sprite.remove();
+            //     bullets.splice(b,1);
+            // }
+            // else {
+            //     bullet.sprite.update();
+            // }
         }
     }
 
@@ -250,67 +284,12 @@ function placeTread(x , y, ang) {
     }
 }
 
-function simpleMove() {
-    if (wKey) {
-        user.move(0,-5);
-        uCannon.move(0,-5);
-        if (user.collidesWithArray(walls)) {
-            user.move(0,5);
-            uCannon.move(0,5);
-        } else {
-            user.update();
-            uCannon.update();
-        }
-    }
-    if(sKey) {
-        user.move(0,5);
-        uCannon.move(0,5);
-        if (user.collidesWithArray(walls)) {
-            user.move(0,-5);
-            uCannon.move(0,-5);
-        } else {
-
-            user.update();
-            uCannon.update();
-        }
-    }
-    if(aKey) {
-        user.move(-5,0);
-        uCannon.move(-5,0);
-        if (user.collidesWithArray(walls)) {
-            user.move(5,0);
-            uCannon.move(5,0);
-        }
-        user.update();
-        uCannon.update();
-    }
-    if(dKey) {
-        user.move(5,0);
-        uCannon.move(5,0);
-        if (user.collidesWithArray(walls)) {
-            user.move(-5,0);
-            uCannon.move(-5,0);
-        }
-        user.update();
-        uCannon.update();
-    }
-    if (ready) {
-        let dx = mousX - user.x;
-        let dy = mousY - user.y;
-        rot = Math.atan2(dy, dx);
-        uCannon.setAngle(0);
-        uCannon.rotate(rot);
-        uCannon.update();
-    }
-}
-
-
 function userMove() {
     if (wKey) {
-        let mov = forwardByAngle(user.angle);
+        let mov = forwardByAngle(user.angle, USER_SPEED);
         user.move(mov[0], mov[1]);
         uCannon.move(mov[0], mov[1]);
-        if (user.collidesWithArray(walls)) {
+        if (user.collidesWithArray(nonTrav)) {
             // if there is a collision revert back to old location
             user.move(-mov[0], -mov[1]);
             uCannon.move(-mov[0], -mov[1]);
@@ -321,10 +300,10 @@ function userMove() {
         }
     }
     if(sKey) {
-        let mov = backwardByAngle(user.angle);
+        let mov = backwardByAngle(user.angle, USER_SPEED);
         user.move(mov[0], mov[1]);
         uCannon.move(mov[0], mov[1]);
-        if (user.collidesWithArray(walls)) {
+        if (user.collidesWithArray(nonTrav)) {
             user.move(-mov[0], -mov[1]);
             uCannon.move(-mov[0], -mov[1]);
         } else {
@@ -334,16 +313,16 @@ function userMove() {
         }
     }
     if(aKey) {
-        user.rotate(-0.02);
-        if (user.collidesWithArray(walls)) {
-            user.rotate(0.02);
+        user.rotate(-USER_ROT);
+        if (user.collidesWithArray(nonTrav)) {
+            user.rotate(USER_ROT);
         }
         user.update();
     }
     if(dKey) {
-        user.rotate(0.02);
-        if (user.collidesWithArray(walls)) {
-            user.rotate(-0.02);
+        user.rotate(USER_ROT);
+        if (user.collidesWithArray(nonTrav)) {
+            user.rotate(-USER_ROT);
         }
         user.update();
     }
