@@ -57,10 +57,7 @@ public class MapBuilder {
 		List<List<Location>> map = this.getMapOfWalls();
 		boolean twoWide;
 		List<Pair<Integer,Integer>> listOfLandCoords = new ArrayList<Pair<Integer,Integer>>();
-		System.out.println("start");
 		while(!q.isEmpty()){
-			this.printMap(map);
-			System.out.println("");
 			twoWide = this.withProbability(.6);
 			String[] coords = q.remove().split(",");
 			rowstart = Integer.parseInt(coords[0]);
