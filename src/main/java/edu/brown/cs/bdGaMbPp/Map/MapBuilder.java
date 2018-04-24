@@ -57,10 +57,7 @@ public class MapBuilder {
 		List<List<Location>> map = this.getMapOfWalls();
 		boolean twoWide;
 		List<Pair<Integer,Integer>> listOfLandCoords = new ArrayList<Pair<Integer,Integer>>();
-		System.out.println("start");
 		while(!q.isEmpty()){
-			this.printMap(map);
-			System.out.println("");
 			twoWide = this.withProbability(.6);
 			String[] coords = q.remove().split(",");
 			rowstart = Integer.parseInt(coords[0]);
@@ -73,7 +70,7 @@ public class MapBuilder {
 				rand = (int)(Math.random() * (colend - colstart));
 				rand += colstart;
 				for(int i = rowstart; i < rowend; i ++){
-					if(map.get(i).get(rand).getRepresentation().equals("u") && this.isValid(map, i, rand, "col")){
+					if(map.get(i).get(rand).getRepresentation().equals("u")){
 						map.get(i).set(rand, new Land());
 						Pair<Integer,Integer> pair = new Pair<Integer,Integer>(i, rand);
 						if(!listOfLandCoords.contains(pair)){
@@ -81,7 +78,7 @@ public class MapBuilder {
 
 						}
 					}if(twoWide){
-						if(i - 1 >= 1 && map.get(i-1).get(rand).getRepresentation().equals("u") && this.isValid(map, i-1, rand, "col")){
+						if(i - 1 >= 1 && map.get(i-1).get(rand).getRepresentation().equals("u")){
 							map.get(i-1).set(rand, new Land());
 							Pair<Integer,Integer> pair = new Pair<Integer,Integer>(i-1,rand);
 							if(!listOfLandCoords.contains(pair)) {
@@ -89,7 +86,7 @@ public class MapBuilder {
 								listOfLandCoords.add(pair);
 							}
 
-						}else if(i + 1 < numOfRows - 1 && map.get(i+1).get(rand).getRepresentation().equals("u") && this.isValid(map, i+1, rand, "col")){
+						}else if(i + 1 < numOfRows - 1 && map.get(i+1).get(rand).getRepresentation().equals("u")){
 							map.get(i+1).set(rand, new Land());
 							Pair<Integer,Integer> pair = new Pair<Integer,Integer>(i+1,rand);
 							if(!listOfLandCoords.contains(pair)) {
@@ -114,7 +111,7 @@ public class MapBuilder {
 				rand = (int)(Math.random() * (rowend - rowstart));
 				rand += rowstart;
 				for(int i = colstart; i < colend; i ++){
-					if(map.get(rand).get(i).getRepresentation().equals("u") && this.isValid(map, rand, i, "row")){
+					if(map.get(rand).get(i).getRepresentation().equals("u")){
 						map.get(rand).set(i, new Land());
 						Pair<Integer,Integer> pair = new Pair<Integer,Integer>(rand,i);
 						if(!listOfLandCoords.contains(pair)) {
@@ -125,7 +122,7 @@ public class MapBuilder {
 
 					}
 					if(twoWide){
-						if(i-1 >= 1 && map.get(rand).get(i-1).getRepresentation().equals("u") && this.isValid(map, rand, i-1, "row")){
+						if(i-1 >= 1 && map.get(rand).get(i-1).getRepresentation().equals("u")){
 							map.get(rand).set(i - 1, new Land());
 							Pair<Integer,Integer> pair = new Pair<Integer,Integer>(rand,i-1);
 							if(!listOfLandCoords.contains(pair)) {
@@ -134,7 +131,7 @@ public class MapBuilder {
 							}
 
 
-						}else if(i+1 < numOfCols - 1 && map.get(rand).get(i+1).getRepresentation().equals("u") && this.isValid(map, rand, i+1, "row")){
+						}else if(i+1 < numOfCols - 1 && map.get(rand).get(i+1).getRepresentation().equals("u")){
 							map.get(rand).set(i+1, new Land());
 							Pair<Integer,Integer> pair = new Pair<Integer,Integer>(rand,i+1);
 							if(!listOfLandCoords.contains(pair)) {
@@ -163,8 +160,8 @@ public class MapBuilder {
 
 		}
 
-		map = this.addBreakables(map, listOfLandCoords, breakableWallProb);
 		map = this.addPotHoles(map, listOfLandCoords, potHoleProb);
+		map = this.addBreakables(map, listOfLandCoords, breakableWallProb);
 
 
 		return map;
@@ -173,15 +170,15 @@ public class MapBuilder {
 	
 	private List<List<Location>> addPotHoles(List<List<Location>> map, List<Pair<Integer, Integer>> listOfLandCoords,
 			double potHoleProb) {
+
 		for(int i = 1; i < numOfRows -1 ; i++) {
 			for(int j = 1; j < numOfCols - 1; j++) {
 				Pair<Integer, Integer> hopefullyWall = new Pair<Integer, Integer>(i,j);
-				if(!listOfLandCoords.contains(hopefullyWall)){
+				if(!listOfLandCoords.contains(hopefullyWall) ){
 					//if it is not in the list, it is a wall
-					Double random = Math.random();
-					if(potHoleProb <= random) {
+					if(this.getNeighbors(hopefullyWall, map).size() >= 2 && this.withProbability(potHoleProb)) {
 						map.get(i).set(j, new Pothole());
-						//switch wall to pothole
+						//if the wall is surrounded by at least 2 neighbors, switch wall to pothole
 					}
 					
 				}
@@ -191,29 +188,12 @@ public class MapBuilder {
 	}
 
 	public GameMap createMap(double potHoleProb, double breakableWallProb){
-		//16 rows, 24 cols
-		if(potHoleProb + breakableWallProb >= 1) {
-			System.out.println("ERROR: the sum of potHoleProb breakableWallProb are >= 1");
-			return null;
-		}
 		List<List<Location>> map = this.getMapAsList(potHoleProb,breakableWallProb);
 
 		return new GameMap(map);
 	}
 
-	private boolean shouldPlacePot(List<List<Location>> map, Pair<Integer,Integer> curr) {
-		int oldNumOfFree = this.getNumberOfFreeBlocks(map, curr);
-		map.get(curr.getFirst()).set(curr.getSecond(), new Pothole());
-		List<Pair<Integer, Integer>> neighbors = this.getNeighbors(curr, map);
-		for(Pair<Integer, Integer> neighbor: neighbors) {
-			if(this.getNumberOfFreeBlocks(map, neighbor) != (oldNumOfFree -1)) {
-				return false;
-			}
-		}
-		return true;
 
-
-	}
 	private List<List<Location>> addBreakables(List<List<Location>> map, List<Pair<Integer, Integer>> landCoords, double breakableWallProb) {
 		for(Pair<Integer, Integer> coord: landCoords) {
 			int row = coord.getFirst();
@@ -228,45 +208,6 @@ public class MapBuilder {
 		return map;
 
 	}
-	private boolean isValid(List<List<Location>> map, int row, int col, String roworcol){
-		return true;/*
-		int numofblocks = 0;
-		int i;
-		switch(roworcol){
-		case "row":
-			for(i = row - leastwall; i < row + leastwall ; i ++){
-				if(i >= 0 && i < numOfRows){
-
-					if(map.get(i).get(col).getRepresentation().equals("u")){
-						numofblocks ++;
-					}else{
-						numofblocks = 0;
-					}
-					if(numofblocks == leastwall){
-						return true;
-					}
-				}
-
-			}
-			break;
-		case "col":
-			for(i = col - leastwall; i < col + leastwall ; i ++){
-				if(i >= 0 && i < numOfCols){
-
-					if(map.get(row).get(i).getRepresentation().equals("u")){
-						numofblocks ++;
-					}else{
-						numofblocks = 0;
-					}
-					if(numofblocks == leastwall){
-						return true;
-					}
-				}
-			}
-			break;
-		}
-		return false;
-	*/}
 
 	public int getNumberOfFreeBlocks(List<List<Location>> map, Pair<Integer,Integer> initial) {
 		Set<Pair<Integer,Integer>> checked = new HashSet<Pair<Integer,Integer>>();
