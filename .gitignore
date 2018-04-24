@@ -72,4 +72,5 @@ local.properties
 # MISC #
 ########
 
+tanks.sqlite3
 .DS_Store
