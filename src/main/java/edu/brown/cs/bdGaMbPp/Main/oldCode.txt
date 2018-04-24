@@ -1,0 +1,53 @@
+function simpleMove() {
+    if (wKey) {
+        user.move(0,-5);
+        uCannon.move(0,-5);
+        if (user.collidesWithArray(walls)) {
+            user.move(0,5);
+            uCannon.move(0,5);
+        } else {
+            user.update();
+            uCannon.update();
+        }
+    }
+    if(sKey) {
+        user.move(0,5);
+        uCannon.move(0,5);
+        if (user.collidesWithArray(walls)) {
+            user.move(0,-5);
+            uCannon.move(0,-5);
+        } else {
+
+            user.update();
+            uCannon.update();
+        }
+    }
+    if(aKey) {
+        user.move(-5,0);
+        uCannon.move(-5,0);
+        if (user.collidesWithArray(walls)) {
+            user.move(5,0);
+            uCannon.move(5,0);
+        }
+        user.update();
+        uCannon.update();
+    }
+    if(dKey) {
+        user.move(5,0);
+        uCannon.move(5,0);
+        if (user.collidesWithArray(walls)) {
+            user.move(-5,0);
+            uCannon.move(-5,0);
+        }
+        user.update();
+        uCannon.update();
+    }
+    if (ready) {
+        let dx = mousX - user.x;
+        let dy = mousY - user.y;
+        rot = Math.atan2(dy, dx);
+        uCannon.setAngle(0);
+        uCannon.rotate(rot);
+        uCannon.update();
+    }
+}

@@ -152,7 +152,7 @@ public class MapBuilder {
 
 		}
 
-		//map = this.addBreakablesAndPotHoles(map, listOfLandCoords, potHoleProb, breakableWallProb);
+		map = this.addBreakablesAndPotHoles(map, listOfLandCoords, potHoleProb, breakableWallProb);
 		return map;
 
 	}
@@ -187,9 +187,9 @@ public class MapBuilder {
 			int col = Integer.parseInt(rowCol[1]);
 			Double random = Math.random();
 			if(random <= potHoleProb) {
-				/*if(this.shouldPlacePot(map, new Pair<Integer,Integer>(row, col))) {
+				if(this.shouldPlacePot(map, new Pair<Integer,Integer>(row, col))) {
 					map.get(row).set(col, new Pothole());
-				}*/
+				}
 				
 			}else if(random <= potHoleProb + breakableWallProb) {
 				map.get(row).set(col, new BreakableWall());
