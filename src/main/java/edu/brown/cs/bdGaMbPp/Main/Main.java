@@ -103,7 +103,7 @@ public final class Main {
     FreeMarkerEngine freeMarker = createEngine();
 
     Spark.get("/home", new HomeHandler(), freeMarker);
-    Spark.get("/test", new TestHandler(), freeMarker);
+    Spark.get("/tanks/game/:id", new TestHandler(), freeMarker);
 
     Spark.post("/map", new MapHandler());
 
