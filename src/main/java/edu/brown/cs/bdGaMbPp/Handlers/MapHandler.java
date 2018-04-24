@@ -27,7 +27,7 @@ public class MapHandler implements Route {
     
     //get id from url based on webpage structure
     if (id == -1) {
-    		map = new MapBuilder().createMap(.2, .2);
+    		map = new MapBuilder().createMap(.1, .1);
     		representations = map.getRepresentations();
     		Querier.addMap(convertToDatabase(representations), -1);
 
