@@ -3,6 +3,7 @@ package edu.brown.cs.bdGaMbPp.Main;
 import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.bdGaMbPp.Handlers.GameHandler;
+import edu.brown.cs.bdGaMbPp.Handlers.HomeHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.MapHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.UserTankHandler;
 import edu.brown.cs.bdGaMbPp.Map.MapBuilder;
@@ -101,6 +102,7 @@ public final class Main {
 
     FreeMarkerEngine freeMarker = createEngine();
 
+    Spark.get("/home", new HomeHandler(), freeMarker);
     Spark.get("/test", new TestHandler(), freeMarker);
 
     Spark.post("/map", new MapHandler());
