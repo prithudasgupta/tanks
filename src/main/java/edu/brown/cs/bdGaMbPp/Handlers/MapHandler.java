@@ -21,24 +21,42 @@ public class MapHandler implements Route {
   public String handle(Request request, Response response) {
     QueryParamsMap qm = request.queryMap();
     String url = qm.value("url");
-    int id = -1;
+    String id = convertUrl(url);
     GameMap map;
     List<List<String>> representations;
     
     //get id from url based on webpage structure
-    if (id == -1) {
+    if (id.equals("-1")) {
     		map = new MapBuilder().createMap(.1, .1);
     		representations = map.getRepresentations();
     		Querier.addMap(convertToDatabase(representations), -1);
 
     }
     else {
-    		String data = Querier.getMapById(id);
-    		representations = convertFromDatabase(data);
+    		String data = Querier.getMapById(Integer.parseInt(id));
+    		if (data.equals("")) {
+    			map = new MapBuilder().createMap(.1, .1);
+        		representations = map.getRepresentations();
+        		Querier.addMap(convertToDatabase(representations), -1);
+    		}
+    		else {
+    			representations = convertFromDatabase(data);
+    		}
     }
     
     Gson GSON = new Gson();
     return GSON.toJson(representations);
+  }
+  
+  private static String convertUrl(String url) {
+	  int index = url.indexOf("id");
+	  String id = url.substring(index);;
+	  if (id.equals("id")) {
+		  return "-1";
+	  }
+	  else {
+		  return id.substring(2);
+	  }
   }
   
   private static String convertToDatabase(List<List<String>> representations) {
