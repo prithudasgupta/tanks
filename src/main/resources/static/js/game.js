@@ -11,12 +11,16 @@ let ready = false;
 let mousX, mousY, rot;
 let bullets = [];
 let treads = [];
+let USER_SPEED = 3;
+let USER_ROT = 
 
 class Bullet{
     constructor(sprite) {
         this.sprite = sprite;
     }
 }
+
+
 
 // add event listeners for movement of the user tank
 
@@ -91,13 +95,31 @@ for (let row = 0; row < 16; row++) {
     }
 }
 
+$.post('/map', {}, responseJSON => {
+    const respObject = JSON.parse(responseJSON);
+    console.log(respObject);
+    for (let row = 0; row < 16; row++) {
+        for (let col = 0; col < 24; col++) {
+                populateMap(row, col, respObject[row][col]);
+        }
+    }
+});
 
+console.log(map);
+
+function populateMap(row, col, type) {
+    map[row][col] = type;
+}
+
+console.log(map);
+
+let startX, startY;
 
 // load in the map
 scene.loadImages(["/sprites/wall.png", "/sprites/freeSpace.png"], function()  {
     for (let row = 0; row < 16; row++) {
         for (let col = 0; col < 24; col++) {
-            if(row === 0 || row === 15 || col === 0 || col === 23) {
+            if(map[row][col] === "u") {
                 let wall = canvasbg.Sprite("/sprites/wall.png");
                 // make sure that it is to size
                 wall.size(45,45);
@@ -116,19 +138,13 @@ scene.loadImages(["/sprites/wall.png", "/sprites/freeSpace.png"], function()  {
                 // update it
                 free.update();
                 map[row][col] = free;
+
+                if (startX === undefined) {
+                    startX = col*TILE_SIZE + 5;
+                    startY = row*TILE_SIZE + 5;
+                }
             }
         }
-    }
-    for (let i = 1; i < 5; i++) {
-        let wall = canvasbg.Sprite("/sprites/wall.png");
-        // make sure that it is to size
-        wall.size(45,45);
-        // put in location
-        wall.move(3*TILE_SIZE, i*TILE_SIZE);
-        // update it
-        wall.update();
-        map[i][3] = wall;
-        walls.push(wall);
     }
 });
 
@@ -138,8 +154,8 @@ scene.loadImages(["/sprites/tank.png","/sprites/tank_cannon.png", "/sprites/bull
     let userTank = canvasbg.Sprite("/sprites/tank.png");
     let cannon = canvasbg.Sprite("/sprites/tank_cannon.png")
     // put in location
-    userTank.move(TILE_SIZE + 5, TILE_SIZE + 5);
-    cannon.move(TILE_SIZE+5, TILE_SIZE+ 5);
+    userTank.move(startX, startY);
+    cannon.move(startX, startY);
     // update it
     userTank.scale(1.25);
     cannon.scale(1.25);
@@ -216,14 +232,21 @@ function placeTread(x , y, ang) {
     tread.update();
     treads.push(tread);
     // remove treads if too many
-    while (treads.length > 4) {
-        let over = treads.pop();
-        over.remove();
-    }
-    for (let i in treads) {
-        let tred = treads[i];
-        tred.setOpacity(1 - (i * 0.2));
-        tred.update();
+
+    if (treads.length > 8) {
+        let temp = treads.slice(Math.max(treads.length - 8 , 0));
+        for (let i in treads) {
+            if (i < treads.length - 8) {
+                let tred = treads[i];
+                tred.remove();
+            }
+        }
+        for (let i in temp) {
+            let tred = temp[i];
+            tred.setOpacity(0.20 * i);
+            tred.update();
+        }
+        treads = temp;
     }
 }
 
@@ -294,7 +317,7 @@ function userMove() {
         } else {
             uCannon.update();
             user.update();
-            placeTread(user.x-mov[0], user.y-mov[1], user.angle);
+            //placeTread(user.x-mov[0], user.y-mov[1], user.angle);
         }
     }
     if(sKey) {
@@ -307,7 +330,7 @@ function userMove() {
         } else {
             uCannon.update();
             user.update();
-            placeTread(user.x-mov[0], user.y-mov[1], user.angle);
+            //placeTread(user.x-mov[0], user.y-mov[1], user.angle);
         }
     }
     if(aKey) {
@@ -358,6 +381,7 @@ function main() {
 $(document).ready(() => {
     main();
 });
+
 
 
 // create the Scene object
