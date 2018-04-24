@@ -109,7 +109,7 @@ let startX, startY;
 let collideable = [];
 
 // load in the map
-scene.loadImages(["/sprites/wall.png", "/sprites/freeSpace.png", "/sprites/pothole.png", "/sprites/breakable.png"],
+setTimeout(scene.loadImages(["/sprites/wall.png", "/sprites/freeSpace.png", "/sprites/pothole.png", "/sprites/breakable.png"],
     function()  {
     for (let row = 0; row < 16; row++) {
         for (let col = 0; col < 24; col++) {
@@ -155,11 +155,11 @@ scene.loadImages(["/sprites/wall.png", "/sprites/freeSpace.png", "/sprites/potho
             }
         }
     }
-});
+}), 200);
 
 // load in the player
-scene.loadImages(["/sprites/tank.png","/sprites/tank_cannon.png", "/sprites/bullet.png", "/sprites/tTreads.png"],
-    function() {
+scene.loadImages(["/sprites/tank.png","/sprites/tank_cannon.png", "/sprites/bullet.png", "/sprites/tTreads.png",
+        "/sprites/explosion.png"], function() {
     let userTank = canvasbg.Sprite("/sprites/tank.png");
     let cannon = canvasbg.Sprite("/sprites/tank_cannon.png")
     // put in location
@@ -253,6 +253,16 @@ function updateBullet() {
         }
     }
 
+}
+
+function createExplosion() {
+    let cycle = scene.Cycle([[0, 45, 5],
+        [45, 45, 5],
+        [90, 45, 5]]);
+    let expl = scene.Sprite("/sprites/explosion.png");
+    cycle.addSprite(expl);
+    cycle.update();
+    cycle.next(5).update();
 }
 
 function placeTread(x , y, ang) {
@@ -350,7 +360,7 @@ function main() {
         fire();
     }
     updateBullet();
-
+    createExplosion();
     lastTime = now;
     window.requestAnimationFrame(main);
 

@@ -18,6 +18,7 @@
     <link rel="image" href="/sprites/pothole.png">
     <link rel="image" href="/sprites/breakable.png">
     <link rel="image" href="/sprites/freeSpace.png">
+    <link rel="image" href="/sprites/explosion.png">
   </head>
   <body>
 
