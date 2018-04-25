@@ -107,7 +107,7 @@ function loadMap() {
                     }
                     if (map[row][col] !== "b") {
                         // TEMP CODE
-                        if(row > 8 && col > 12 && !placedEnemy) {
+                        if(row > 8 && col > 12 && !placedEnemy && map[row][col] !== "w") {
                             placedEnemy = true;
                             next = canvasbg.Sprite("/sprites/tank_space.png");
                             enemy = canvasbg.Sprite("/sprites/imm_tank.png");
