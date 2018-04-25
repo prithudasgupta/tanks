@@ -35,7 +35,9 @@
      <script src="/js/jquery-3.1.1.js"></script>
      <script src="/js/sprite.js"></script>
      <script src="/js/collision.js"></script>
+     
      <script src="/js/game.js"></script>
+     <script src="/js/mapbuilder.js></script>
 
   </body>
   <!-- See http://html5boilerplate.com/ for a good place to start

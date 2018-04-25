@@ -79,6 +79,14 @@ public final class Main {
       return new ModelAndView(variables, "test.ftl");
     }
   }
+  
+  private static class MapBuilderHomeHandler implements TemplateViewRoute {
+	  @Override
+	    public ModelAndView handle(Request req, Response res) {
+	      Map<String, Object> variables = ImmutableMap.of("title", "Tanks: Create your own map");
+	      return new ModelAndView(variables, "mapbuilder.ftl");
+	    }
+  }
 
 
   private static FreeMarkerEngine createEngine() {
@@ -104,8 +112,8 @@ public final class Main {
 
     Spark.get("/home", new HomeHandler(), freeMarker);
     Spark.get("/test", new TestHandler(), freeMarker);
-
     Spark.post("/map", new MapHandler());
+    Spark.get("/mapbuilder", new MapBuilderHomeHandler(), freeMarker);
 
     //Spark.post("/user", new UserTankHandler());
   }

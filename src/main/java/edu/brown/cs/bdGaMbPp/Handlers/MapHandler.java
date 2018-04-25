@@ -37,7 +37,7 @@ public class MapHandler implements Route {
 //    		String data = Querier.getMapById(Integer.parseInt(id));
 //    		if (data.equals("")) {
     			map = new MapBuilder().createMap(0.1, 0);
-    			System.out.println(map.withinSight(new Pair<Integer, Integer>(1, 2), new Pair<Integer, Integer>(3, 4)));
+    			System.out.println(map.withinSight(new Pair<Integer, Integer>(5, 5), new Pair<Integer, Integer>(6, 6)));
         		representations = map.getRepresentations();
         		Querier.addMap(convertToDatabase(representations), -1);
 //    		}

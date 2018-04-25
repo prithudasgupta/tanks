@@ -43,7 +43,7 @@ public class GameHandler implements Route{
     }
     else {
     		Direction d = directions[Integer.valueOf(qm.value("direction"))];
-    		game.moveUser(d, Double.parseDouble(qm.value("height")), Double.parseDouble(qm.value("width")));
+    		//game.moveUser(d, Double.parseDouble(qm.value("height")), Double.parseDouble(qm.value("width")));
     }
     
     
