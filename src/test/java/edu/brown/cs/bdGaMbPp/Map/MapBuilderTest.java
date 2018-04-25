@@ -25,7 +25,6 @@ public class MapBuilderTest {
 		GameMap map;
 		for(int k = 0; k < 50 ; k++) {
 			map = builder.createMap(.2, .2);
-			System.out.println(map.toString());
 			Pair<Integer,Integer> initial = null;
 			for(int i = 0 ; i < map.getWidth(); i ++){
 				for(int j =0;j<map.getLength();j++){
@@ -34,6 +33,7 @@ public class MapBuilderTest {
 					}
 				}
 			}
+			assertNotNull(initial);
 			int actualFreeBlocks = this.getNumberOfFreeBlocks(map, initial);
 			int ourFreeBlocks = 0;
 			ourFreeBlocks += map.indicesByType("l").size();
@@ -47,7 +47,6 @@ public class MapBuilderTest {
 
 	public List<Pair<Integer,Integer>> getNeighbors(Pair<Integer,Integer> curr, GameMap map){
 		List<Pair<Integer,Integer>> output = new ArrayList<Pair<Integer,Integer>>();
-		//System.out.println("here");
 		int row = curr.getFirst();
 		int col = curr.getSecond();
 		for(int rowdiff = -1; rowdiff <=1; rowdiff+=2) {
@@ -55,19 +54,14 @@ public class MapBuilderTest {
 			if(row + rowdiff >=0 && row + rowdiff < map.getWidth() && (representation.equals("b") || representation.equals("l"))){
 				Pair<Integer,Integer> neighbor = new Pair<Integer,Integer>(row + rowdiff,col);
 				output.add(neighbor);
-			}//else {
-				//System.out.println("test 1 " + representation);
-			//}
+			}
 		}
 		for(int coldiff = -1; coldiff <=1; coldiff+=2) {
 			String representation = map.get(row,col + coldiff).toString();
 			if(col + coldiff >= 0 && col + coldiff < map.getLength() && (representation.equals("b") || representation.equals("l"))) {
 				Pair<Integer,Integer> neighbor = new Pair<Integer,Integer>(row,col + coldiff);
 				output.add(neighbor);
-			}//else {
-				//System.out.println("test 2 " + representation);
-
-			//}
+			}
 		}
 		return output;
 
