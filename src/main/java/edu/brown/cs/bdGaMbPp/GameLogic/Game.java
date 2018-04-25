@@ -28,6 +28,7 @@ public class Game {
     return user;
   }
   
+  /**
   public void moveUser(Direction dirr, double height, double width) {
 	  Coordinate updatedCoord = user.potenitalMove(dirr);
 	  List<Coordinate> corners = user.getCorners(height, width, updatedCoord);
@@ -40,6 +41,7 @@ public class Game {
 		  }
 	  }
   }
+  */
   
   public List<List<String>> getRepresentations(){
     return map.getRepresentations();

@@ -44,13 +44,10 @@ let enemy;
 let one,two,three;
 
 // set up canvas
-canvas = $('#canvas')[0];
-canvas.height = 720;
-canvas.width = 1080;
-ctx = canvas.getContext("2d");
+
 
 // create the Scene object and create the map
-let scene = sjs.Scene({w:canvas.width, h:canvas.height});
+let scene = sjs.Scene({w:1080, h:720});
 let canvasbg = scene.Layer('background', {useCanvas:false, autoClear:true});
 
 
@@ -120,7 +117,7 @@ function loadMap() {
                     }
                     if (map[row][col] !== "b") {
                         // TEMP CODE
-                        if(row > 8 && col > 12 && !placedEnemy && map[row][col] !== "w") {
+                        if(row > 8 && col > 12 && !placedEnemy && map[row][col] !== "u") {
                             placedEnemy = true;
                             next = canvasbg.Sprite("/sprites/tank_space.png");
                             enemy = canvasbg.Sprite("/sprites/imm_tank.png");
