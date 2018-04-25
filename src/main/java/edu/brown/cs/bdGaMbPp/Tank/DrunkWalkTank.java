@@ -5,16 +5,19 @@ import java.util.List;
 import edu.brown.cs.bdGaMbPp.Collect.Angle;
 import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
 
-public class StationaryEnemyTank implements Tank{
+public class DrunkWalkTank implements Tank{
 
 	private Coordinate location;
 	private Angle angleForward;
 	private Angle launcherAngle;
 	private boolean isAlive;
+	private Direction [] directions = Direction.values();
 	
-	private static final double ROTATE_SPEED = 1;
 	
-	public StationaryEnemyTank(Coordinate startCoord, double startDegrees) {
+	private static final double MOVE_SPEED = .01;
+	private static final double ROTATE_SPEED = .01;
+	
+	public DrunkWalkTank(Coordinate startCoord, double startDegrees) {
 		location = startCoord;
 		angleForward = new Angle(startDegrees, ROTATE_SPEED);
 		launcherAngle = new Angle(startDegrees, ROTATE_SPEED);
@@ -24,26 +27,41 @@ public class StationaryEnemyTank implements Tank{
 
 	@Override
 	public void move(Direction d) {
-		//cannot move
+		
+		if (d == Direction.LEFT) {
+			angleForward.rotateClockwise();
+		}
+		
+		else if(d == Direction.RIGHT) {
+			angleForward.rotateClockwise();
+		}
+		else if(d == Direction.FORWARD) {
+			location.forwardByAngle(angleForward, MOVE_SPEED);
+		}
+		else if(d == Direction.BACKWARD) {
+			location.backwardByAngle(angleForward, MOVE_SPEED);
+		}
 	}
 	
 	@Override
 	public void move() {
-		//cannot move	
+		Direction curr = directions[(int)(Math.random() * directions.length)];
+		move(curr);
+		
 	}
-	
-	
+
 	public void rotateLauncher() {
 		
-		int rand = (int)(Math.random() * 2);
+		Direction curr = directions[(int)(Math.random() * directions.length)];
 		
-		if (rand == 0) {
+		if (curr == Direction.LEFT) {
+			launcherAngle.rotateClockwise();
+		}
+		
+		else if(curr == Direction.RIGHT) {
 			launcherAngle.rotateCounterClockwise();
 		}
 		
-		else if(rand == 1) {
-			launcherAngle.rotateClockwise();
-		}
 	}
 
 	@Override
@@ -69,14 +87,13 @@ public class StationaryEnemyTank implements Tank{
 		return launcherAngle;
 	}
 
-
 	public Coordinate potenitalMove(Direction d) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-public List<Coordinate> getCorners(double height, double width, Coordinate newCenter) {
+	public List<Coordinate> getCorners(double height, double width, Coordinate newCenter) {
 	// TODO Auto-generated method stub
 	return null;
-}
+	}
 }

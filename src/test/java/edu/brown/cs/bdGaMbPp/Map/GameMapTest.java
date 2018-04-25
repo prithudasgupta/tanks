@@ -9,11 +9,8 @@ import org.junit.Test;
 
 public class GameMapTest {
 	
-<<<<<<< HEAD
-	//@Test
-=======
+
 	
->>>>>>> 6bd5ea35c19185b7502d07b4fd43d6f8382be675
 	public void construction() {
 	
 	List<List<Location>> total = new ArrayList<List<Location>>();	
