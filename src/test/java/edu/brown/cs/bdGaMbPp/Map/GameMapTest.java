@@ -9,7 +9,7 @@ import org.junit.Test;
 
 public class GameMapTest {
 	
-	@Test
+	//@Test
 	public void construction() {
 	
 	List<List<Location>> total = new ArrayList<List<Location>>();	
