@@ -1,3 +1,11 @@
+// GOKUL TODO:
+// make enemy class
+// make alive, variable, stage variable
+//
+
+
+
+
 // TODO:
 // Enemy tanks
 // Load in screen and process to get to the first campaign levels
@@ -23,6 +31,15 @@ let USER_ROT = 0.02;
 let lastFire = Date.now();
 let gameTime = false;
 let isGameOver;
+let explosions = [];
+
+class Explosion {
+    constructor(sprite) {
+        this.sprite = sprite;
+        this.stage = 1;
+        this.count = 0;
+    }
+}
 
 // TEMP variables for testing
 let placedEnemy = false;
@@ -140,7 +157,7 @@ function loadMap() {
     // load in the player
     scene.loadImages(["/sprites/one.png", "/sprites/two.png", "/sprites/three.png", "/sprites/tank.png",
         "/sprites/tank_cannon.png", "/sprites/bullet.png", "/sprites/tTreads.png",
-        "/sprites/explosion.png"], function() {
+        "/sprites/explo2.png", "/sprites/explo1.png", "/sprites/explo3.png"], function() {
         let userTank = canvasbg.Sprite("/sprites/tank.png");
         let cannon = canvasbg.Sprite("/sprites/tank_cannon.png")
         // put in location
@@ -158,9 +175,9 @@ function loadMap() {
         ready = true;
 
         // now loading screen
-        one = canvasbg.Sprite("/sprites/one.png");
+        three = canvasbg.Sprite("/sprites/one.png");
         two = canvasbg.Sprite("/sprites/two.png");
-        three = canvasbg.Sprite("/sprites/three.png");
+        one = canvasbg.Sprite("/sprites/three.png");
 
         window.requestAnimationFrame(oneM);
 
@@ -260,27 +277,48 @@ function fire(sprite) {
 
 
 function updateBullet() {
+    // if game map is loaded
     if (ready) {
+        // go through all bullets and check for collisions
         for(let b in bullets) {
+            // retrieve bullet from array
             let bullet = bullets[b];
+            // direction the bullet is moving
             let cord = bullet.movDir;
             bullet.sprite.move(cord[0],cord[1]);
+            // if the bullet collides with a wall, remove it
             if (bullet.sprite.collidesWithArray(walls)) {
                 bullet.sprite.remove();
                 bullets.splice(b, 1);
-            } else {
+            }
+            // otherwise check for collision with other entities (tanks, breakable walls)
+            else {
+                // may not collide with anything
                 let collided = false;
                 for (let i in collideable) {
+                    // for everything on map that needs handling if bullet hits it
                     if (bullet.sprite.collidesWith(collideable[i])) {
+                        // if collides with enemy
                         if (collideable[i] === enemy) {
                             placedEnemy = false;
                         }
-                        collideable[i].remove();
-                        collideable.splice(i, 1);
+                        // find it in non-traversable and remove, so player can drive over dead body
                         let ind = nonTrav.indexOf(collideable[i]);
                         if (ind >= 0) {
                             nonTrav.splice(ind, 1);
                         }
+                        // remove from collideable
+                        // GOKUL CHANGE
+                        // we dont want to remove bullet, we want to change the sprite... and set up some type of
+                        // timeline to change from different parts of the explosion
+                        let explosion = new Explosion(collideable[i]);
+                        explosion.sprite.loadImg("/sprites/explo1.png");
+                        explosion.sprite.update();
+                        explosions.push(explosion);
+                        //collideable[i].remove();
+                        collideable.splice(i, 1);
+                        // ABOVE
+
                         bullet.sprite.remove();
                         bullets.splice(b,1);
                         collided = true;
@@ -434,6 +472,26 @@ function userMove() {
     }
 }
 
+function updateExplosions() {
+    for(let i in explosions) {
+        let explo = explosions[i];
+        explo.count += 1;
+        if (explo.count > 5 && explo.count <= 10) {
+            explo.stage = 2;
+            explo.sprite.loadImg("/sprites/explo2.png");
+            explo.sprite.update();
+        } else if (explo.count > 15 && explo.count <= 20) {
+            explo.stage = 3;
+            explo.sprite.loadImg("/sprites/explo3.png");
+            explo.sprite.update();
+        } else if (explo.count > 30) {
+            explo.sprite.remove();
+            explosions.splice(i, 1);
+        }
+    }
+}
+
+
 let firstIteration = true;
 
 function main() {
@@ -441,6 +499,9 @@ function main() {
 
     } else {
         if (firstIteration) {
+            let now1 = Date.now();
+            while (Date.now() - now1 < 1000) {
+            }
             three.remove();
             firstIteration = false;
         }
@@ -459,9 +520,12 @@ function main() {
             fire(user);
         }
         updateBullet();
+        // check to see if the enemy is alive
         if (placedEnemy) {
             enemyLogic();
         }
+
+        updateExplosions();
 
         lastTime = now;
         window.requestAnimationFrame(main);
