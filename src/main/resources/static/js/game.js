@@ -41,6 +41,8 @@ class Explosion {
     }
 }
 
+
+
 // TEMP variables for testing
 let placedEnemy = false;
 let enemy;
@@ -235,6 +237,7 @@ class Bullet {
     constructor(sprite) {
         this.sprite = sprite;
         this.bounces = 0;
+        this.type = 0;
     }
 }
 
@@ -254,7 +257,6 @@ function fire(sprite) {
 
 
         if (user === sprite) {
-            console.log("user firing");
             b.rotate(uCannon.angle);
         } else {
             b.rotate(sprite.angle);
@@ -266,12 +268,33 @@ function fire(sprite) {
         let bullet = new Bullet(b);
         if (user === sprite) {
             bullet.movDir = forwardByAngle(uCannon.angle, BULLET_SPEED);
+            bullet.type = 1;
         } else {
             bullet.movDir = forwardByAngle(sprite.angle, BULLET_SPEED);
         }
         bullets.push(bullet);
         sprite.lastFire = Date.now();
     }
+}
+
+function findCollisionDirection(x1, y1, x2, y2){
+	let left = x2;
+	let bottom = y2;
+	let right = x2 + TILE_SIZE;
+	let top = y2 + TILE_SIZE;
+	
+	left = Math.abs(left - x1);
+	bottom = Math.abs(bottom - y1);
+	right = Math.abs(right - x1);
+	top = Math.abs(top - y1);
+	
+	let min = Math.min(left, bottom, right, top);
+	
+	if(min == bottom || min == top){
+		return 0;
+	}else{
+		return 1;
+	}
 }
 
 
@@ -283,13 +306,37 @@ function updateBullet() {
         for(let b in bullets) {
             // retrieve bullet from array
             let bullet = bullets[b];
+            
+            // get previous (non collided cords)
+            let prevX = bullet.sprite.x;
+            let prevY = bullet.sprite.y;
+            
             // direction the bullet is moving
             let cord = bullet.movDir;
             bullet.sprite.move(cord[0],cord[1]);
             // if the bullet collides with a wall, remove it
             if (bullet.sprite.collidesWithArray(walls)) {
-                bullet.sprite.remove();
-                bullets.splice(b, 1);
+                
+            	let wall = bullet.sprite.collidesWithArray(walls);
+            		
+            		console.log(bullet.bounces);
+                if(bullet.type == 1 && bullet.bounces < 3){
+                		
+                		let direction = findCollisionDirection(bullet.sprite.x, bullet.sprite.y, wall.x, wall.y);
+                		bullet.bounces++;
+                		
+                		if(direction == 0){
+                			bullet.movDir[1] = -bullet.movDir[1];
+                		}else{
+                			bullet.movDir[0] = -bullet.movDir[0];
+                		}
+
+                }else{
+                		
+                		bullet.sprite.remove();
+                    bullets.splice(b, 1);
+                }
+                
             }
             // otherwise check for collision with other entities (tanks, breakable walls)
             else {
