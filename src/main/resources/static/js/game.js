@@ -393,6 +393,8 @@ function placeTread(x , y, ang) {
     tread.rotate(ang);
     // update it
     tread.update();
+    console.log(tread);
+    console.log(user);
     treads.push(tread);
     // remove treads if too many
 
@@ -425,7 +427,7 @@ function userMove() {
         } else {
             uCannon.update();
             user.update();
-            //placeTread(user.x-mov[0], user.y-mov[1], user.angle);
+            placeTread(user.x-mov[0], user.y-mov[1], user.angle);
         }
     }
     if (sKey) {
@@ -438,7 +440,7 @@ function userMove() {
         } else {
             uCannon.update();
             user.update();
-            //placeTread(user.x-mov[0], user.y-mov[1], user.angle);
+            placeTread(user.x-mov[0], user.y-mov[1], user.angle);
         }
     }
     if (aKey) {
