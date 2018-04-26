@@ -102,7 +102,6 @@ public class UserTank implements Tank{
 	}
 
 
-	@Override
 	public Coordinate potenitalMove(Direction d) {
 		
 		double x = location.getCoordinate(0);
@@ -120,7 +119,6 @@ public class UserTank implements Tank{
 	}
 
 
-  @Override
   public List<Coordinate> getCorners(double height, double width, Coordinate newCenter) {
     
     List<Coordinate> corners = new ArrayList<Coordinate>();

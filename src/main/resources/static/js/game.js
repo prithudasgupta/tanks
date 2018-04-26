@@ -3,16 +3,12 @@
 // make alive, variable, stage variable
 //
 
-
-
-
 // TODO:
 // Enemy tanks
 // Load in screen and process to get to the first campaign levels
 // a system to load each game individually
 // A start screen for the game
     // a way to pause and end the game.
-
 
 // let canvas;
 let TILE_SIZE = 45;
@@ -50,13 +46,10 @@ let enemy;
 let one,two,three;
 
 // set up canvas
-canvas = $('#canvas')[0];
-canvas.height = 720;
-canvas.width = 1080;
-ctx = canvas.getContext("2d");
+
 
 // create the Scene object and create the map
-let scene = sjs.Scene({w:canvas.width, h:canvas.height});
+let scene = sjs.Scene({w:1080, h:720});
 let canvasbg = scene.Layer('background', {useCanvas:false, autoClear:true});
 
 
@@ -447,6 +440,8 @@ function placeTread(x , y, ang) {
     tread.rotate(ang);
     // update it
     tread.update();
+    console.log(tread);
+    console.log(user);
     treads.push(tread);
     // remove treads if too many
 
@@ -479,7 +474,7 @@ function userMove() {
         } else {
             uCannon.update();
             user.update();
-            //placeTread(user.x-mov[0], user.y-mov[1], user.angle);
+            placeTread(user.x-mov[0], user.y-mov[1], user.angle);
         }
     }
     if (sKey) {
@@ -492,7 +487,7 @@ function userMove() {
         } else {
             uCannon.update();
             user.update();
-            //placeTread(user.x-mov[0], user.y-mov[1], user.angle);
+            placeTread(user.x-mov[0], user.y-mov[1], user.angle);
         }
     }
     if (aKey) {

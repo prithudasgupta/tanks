@@ -18,10 +18,7 @@ public interface Tank {
 	Angle getAngleForward();
 	
 	Angle getLauncherAngle();
-	
-	Coordinate potenitalMove(Direction d);
-	
-	List<Coordinate> getCorners(double height, double width, Coordinate newCenter);
+
 }
 
 

@@ -2,6 +2,7 @@ package edu.brown.cs.bdGaMbPp.Handlers;
 
 import com.google.gson.Gson;
 
+import edu.brown.cs.bdGaMbPp.Collect.Pair;
 import edu.brown.cs.bdGaMbPp.Database.Querier;
 import edu.brown.cs.bdGaMbPp.GameLogic.Game;
 import edu.brown.cs.bdGaMbPp.Map.GameMap;
@@ -36,6 +37,7 @@ public class MapHandler implements Route {
 //    		String data = Querier.getMapById(Integer.parseInt(id));
 //    		if (data.equals("")) {
     			map = new MapBuilder().createMap(0.1, 0);
+    			System.out.println(map.withinSight(new Pair<Integer, Integer>(5, 5), new Pair<Integer, Integer>(6, 6)));
         		representations = map.getRepresentations();
         		Querier.addMap(convertToDatabase(representations), -1);
 //    		}

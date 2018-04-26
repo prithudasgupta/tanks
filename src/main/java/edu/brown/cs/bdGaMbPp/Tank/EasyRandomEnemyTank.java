@@ -88,13 +88,13 @@ public class EasyRandomEnemyTank implements Tank{
 	}
 
 
-	@Override
+	
 	public Coordinate potenitalMove(Direction d) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-@Override
+
 public List<Coordinate> getCorners(double height, double width, Coordinate newCenter) {
 	// TODO Auto-generated method stub
 	return null;
