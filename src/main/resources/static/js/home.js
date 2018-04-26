@@ -214,10 +214,10 @@ function main() {
 
         userMove();
         // (Date.now() - lastFire) > 800
-        if (space) {
-            fire(user);
-        }
-        updateBullet();
+        // if (space) {
+        //     fire(user);
+        // }
+        // updateBullet();
         // // check to see if the enemy is alive
         // if (placedEnemy) {
         //     enemyLogic();

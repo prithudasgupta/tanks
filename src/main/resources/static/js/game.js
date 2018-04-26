@@ -311,7 +311,9 @@ function updateBullet() {
             if (bullet.sprite.collidesWithArray(walls)) {
                 
             	let wall = bullet.sprite.collidesWithArray(walls);
-            		
+            		console.log("x range is " + wall.x + ", " + (wall.x+45));
+            		console.log("y range is " + wall.y + ", " + (wall.y+45));
+            		console.log("bullet " + bullet.sprite.x + ", " + bullet.sprite.y);
             		console.log(bullet.bounces);
                 if(bullet.type == 1 && bullet.bounces < 3){
                 		
@@ -413,7 +415,7 @@ function enemyLogic() {
         // let dy = mousY - user.y;
         // rot = Math.atan2(dy, dx);
         // uCannon.setAngle(0);
-        if (user !== undefined && enemyDetector(enemy.x, enemy.y) <= 200) {
+        if (user !== undefined && withinSight(enemy.x, enemy.y)) {
             // let dx = user.x - enemy.x;
             // let dy = user.y - enemy.y;
             let dx = enemy.x - user.x;
@@ -440,8 +442,8 @@ function placeTread(x , y, ang) {
     tread.rotate(ang);
     // update it
     tread.update();
-    console.log(tread);
-    console.log(user);
+    //console.log(tread);
+    //console.log(user);
     treads.push(tread);
     // remove treads if too many
 
@@ -632,6 +634,37 @@ function enemyDetector(x, y) {
     // get row and col
     let dist = Math.sqrt((user.x - x)*(user.x - x) + (user.y - y)*(user.y - y));
     return dist;
+}
+
+function withinSight(cpuX, cpuY){
+	const deltaY = user.y - cpuY;
+	const deltaX = user.x - cpuX;
+	const distance = enemyDetector(cpuX, cpuY);
+	const epsilon = 5;
+	
+	const userXTile = Math.floor(parseInt(user.x) / TILE_SIZE);
+	const userYTile = Math.floor(parseInt(user.y) / TILE_SIZE);
+	
+	let currX = cpuX;
+	let currY = cpuY;
+	
+	for (let i = 0; i < distance; i = i + epsilon){
+		currX += deltaX / (distance / epsilon);
+		currY += deltaY / (distance / epsilon);
+		
+		const currXTile = Math.floor(parseInt(currX) / TILE_SIZE);
+		const currYTile = Math.floor(parseInt(currY) / TILE_SIZE);
+		const currTile = map[currYTile][currXTile];
+		
+		if (userXTile === currXTile && userYTile === currYTile){
+			return true;
+		}
+		else if(currTile == "u"){
+			return false;
+		}
+	}
+	console.log("finished loop");
+	return false;
 }
 
 // function startScreen() {

@@ -201,29 +201,28 @@ public class GameMap {
 	}
 	
 	public boolean withinSight(Pair<Integer, Integer> cpu, Pair<Integer, Integer> user) {
-		double deltaY = (user.getSecond() - cpu.getSecond()); 
-		double deltaX = (user.getFirst() - cpu.getFirst());
-		double distance = GameMap.getDistance(cpu, user);
-		
-		double currX = cpu.getFirst();
-		double currY = cpu.getSecond();
-		for (double i = 0; i < distance; i+=.25) {
-			currX += (i * deltaX);
-			currY += (i * deltaY);
-			
-			Pair<Integer, Integer> currIndex = new Pair<Integer, Integer>((int) currX, (int) currY);
-			String representation = this.get((int) currX, (int) currY).getRepresentation();
-			
-			if (representation.equals("u")) {
-				return false;
-			}
-			else if (currIndex.equals(user)) {
-				return true;
-			}
-		}		
-		
-		return false;
-		
+		double deltaY = (user.getSecond() - cpu.getSecond());
+        double deltaX = (user.getFirst() - cpu.getFirst());
+        double distance = GameMap.getDistance(cpu, user);
+       
+        double currX = cpu.getFirst();
+        double currY = cpu.getSecond();
+        
+        for (double i = 0; i < distance; i+=.25) {
+                      currX += (deltaX/(distance/.25));
+                      currY += (deltaY/(distance/.25));
+                      
+                      Pair<Integer, Integer> currIndex = new Pair<Integer, Integer>((int) currX, (int) currY);
+                      String representation = this.get((int) currX, (int) currY).getRepresentation();
+                      if (currIndex.equals(user)) {
+                            return true;
+                      }
+                      else if (representation.equals("u")) {
+                            return false;
+                      }
+                     
+        }                         
+        return false;
 	}
 
 

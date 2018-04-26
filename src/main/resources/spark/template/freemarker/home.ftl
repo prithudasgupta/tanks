@@ -89,6 +89,12 @@ a:hover{
 color: red;
 }
 
+#sjs0 {
+    position: absolute;
+    top: 25%;
+    left: 5%;
+}
+
 </style>
 
 </#assign>
