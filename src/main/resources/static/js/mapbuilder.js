@@ -92,9 +92,9 @@ function loadMap() {
                     wall = next;
                     cur = wall;
                     map[row][col] = new Tile(next, "t");
-                    sel = game.Sprite("/sprites/select.png");
-                    sel.move((col - 1) * TILE_SIZE, row * TILE_SIZE);
-                    sel.update();
+                    map[row][col - 1 ].sprite.loadImg("/sprites/select.png");
+                    map[row][col - 1 ].sprite.update();
+                    sel = map[row][col - 1 ].sprite;
                 } else if (row === 4 && col === 26) {
                     next = game.Sprite("/sprites/pothole.png");
                     pot = next;
@@ -153,12 +153,11 @@ function updateMouse() {
                 if (down){
                 		console.log(curRow, curCol);
                 		if ((map[curRow][curCol]).perWall === false) {
-	                    if (map[curRow][curCol].type !== cur.sel.type) {
-	                        map[curRow][curCol].type = cur.sel.type;
-	                        map[curRow][curCol].sprite.loadImg(cur.sel.string);
-	                        map[curRow][curCol].sprite.update();
-	                    }
-
+                            if ((map[curRow][curCol]).type !== cur.sel.type) {
+                                map[curRow][curCol].type = cur.sel.type;
+                                map[curRow][curCol].sprite.loadImg(cur.sel.string);
+                                map[curRow][curCol].sprite.update();
+                            }
                 		}
                 }
                 offScreen = false;
@@ -170,10 +169,12 @@ function updateMouse() {
 		}).mouseup(function() {
 		    down = false;  
 		});
+
         document.addEventListener("mousedown", function(e) {
         // console.log(curRow, curCol);
         	
         });
+
         document.addEventListener("click", function(e) {
             if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080) {
                 if ((map[curRow][curCol]).perWall === false) {
@@ -182,37 +183,50 @@ function updateMouse() {
                         map[curRow][curCol].sprite.loadImg(cur.sel.string);
                         map[curRow][curCol].sprite.update();
                     }
-
                 }
             }
             if (wall.isPointIn(e.clientX, e.clientY)) {
                 if (cur !== wall) {
-                    sel.move((26 - 1) * TILE_SIZE, 2 * TILE_SIZE);
+                    sel.loadImg("/sprites/menu.png");
                     sel.update();
+                    map[2][25].sprite.loadImg("/sprites/select.png");
+                    map[2][25].sprite.update();
+                    sel = map[2][25].sprite;
                     cur = wall;
                     cur.sel = new Selected("u");
                 }
             }
             if (pot.isPointIn(e.clientX, e.clientY)) {
                 if (pot !== wall) {
-                    sel.move((26 - 1) * TILE_SIZE, 4 * TILE_SIZE);
+                    sel.loadImg("/sprites/menu.png");
                     sel.update();
+                    map[4][25].sprite.loadImg("/sprites/select.png");
+                    map[4][25].sprite.update();
+                    sel = map[4][25].sprite;
                     cur = pot;
+                    console.log(sel);
+                    console.log(cur);
                     cur.sel = new Selected("p");
                 }
             }
             if (brek.isPointIn(e.clientX, e.clientY)) {
                 if (brek !== wall) {
-                    sel.move((26 - 1) * TILE_SIZE, 6 * TILE_SIZE);
+                    sel.loadImg("/sprites/menu.png");
                     sel.update();
+                    map[6][25].sprite.loadImg("/sprites/select.png");
+                    map[6][25].sprite.update();
+                    sel = map[6][25].sprite;
                     cur = brek;
                     cur.sel = new Selected("b");
                 }
             }
             if (land.isPointIn(e.clientX, e.clientY)){
             		if (land !== wall) {
-                    sel.move((26 - 1) * TILE_SIZE, 8 * TILE_SIZE);
+                    sel.loadImg("/sprites/menu.png");
                     sel.update();
+                    map[8][25].sprite.loadImg("/sprites/select.png");
+                    map[8][25].sprite.update();
+                    sel = map[8][25].sprite;
                     cur = land;
                     cur.sel = new Selected("l");
                 }

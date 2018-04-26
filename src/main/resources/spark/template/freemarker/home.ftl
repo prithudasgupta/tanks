@@ -7,7 +7,7 @@
 <br />
 <br />
 
-<img id = "tank" src = "images/homepagetank.png" style="width:30%;height:30%; margin-left: 10%;" ></img>
+<#--<img id = "tank" src = "images/homepagetank.png" style="width:30%;height:30%; margin-left: 10%;" ></img>-->
 
 <div class="menuoption" onmouseover="this.style.color='red';" onmouseout="this.style.color='blacḱ';" style="position: absolute; width:25%;height:25%; right:30%;bottom: 55%;">
 <img id = "img1" src = "images/stickynote.png" style="width:90%;height:90%;"></img>
@@ -93,3 +93,4 @@ color: red;
 
 </#assign>
 <#include "main.ftl">
+<script src="/js/home.js"></script>
