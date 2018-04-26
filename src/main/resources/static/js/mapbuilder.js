@@ -3,7 +3,7 @@ let BOARD_WIDTH = 24;
 let BOARD_HEIGHT = 16;
 let sel;
 
-let wall, pot, brek, cur;
+let wall, pot, brek, land, cur;
 
 // set variables for mouse display
 let curRow = 0;
@@ -103,7 +103,13 @@ function loadMap() {
                     next = game.Sprite("/sprites/breakable.png");
                     brek = next;
                     map[row][col] = new Tile(next, "t");
-                } else {
+                } else if (row === 8 && col === 26) {
+                    next = game.Sprite("/sprites/freeSpace.png");
+                    land = next;
+                    map[row][col] = new Tile(next, "l");
+                }
+                
+                else {
                     next = game.Sprite("/sprites/menu.png");
                     map[row][col] = new Tile(next, "t");
                 }
@@ -116,8 +122,8 @@ function loadMap() {
 }
 
 function updateMouse() {
-    if(curRow !== undefined) {
-        if ((map[curRow][curCol]).perWall === false) {
+   // if(curRow !== undefined) {
+     //   if ((map[curRow][curCol]).perWall === false) {
             // if (prev === undefined) {
             //     prev = map[curRow][curCol];
             //     map[curRow][curCol].sprite.loadImg("/sprites/selected.png");
@@ -133,19 +139,40 @@ function updateMouse() {
             //         prev = map[curRow][curCol];
             //     }
             // }
-        }
+      //  }
 
-    }
+    //}
 }
-    $(document).ready(() => {
 
+    $(document).ready(() => {
+		let down = false;
         document.addEventListener("mousemove", function(e) {
             if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080) {
                 curRow = Math.floor(e.clientY/45);
                 curCol = Math.floor(e.clientX/45);
+                if (down){
+                		console.log(curRow, curCol);
+                		if ((map[curRow][curCol]).perWall === false) {
+	                    if (map[curRow][curCol].type !== cur.sel.type) {
+	                        map[curRow][curCol].type = cur.sel.type;
+	                        map[curRow][curCol].sprite.loadImg(cur.sel.string);
+	                        map[curRow][curCol].sprite.update();
+	                    }
+
+                		}
+                }
                 offScreen = false;
             }
 
+        });
+        $(document).mousedown(function() {
+		    down = true;
+		}).mouseup(function() {
+		    down = false;  
+		});
+        document.addEventListener("mousedown", function(e) {
+        // console.log(curRow, curCol);
+        	
         });
         document.addEventListener("click", function(e) {
             if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080) {
@@ -182,8 +209,14 @@ function updateMouse() {
                     cur.sel = new Selected("b");
                 }
             }
-
-
+            if (land.isPointIn(e.clientX, e.clientY)){
+            		if (land !== wall) {
+                    sel.move((26 - 1) * TILE_SIZE, 8 * TILE_SIZE);
+                    sel.update();
+                    cur = land;
+                    cur.sel = new Selected("l");
+                }
+            }
         });
         loadMap();
 
