@@ -147,10 +147,10 @@ function updateMouse() {
     $(document).ready(() => {
 		let down = false;
         document.addEventListener("mousemove", function(e) {
-            if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080) {
-                curRow = Math.floor(e.clientY/45);
-                curCol = Math.floor(e.clientX/45);
-                if (down){
+            if (down) {
+                if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080){
+                		curRow = Math.floor(e.clientY/45);
+                		curCol = Math.floor(e.clientX/45);
                 		console.log(curRow, curCol);
                 		if ((map[curRow][curCol]).perWall === false) {
 	                    if (map[curRow][curCol].type !== cur.sel.type) {
@@ -165,17 +165,16 @@ function updateMouse() {
             }
 
         });
+        
         $(document).mousedown(function() {
 		    down = true;
 		}).mouseup(function() {
 		    down = false;  
 		});
-        document.addEventListener("mousedown", function(e) {
-        // console.log(curRow, curCol);
-        	
-        });
+        
         document.addEventListener("click", function(e) {
             if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080) {
+            
                 if ((map[curRow][curCol]).perWall === false) {
                     if (map[curRow][curCol].type !== cur.sel.type) {
                         map[curRow][curCol].type = cur.sel.type;
@@ -219,7 +218,7 @@ function updateMouse() {
             }
         });
         loadMap();
-
+        
         main();
             // getMap();
             // render();
