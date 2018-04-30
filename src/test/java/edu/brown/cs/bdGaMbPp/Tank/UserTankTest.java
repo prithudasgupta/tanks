@@ -11,7 +11,7 @@ public class UserTankTest {
 	
 	public void construction() {
 		
-		Tank user = new UserTank(new Coordinate(3, 4), 1, 1);
+		Tank user = new UserTank(new Coordinate(3, 4));
 		assertEquals(user.getCoord(), new Coordinate(3, 4));
 		assertEquals((int)user.getAngleForward().getDegrees(), 90);
 		assertEquals((int)user.getLauncherAngle().getDegrees(), 90);	
@@ -19,7 +19,7 @@ public class UserTankTest {
 	
 	 
 	public void movementTest() {
-		Tank user = new UserTank(new Coordinate(0, 0), 1, 1);
+		Tank user = new UserTank(new Coordinate(0, 0));
 		user.move(Direction.FORWARD);
 		assertEquals(user.getCoord(), new Coordinate(0, 1));
 		user.move(Direction.RIGHT);
@@ -32,12 +32,12 @@ public class UserTankTest {
 	
 	
 	public void complexMovement() {
-		Tank user = new UserTank(new Coordinate(0, 0), 1, 1);
+		Tank user = new UserTank(new Coordinate(0, 0));
 	
 		user.move(Direction.FORWARD);
 		assertEquals(user.getCoord(), new Coordinate(.70710678118, .70710678118));
 		
-		user = new UserTank(new Coordinate(0, 0 ), 1, 1);
+		user = new UserTank(new Coordinate(0, 0 ));
 		for (int i = 0; i < 5; i++) {
 			user.move(Direction.FORWARD);
 		}
@@ -47,7 +47,7 @@ public class UserTankTest {
 	
 	@Test
 	public void launcherRotation() {
-		UserTank user = new UserTank(new Coordinate(0, 0), 1, 1);
+		UserTank user = new UserTank(new Coordinate(0, 0));
 		user.rotateLauncher(new Coordinate(0, 1));
 		
 		//need to do

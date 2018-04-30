@@ -1,11 +1,20 @@
 package edu.brown.cs.bdGaMbPp.Database;
 
 import java.sql.Connection;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
+import edu.brown.cs.bdGaMbPp.GameLogic.Game;
+import edu.brown.cs.bdGaMbPp.Map.GameMap;
+import edu.brown.cs.bdGaMbPp.Tank.Tank;
+import edu.brown.cs.bdGaMbPp.Tank.UserTank;
 
 
 public final class Querier {
@@ -47,7 +56,8 @@ public final class Querier {
 	        return num;
 	}
 	
-	public static void addMap(String representation, int user) {
+	public static void addMap(List<List<String>> representationList, int user) {
+		String representation = convertToDatabase(representationList);
 		try {
 			PreparedStatement prep = instance.conn
 			        .prepareStatement("INSERT INTO maps VALUES (?, ?, ?);");
@@ -81,5 +91,74 @@ public final class Querier {
 		}
 	        return representation;
 	}
+	
+	private static Tank getTanksById(int id){
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("SELECT * FROM tanks WHERE id = ?;");
+			prep.setString(1, Integer.toString(id));
+	        ResultSet rs = prep.executeQuery();
+	        if (rs.next()) {
+	          String type = rs.getString(2);
+	          String startRow = rs.getString(3);
+	          String startCol = rs.getString(4);
+	        }
+	        prep.close();
+	        rs.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			
+		}
+	        return null;
+	}
+	
+	public static Game getGameById(int id) {
+		String map = "";
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("SELECT * FROM game WHERE id = ?;");
+			prep.setString(1, Integer.toString(id));
+	        ResultSet rs = prep.executeQuery();
+	        List<Tank> tanks = new ArrayList<Tank>();
+	        while (rs.next()) {
+	          if (map.equals("")) {
+	        	  	map = Querier.getMapById(Integer.parseInt(rs.getString(2)));
+	          }
+	          tanks.add(Querier.getTanksById(Integer.parseInt(rs.getString(3)))); 
+	        }
+	        prep.close();
+	        rs.close();
+	        
+	        return new Game(GameMap.representationToMap(convertFromDatabase(map)), new UserTank(new Coordinate(10, 10)), tanks);
+	        
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			
+		}
+		return null;
+	}
+	
+	private static String convertToDatabase(List<List<String>> representations) {
+		  StringBuilder sb = new StringBuilder();
+		  for (int i = 0; i < representations.size(); i++) {
+			  List<String> currentRow = representations.get(i);
+			  for (int j = 0; j < currentRow.size(); j++) {
+				  sb.append(currentRow.get(j));
+			  }
+		  }
+		  return sb.toString();
+	  }
+	  
+	  private static List<List<String>> convertFromDatabase(String representations) {
+		  assert representations.length() == 384;
+		  List<List<String>> locs = new ArrayList<List<String>>();
+		  for (int r = 0; r < 16; r++) {
+		      locs.add(new ArrayList<>());
+		      for (int c = 0; c < 24; c++) {
+		        locs.get(r).add(Character.toString(representations.charAt(16 * r + c)));
+		      }
+		    }
+		  return locs;
+	  }
 
 }
