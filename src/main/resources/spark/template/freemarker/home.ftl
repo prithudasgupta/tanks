@@ -9,45 +9,34 @@
 
 <#--<img id = "tank" src = "images/homepagetank.png" style="width:30%;height:30%; margin-left: 10%;" ></img>-->
 
-<div class="menuoption" onmouseover="this.style.color='red';" onmouseout="this.style.color='blacḱ';" style="position: absolute; width:25%;height:25%; right:30%;bottom: 55%;">
-<img id = "img1" src = "images/stickynote.png" style="width:90%;height:90%;"></img>
-
-<div class="centeredOption">
-<a >Campaign</a>
-</div>
-
-</div>
-
-<div class="menuoption" style="position: absolute; width:25%;height:25%; right:5%;bottom: 55%;">
-<img id = "img2" src = "images/stickynote.png" style="width:90%;height:90%; right: 0px;bottom: 50%;" ></img>
-<div class="centeredOption">
-<a >Survival</a>
-</div>
-</div>
-
-
+<#--<img id = "img1" src = "/images/campaign.png">-->
+<#--<br />-->
+<#--<br />-->
+<img id="menuOp" src='/images/campaign.png' onmouseover="this.src='/images/campaign_hover.png';" onmouseout="this.src='/images/campaign.png';" />
 <br />
-<div class="menuoption" style="position: absolute; width:25%;height:25%; right:15%;bottom: 35%;">
-<img id = "img3" src = "images/stickynote.png" style="width:90%;height:90%;" ></img>
-<div class="centeredOption">
-<a href= "/mapbuilder">Map Builder</a>
-</div>
-</div>
-
+<img id="menuOp" src='/images/survival.png' onmouseover="this.src='/images/survival_hover.png';" onmouseout="this.src='/images/survival.png';" />
 <br />
-<div class="menuoption" style="position: absolute; width:25%;height:25%; right:30%;bottom: 15%;">
-<img id = "img4" src = "images/stickynote.png" style="width:90%;height:90%;" ></img>
-<div class="centeredOption">
-<a >Multiplayer</a>
-</div>
-</div>
+<img id="menuOp" src='/images/mapBuilder.png' onmouseover="this.src='/images/mapBuilder_hover.png';" onmouseout="this.src='/images/mapBuilder.png';" />
+<#--<img id = "img2" src = "/images/survival.png" ></img>-->
+<br />
+<br />
 
-<div class="menuoption" style="position: absolute; width:25%;height:25%; right:5%;bottom: 15%;">
-<img id = "img5" src = "images/stickynote.png" style="width:90%;height:90%;" ></img>
-<div class="centeredOption">
-<a >Leaderboards</a>
-</div>
-</div>
+
+
+
+<#--<div class="menuoption" style="position: absolute; width:25%;height:25%; right:30%;bottom: 15%;">-->
+<#--<img id = "img4" src = "images/stickynote.png" style="width:90%;height:90%;" ></img>-->
+<#--<div class="centeredOption">-->
+<#--<a >Multiplayer</a>-->
+<#--</div>-->
+<#--</div>-->
+
+<#--<div class="menuoption" style="position: absolute; width:25%;height:25%; right:5%;bottom: 15%;">-->
+<#--<img id = "img5" src = "images/stickynote.png" style="width:90%;height:90%;" ></img>-->
+<#--<div class="centeredOption">-->
+<#--<a >Leaderboards</a>-->
+<#--</div>-->
+<#--</div>-->
 
 
 <style>
@@ -89,10 +78,28 @@ a:hover{
 color: red;
 }
 
+#menuOp {
+    
+}
+
 #sjs0 {
     position: absolute;
     top: 25%;
     left: 5%;
+}
+
+#img1 {
+    background-image: url("/images/campaign.png");
+}
+
+#img1:hover {
+    background-image: url("/images/campaign_hover.png");
+}
+#img2:hover {
+    background-image: url("/images/survival_hover.png");
+}
+#img3:hover {
+    background-image: url("/images/mapBuilder_hover.png");
 }
 
 </style>
