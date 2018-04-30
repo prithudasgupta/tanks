@@ -10,6 +10,7 @@ let curRow = 0;
 let curCol = 0;
 let prev;
 let offScreen;
+const submit = $("#submitLevel");
 
 // create the Scene object and create the map
 let scene = sjs.Scene({w:1305, h:720});
@@ -108,11 +109,6 @@ function loadMap() {
                     land = next;
                     map[row][col] = new Tile(next, "l");
                 }
-                else if (row === 10 && col === 26) {
-                    next = game.Sprite("/sprites/immTank.png");
-                    land = next;
-                    map[row][col] = new Tile(next, "l");
-                }
                 
                 else {
                     next = game.Sprite("/sprites/menu.png");
@@ -131,6 +127,20 @@ function loadMap() {
 
 
 		let down = false;
+		let representation = "";
+		for (let row = 0; row < 16; row++) {
+		    for (let col = 0; col < 24; col++) {
+		        representation += map[row][col];
+		    }
+		}
+		
+		
+		submit.click(event => {
+			$.post('/mapBuilderSubmit', {"representation": representation}, responseJSON => {
+	        		
+    		});
+	
+		});
 		
         document.addEventListener("mousemove", function(e) {
             if (down) {
@@ -214,10 +224,7 @@ function loadMap() {
                     cur.sel = new Selected("l");
                 }
             }
-            if (submit.isPointIn(e.clinetX, e.clienty)){
             
-            
-            }
         });
         loadMap();
         
@@ -230,7 +237,7 @@ function loadMap() {
 
 
 function main() {
-    updateMouse();
+    
 
     window.requestAnimationFrame(main);
 

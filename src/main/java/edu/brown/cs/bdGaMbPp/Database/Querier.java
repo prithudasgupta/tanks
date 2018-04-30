@@ -58,8 +58,8 @@ public final class Querier {
 	        return num;
 	}
 	
-	public static void addMap(List<List<String>> representationList, int user) {
-		String representation = convertToDatabase(representationList);
+	public static void addMap(String representation, int user) {
+		
 		try {
 			PreparedStatement prep = instance.conn
 			        .prepareStatement("INSERT INTO maps VALUES (?, ?, ?);");
