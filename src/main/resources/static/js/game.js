@@ -32,9 +32,14 @@ let startTime;
 let currentTime = "00:00";
 let pauseTime = 0;
 let enemyObj;
+let pause = false;
+let pauseStart;
+let pauseSprite;
 
 let movingEnemyX;
 let movingEnemyY;
+
+
 
 class Explosion {
     constructor(sprite) {
@@ -54,6 +59,7 @@ class Coordinate {
 class Enemy {
     constructor(sprite) {
         this.sprite = sprite;
+        this.alive = true;
     }
 }
 
@@ -185,7 +191,8 @@ function loadMap() {
     // load in the player
     scene.loadImages(["/sprites/one.png", "/sprites/two.png", "/sprites/three.png", "/sprites/tank.png",
         "/sprites/tank_cannon.png", "/sprites/bullet.png", "/sprites/tTreads.png",
-        "/sprites/explo2.png", "/sprites/explo1.png", "/sprites/explo3.png"], function() {
+        "/sprites/explo2.png", "/sprites/explo1.png", "/sprites/explo3.png", "/sprites/pause.png",
+        "/sprites/pause_blank.png"], function() {
         let userTank = canvasbg.Sprite("/sprites/tank.png");
         let cannon = canvasbg.Sprite("/sprites/tank_cannon.png")
         // put in location
@@ -215,6 +222,11 @@ function loadMap() {
         three = canvasbg.Sprite("/sprites/one.png");
         two = canvasbg.Sprite("/sprites/two.png");
         one = canvasbg.Sprite("/sprites/three.png");
+
+        // load pause
+        pauseSprite = canvasbg.Sprite("/sprites/pause_blank.png");
+        pauseSprite.move(375, 275);
+        pauseSprite.update();
 
         window.requestAnimationFrame(oneM);
 
@@ -383,6 +395,9 @@ function updateBullet() {
                         if (collideable[i] === enemy) {
                             placedEnemy = false;
                         }
+                        if (collideable[i] == enemyObj.sprite) {
+                            enemyObj.alive = false;
+                        }
                         // find it in non-traversable and remove, so player can drive over dead body
                         let ind = nonTrav.indexOf(collideable[i]);
                         if (ind >= 0) {
@@ -490,6 +505,10 @@ function getBorderingLandTiles(xCoord, yCoord){
 		landSpots.push(new Coordinate(xTile + 1, yTile))
 	}
 	return landSpots;	
+}
+
+function checkEndGame() {
+    return (!placedEnemy && !(enemyObj.alive));
 }
 
 function movingEnemyLogic() {
@@ -656,7 +675,7 @@ let firstIteration = true;
 
 function main() {
     if (isGameOver) {
-
+        window.alert("You won!");
     } else {
         if (firstIteration) {
             let now1 = Date.now();
@@ -673,28 +692,37 @@ function main() {
         // update(timeChange);
         // // redraw all the objects
         // render();
-		
-        userMove();
-        // (Date.now() - lastFire) > 800
-        if (space) {
-            fire(user);
-        }
-        updateBullet();
-        // check to see if the enemy is alive
-        if (placedEnemy) {
-            enemyLogic();
-        }
-        
-        if (placedMovingEnemy){
-         		movingEnemyLogic();
-        }
+        //console.log(pause);
+        if (!pause) {
+            userMove();
+            // (Date.now() - lastFire) > 800
+            if (space) {
+                fire(user);
+            }
+            updateBullet();
+            // check to see if the enemy is alive
+            if (placedEnemy) {
+                enemyLogic();
+            }
 
-        updateExplosions();
+            if (placedMovingEnemy && enemyObj.alive) {
+                movingEnemyLogic();
+            }
 
-        lastTime = now;
+            updateExplosions();
+
+            lastTime = now;
+
+            currentTime = updateTime(Date.now() - startTime + pauseTime);
+            count++;
+        }
+        if(checkEndGame()) {
+            isGameOver = true;
+        }
         window.requestAnimationFrame(main);
-        currentTime = updateTime(Date.now() - startTime + pauseTime);
-        count++;
+
+
+
     }
 }
 
@@ -718,6 +746,22 @@ $(document).ready(() => {
                 break;
             case " ":
                 space = true;
+                break;
+            case "p":
+                if (pause) {
+                    pause = false;
+                    if (pauseStart !== undefined) {
+                        pauseTime += Date.now() - pauseStart;
+                        pauseStart = undefined;
+                        pauseSprite.loadImg("/sprites/pause_blank.png");
+                        pauseSprite.update();
+                    }
+                } else {
+                    pause = true;
+                    pauseStart = Date.now();
+                    pauseSprite.loadImg("/sprites/pause.png");
+                    pauseSprite.update();
+                }
                 break;
         }
     });
@@ -746,9 +790,9 @@ $(document).ready(() => {
         mousX = e.clientX;
         mousY = e.clientY;
     });
-   
 
-    // main();
+    let adWidth = (screen.width - 1080).toString();
+    document.getElementById('sideMenu').setAttribute("style","width:" + adWidth + "px");
 });
 
 
@@ -783,9 +827,9 @@ function enemyDetector(x, y) {
 }
 
 function euclidDist(x1, y1, x2, y2) {
-    console.log(x1 + ' ' + y1 + ' ' + x2 + ' ' + y2);
+    //console.log(x1 + ' ' + y1 + ' ' + x2 + ' ' + y2);
     let dist = Math.sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
-    console.log(dist);
+    //console.log(dist);
     return dist;
 }
 

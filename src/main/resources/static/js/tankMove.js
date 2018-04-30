@@ -2,12 +2,12 @@
 // let nextRow = 0;
 // let nextCol = 0;
 
-
+/**
+ * A function that moves an enemy tank to a predetermined position
+ * @param enemyObj The object of the enemy tank which contains the sprite, along with
+ * 			information that explains that destination of the tank.
+ */
 function moveBetween(enemyObj){
-
-
-
-
 	let currAngle = enemyObj.sprite.angle % 6.28;
 	let angleDiff;
 	if (Math.abs(currAngle - enemyObj.nextAngle) < 0.019){
@@ -30,5 +30,11 @@ function moveBetween(enemyObj){
 function forwardByAngle(angRads, speed) {
     let x = speed * Math.cos(angRads);
     let y = speed * Math.sin(angRads);
+    return [x,y];
+}
+
+function backwardByAngle(angRads, speed) {
+    let x = -(speed * Math.cos(angRads));
+    let y = -(speed * Math.sin(angRads));
     return [x,y];
 }
