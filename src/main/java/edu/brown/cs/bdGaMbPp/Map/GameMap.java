@@ -9,7 +9,9 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 import edu.brown.cs.bdGaMbPp.Collect.Angle;
+import edu.brown.cs.bdGaMbPp.Collect.Graph;
 import edu.brown.cs.bdGaMbPp.Collect.Pair;
+import edu.brown.cs.bdGaMbPp.Collect.StagnantGraph;
 import edu.brown.cs.bdGaMbPp.Tank.Direction;
 
 public class GameMap {
@@ -18,16 +20,20 @@ public class GameMap {
 	private final int length;
 	private final int width;
 	private int id;
+	private final Graph<Pair<Integer, Integer>, String> graph;
 
 	public GameMap(List<List<Location>> locations) {
 		tiles = locations;
 		width = locations.size();
+		
 		if (width > 0) {
 			length = locations.get(0).size();
 		}
 		else {
 			length = 0;
 		}
+		//combine two lists eventually (l and b)
+		graph = new StagnantGraph<Pair<Integer, Integer>, String>(this.indicesByType("l"));
 	}
 
 	public GameMap(GameMap oldMap) {
