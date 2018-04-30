@@ -108,6 +108,7 @@ function getMap () {
                 populateMap(row, col, mapLoc[row][col]);
             }
         }
+        setStatTankMap(enemyLoc);
         startX = (respObject.game.user.location.coordinates[0] * 45) + 5;
         startY = (respObject.game.user.location.coordinates[1] * 45) + 5;
         loadMap();
@@ -119,6 +120,15 @@ function populateMap(row, col, type) {
     map[row][col] = type;
 }
 
+function setStatTankMap(list) {
+    console.log(list);
+    for (let i in list) {
+        let row = (list[i])[1];
+        let col = (list[i])[0];
+        map[row][col] = "st";
+    }
+}
+
 let startX, startY;
 let collideable = [];
 
@@ -128,7 +138,7 @@ function loadMap() {
             "/sprites/imm_tank.png", "/sprites/tank_space.png"], function()  {
 
             let next;
-            console.log(map);
+            //console.log(map);
             for (let row = 0; row < 16; row++) {
                 for (let col = 0; col < 24; col++) {
 
@@ -140,9 +150,9 @@ function loadMap() {
                         next = canvasbg.Sprite("/sprites/freeSpace.png");
                         next.size(45, 45);
                         // put in location
-                        next.move(col * TILE_SIZE, row * TILE_SIZE);
-                        // update it
-                        next.update();
+                        // next.move(col * TILE_SIZE, row * TILE_SIZE);
+                        // // update it
+                        // next.update();
 
                         let breakable = canvasbg.Sprite("/sprites/breakable.png");
                         breakable.size(45, 45);
@@ -156,6 +166,8 @@ function loadMap() {
                     } else if (map[row][col] === "p") {
                         next = canvasbg.Sprite("/sprites/pothole.png");
                         nonTrav.push(next);
+                    } else if (map[row][col] === "st") {
+                        next = canvasbg.Sprite("/sprites/tank_space.png");
                     } else {
                         next = canvasbg.Sprite("/sprites/freeSpace.png");
                     }
@@ -232,7 +244,7 @@ function loadMap() {
         placedEnemy = true;
 
         for(let i in enemyLoc) {
-            console.log(i);
+            //console.log(i);
             let cur = enemyLoc[i];
             createStationaryTank(cur[1], cur[0]);
         }
@@ -254,11 +266,11 @@ function loadMap() {
 }
 
 function createStationaryTank(row, col) {
-    let space = canvasbg.Sprite("/sprites/tank_space.png");
+    //let space = canvasbg.Sprite("/sprites/tank_space.png");
     let tank = canvasbg.Sprite("/sprites/imm_tank.png");
-    space.move(col*TILE_SIZE, row*TILE_SIZE);
+    //space.move(col*TILE_SIZE, row*TILE_SIZE);
     tank.move(col*TILE_SIZE, row*TILE_SIZE);
-    space.update();
+    //space.update();
     tank.update();
     tank.lastFire = Date.now();
     collideable.push(tank);
