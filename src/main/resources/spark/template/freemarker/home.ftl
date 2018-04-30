@@ -13,7 +13,7 @@
 <img id = "img1" src = "images/stickynote.png" style="width:90%;height:90%;"></img>
 
 <div class="centeredOption">
-<a href= "/campaign">Campaign</a>
+<a >Campaign</a>
 </div>
 
 </div>
@@ -21,7 +21,7 @@
 <div class="menuoption" style="position: absolute; width:25%;height:25%; right:5%;bottom: 55%;">
 <img id = "img2" src = "images/stickynote.png" style="width:90%;height:90%; right: 0px;bottom: 50%;" ></img>
 <div class="centeredOption">
-<a href= "/survival">Survival</a>
+<a >Survival</a>
 </div>
 </div>
 
@@ -38,14 +38,14 @@
 <div class="menuoption" style="position: absolute; width:25%;height:25%; right:30%;bottom: 15%;">
 <img id = "img4" src = "images/stickynote.png" style="width:90%;height:90%;" ></img>
 <div class="centeredOption">
-<a href= "/multiplayer">Multiplayer</a>
+<a >Multiplayer</a>
 </div>
 </div>
 
 <div class="menuoption" style="position: absolute; width:25%;height:25%; right:5%;bottom: 15%;">
 <img id = "img5" src = "images/stickynote.png" style="width:90%;height:90%;" ></img>
 <div class="centeredOption">
-<a href= "/leaderboards">Leaderboards</a>
+<a >Leaderboards</a>
 </div>
 </div>
 
