@@ -153,6 +153,7 @@ function userMove() {
 $(document).ready(() => {
 
 
+	
     document.addEventListener('keydown', function (e) {
         switch (e.key) {
             case "a":
@@ -198,6 +199,9 @@ $(document).ready(() => {
         mousY = e.clientY;
     });
 
+    document.getElementById("sjs0").style.position = "absolute";
+    document.getElementById("sjs0").style.top = "25%";
+    document.getElementById("sjs0").style.left = "5%";
     loadMap();
 
 

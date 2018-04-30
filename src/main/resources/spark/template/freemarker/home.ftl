@@ -1,5 +1,7 @@
 <#assign content>
     
+    
+<img src = "images/friendsIcon.png" onmouseover="this.src='/images/friendsIcon_selected.png';" onmouseout="this.src='/images/friendsIcon.png';">
 <center>    
 <h1>DESKTOP TANKS</h1>
 </center>
@@ -12,11 +14,11 @@
 <#--<img id = "img1" src = "/images/campaign.png">-->
 <#--<br />-->
 <#--<br />-->
-<img id="menuOp" src='/images/campaign.png' onmouseover="this.src='/images/campaign_hover.png';" onmouseout="this.src='/images/campaign.png';" />
+<img id="menuOp" src='/images/campaign.png' onmouseover="this.src='/images/campaign_hover.png';" onmouseout="this.src='/images/campaign.png';" style="position: absolute; right: 10%; top: 25%;" />
 <br />
-<img id="menuOp" src='/images/survival.png' onmouseover="this.src='/images/survival_hover.png';" onmouseout="this.src='/images/survival.png';" />
+<img id="menuOp" src='/images/survival.png' onmouseover="this.src='/images/survival_hover.png';" onmouseout="this.src='/images/survival.png';" style="position: absolute; right: 10%; top: 40%;"/>
 <br />
-<img id="menuOp" src='/images/mapBuilder.png' onmouseover="this.src='/images/mapBuilder_hover.png';" onmouseout="this.src='/images/mapBuilder.png';" />
+<img id="menuOp" src='/images/mapBuilder.png' onmouseover="this.src='/images/mapBuilder_hover.png';" onmouseout="this.src='/images/mapBuilder.png';" style="position: absolute; right: 10%; top: 55%;" />
 <#--<img id = "img2" src = "/images/survival.png" ></img>-->
 <br />
 <br />
@@ -41,7 +43,8 @@
 
 <style>
 body {
-   background-image: url("images/homebg.jpg");
+   background-image: url("sprites/freeSpace.png");
+   background-repeat: repeat;
 }
 
 h1 {
@@ -82,11 +85,7 @@ color: red;
     
 }
 
-#sjs0 {
-    position: absolute;
-    top: 25%;
-    left: 5%;
-}
+
 
 #img1 {
     background-image: url("/images/campaign.png");
@@ -100,6 +99,12 @@ color: red;
 }
 #img3:hover {
     background-image: url("/images/mapBuilder_hover.png");
+}
+
+#sjs0 {
+    position: absolute;
+    top: 0%;
+    left: 5%;
 }
 
 </style>
