@@ -108,6 +108,11 @@ function loadMap() {
                     land = next;
                     map[row][col] = new Tile(next, "l");
                 }
+                else if (row === 10 && col === 26) {
+                    next = game.Sprite("/sprites/immTank.png");
+                    land = next;
+                    map[row][col] = new Tile(next, "l");
+                }
                 
                 else {
                     next = game.Sprite("/sprites/menu.png");
@@ -121,34 +126,12 @@ function loadMap() {
 
 }
 
-function updateMouse() {
-   // if(curRow !== undefined) {
-     //   if ((map[curRow][curCol]).perWall === false) {
-            // if (prev === undefined) {
-            //     prev = map[curRow][curCol];
-            //     map[curRow][curCol].sprite.loadImg("/sprites/selected.png");
-            //     map[curRow][curCol].sprite.update();
-            // } else {
-            //     if (prev !== map[curRow][curCol]) {
-            //         map[curRow][curCol].sprite.loadImg("/sprites/selected.png");
-            //         map[curRow][curCol].sprite.update();
-            //         if (prev.type === "t") {
-            //             prev.sprite.loadImg("/sprites/freeSpace.png");
-            //             prev.sprite.update();
-            //         }
-            //         prev = map[curRow][curCol];
-            //     }
-            // }
-      //  }
-
-    //}
-}
-
     $(document).ready(() => {
 
 
 
 		let down = false;
+		
         document.addEventListener("mousemove", function(e) {
             if (down) {
                 if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080){
@@ -230,6 +213,10 @@ function updateMouse() {
                     cur = land;
                     cur.sel = new Selected("l");
                 }
+            }
+            if (submit.isPointIn(e.clinetX, e.clienty)){
+            
+            
             }
         });
         loadMap();
