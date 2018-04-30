@@ -116,14 +116,9 @@ color: red;
 
 #level {
     position: relative;
-    padding: 0px;
-
+    padding: 18px;
 }
 
-#number {
-    position: relative;
-    padding: 20px;
-}
 
 </style>
 

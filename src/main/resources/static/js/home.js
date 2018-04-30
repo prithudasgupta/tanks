@@ -213,11 +213,10 @@ $(document).ready(() => {
 
 
     for(let i = 0; i < 20; i++){
-        if (i === 0) {
-            $('div#levels').append("<div id='number' style='width: 65px; height: 65px;'><img id='level' src='images/mapIcon.png'/> </img>" +
-                "<div class='centeredOption'> 1 </div> </div>");
+        if (i < 5) {
+            $('div#levels').append("<img id='level' src='images/mapIcons/mapIcon" + i + ".png'/> </img>");
         } else {
-            $('div#levels').append("<div id='number' style='width: 65px; height: 65px;'><img id='level' src='images/mapIcon_lock.png'/> </img></div>");
+            $('div#levels').append("<img id='level' src='images/mapIcon_lock.png'/> </img>");
         }
 
 
