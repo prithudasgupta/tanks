@@ -32,6 +32,9 @@ let startTime;
 let currentTime = "00:00";
 let pauseTime = 0;
 
+let movingEnemyX;
+let movingEnemyY;
+
 class Explosion {
     constructor(sprite) {
         this.sprite = sprite;
@@ -149,18 +152,7 @@ function loadMap() {
                             enemy.lastFire = Date.now();
                             collideable.push(enemy);
                             nonTrav.push(enemy);
-                        } else if (!placedMovingEnemy && map[row][col] !== "u" &&  row > 12 && col > 16){
-                        		placedMovingEnemy = true;
-                        		movingEnemy = canvasbg.Sprite("/sprites/imm_tank.png");
-                        		next.size(45,45);
-                            	movingEnemy.move(col*TILE_SIZE, row*TILE_SIZE);
-                            	next.move(col*TILE_SIZE, row*TILE_SIZE);
-                            next.update();
-                            movingEnemy.update();
-                            movingEnemy.lastFire = Date.now();
-                            collideable.push(movingEnemy);
-                            nonTrav.push(movingEnemy);
-                        }
+                        } 
                         else {
                             // make sure that it is to size
                             next.size(45,45);
@@ -172,6 +164,11 @@ function loadMap() {
                         if (startX === undefined && map[row][col] === "l") {
                             startX = col*TILE_SIZE + 5;
                             startY = row*TILE_SIZE + 5;
+                        }
+                        if (!placedMovingEnemy && map[row][col] !== "u" &&  row > 12 && col > 16){
+                        		placedMovingEnemy = true;
+                        		movingEnemyX = col*TILE_SIZE;
+                        		movingEnemyY = row*TILE_SIZE;
                         }
                     }
                 }
@@ -197,6 +194,13 @@ function loadMap() {
         user.lastFire = Date.now();
         uCannon = cannon;
         ready = true;
+        
+        movingEnemy = canvasbg.Sprite("/sprites/imm_tank.png");
+        	movingEnemy.move(movingEnemyX, movingEnemyY);
+        movingEnemy.update();
+       	movingEnemy.lastFire = Date.now();
+        collideable.push(movingEnemy);
+        nonTrav.push(movingEnemy);
 
         // now loading screen
         three = canvasbg.Sprite("/sprites/one.png");
@@ -459,33 +463,35 @@ function enemyLogic() {
 }
 
 function getBorderingLandTiles(xCoord, yCoord){
-	const yTile = Math.floor(xCoord / 45);
-	const xTile = Math.floor(yCoord / 45);
+	console.log(yCoord, xCoord);
+	const yTile = Math.floor(yCoord / 45);
+	const xTile = Math.floor(xCoord / 45);
 	let landSpots = [];
 	
-	if (map[xTile - 1][yTile] === "l"){
-		landSpots.push(new Coordinate(xTile - 1, yTile))
-	}
-	if (map[xTile + 1][yTile] === "l"){
-		landSpots.push(new Coordinate(xTile + 1, yTile))
-	}
-	if (map[xTile][yTile - 1] === "l"){
+	console.log(yTile, xTile);
+	if (map[yTile - 1][xTile] === "l"){
 		landSpots.push(new Coordinate(xTile, yTile - 1))
 	}
-	if (map[xTile][yTile + 1] === "l"){
-		landSpots.push(new Coordinate(xTile, yTile + 1))
+	if (map[yTile + 1][xTile] === "l"){
+		landSpots.push(new Coordinate( xTile, yTile + 1))
 	}
-	
+	if (map[yTile][xTile - 1] === "l"){
+		landSpots.push(new Coordinate( xTile - 1,yTile))
+	}
+	if (map[yTile][xTile + 1] === "l"){
+		landSpots.push(new Coordinate(xTile + 1, yTile))
+	}
 	return landSpots;	
 }
 
 function movingEnemyLogic() {
+	
 	if (ready) {
         // let dx = mousX - user.x;
         // let dy = mousY - user.y;
         // rot = Math.atan2(dy, dx);
         // uCannon.setAngle(0);
-        if (user !== undefined && withinSight(movingEnemy.x, movingEnemy.y)) {
+        if (user !== undefined && false) {
         		let dx = movingEnemy.x - user.x;
             let dy = movingEnemy.y - user.y;
             rot = Math.atan2(-dy, -dx);
@@ -498,10 +504,11 @@ function movingEnemyLogic() {
         		let landSpots = getBorderingLandTiles(movingEnemy.x, movingEnemy.y);
         		const rand = Math.floor(Math.random() * landSpots.length);
         		const nextMove = landSpots[rand];
-        		
-        		movingEnemy.move(nextMove.x * TILE_SIZE, nextMove.y * TILE_SIZE);
-        		movingEnemy.update();
-        		
+        		const yTile = Math.floor(movingEnemy.y / 45);
+			const xTile = Math.floor(movingEnemy.x / 45);
+			console.log("from " + yTile + ", " + xTile);
+			console.log("to " + nextMove.y + ", " + nextMove.x);
+        		moveBetween(nextMove.x, nextMove.y, xTile, yTile, movingEnemy);
         		}
       }
 }
@@ -631,8 +638,7 @@ function main() {
         // update(timeChange);
         // // redraw all the objects
         // render();
-
-
+		
         userMove();
         // (Date.now() - lastFire) > 800
         if (space) {
@@ -644,9 +650,9 @@ function main() {
             enemyLogic();
         }
         
-        // if (placedMovingEnemy){
-        // 		movingEnemyLogic();
-        // }
+        if (placedMovingEnemy){
+         		movingEnemyLogic();
+        }
 
         updateExplosions();
 
@@ -756,16 +762,14 @@ function withinSight(cpuX, cpuY){
 	for (let i = 0; i < distance; i = i + epsilon){
 		currX += deltaX / (distance / epsilon);
 		currY += deltaY / (distance / epsilon);
-		//console.log("hello");
-		const currXTile = Math.floor(parseInt(currX) / TILE_SIZE);
-		const currYTile = Math.floor(parseInt(currY) / TILE_SIZE);
-		//const currTile = map[currYTile][currXTile];
-		const currTile = map[currXTile][currYTile];
+		const currXTile = Math.floor(currX / TILE_SIZE);
+		const currYTile = Math.floor(currY / TILE_SIZE);
+		const currTile = map[currYTile][currXTile];
 
 		if (userXTile === currXTile && userYTile === currYTile){
 			return true;
 		}
-		else if(currTile == "u"){
+		else if(currTile === "u"){
 			return false;
 		}
 	}
