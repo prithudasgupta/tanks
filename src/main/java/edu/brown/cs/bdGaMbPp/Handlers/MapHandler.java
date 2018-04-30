@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import edu.brown.cs.bdGaMbPp.Collect.Pair;
 import edu.brown.cs.bdGaMbPp.Database.Querier;
 import edu.brown.cs.bdGaMbPp.GameLogic.Game;
+import edu.brown.cs.bdGaMbPp.GameLogic.GameInitializer;
 import edu.brown.cs.bdGaMbPp.Map.GameMap;
 import edu.brown.cs.bdGaMbPp.Map.MapBuilder;
 import edu.brown.cs.bdGaMbPp.Tank.Direction;
@@ -37,7 +38,7 @@ public class MapHandler implements Route {
 //    		String data = Querier.getMapById(Integer.parseInt(id));
 //    		if (data.equals("")) {
     			map = new MapBuilder().createMap(0.1, 0);
-    			
+    			Game aGame = GameInitializer.initializeGame(map, 5);
         		representations = map.getRepresentations();
         		
 //    		}

@@ -40,7 +40,7 @@ public final class GameInitializer {
 		//template method need to add when more tank types added
 		List<Pair<Integer, Integer>> landIndices = newMap.indicesByType("l");
 		
-		int numTanks = Math.min(difficulty, landIndices.size());
+		int numTanks = (int) Math.random() * Math.min(difficulty, landIndices.size());
 		
 		for (int i = 0; i < numTanks; i++) {
 			int randIndex = (int) Math.random() * landIndices.size();
