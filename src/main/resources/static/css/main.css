@@ -5,3 +5,7 @@
   height: 720px; /*16 rows of tiles that are 45px high*/
 }
 
+#menu {
+  position: absolute;
+  right: 0;
+}

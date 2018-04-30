@@ -30,6 +30,7 @@ let isGameOver;
 let explosions = [];
 let startTime;
 let currentTime = "00:00";
+let pauseTime = 0;
 
 class Explosion {
     constructor(sprite) {
@@ -460,7 +461,7 @@ function enemyLogic() {
 function getBorderingLandTiles(xCoord, yCoord){
 	const yTile = Math.floor(xCoord / 45);
 	const xTile = Math.floor(yCoord / 45);
-	let landSpots = []
+	let landSpots = [];
 	
 	if (map[xTile - 1][yTile] === "l"){
 		landSpots.push(new Coordinate(xTile - 1, yTile))
@@ -643,15 +644,15 @@ function main() {
             enemyLogic();
         }
         
-        if (placedMovingEnemy){
-        		movingEnemyLogic();
-        }
+        // if (placedMovingEnemy){
+        // 		movingEnemyLogic();
+        // }
 
         updateExplosions();
 
         lastTime = now;
         window.requestAnimationFrame(main);
-        updateTime(Date.now() - startTime);
+        currentTime = updateTime(Date.now() - startTime + pauseTime);
         count++;
     }
 }
@@ -726,9 +727,12 @@ function updateTime(time){
 	}
 	timeString += seconds.toString();
 	
-	//console.log(timeString);
+	// console.log(timeString);
+    if (timeString !== document.getElementById("timer").innerHTML) {
+        document.getElementById("timer").innerHTML = timeString;
+    }
 	//gets time just need to display to user
-	
+	 return timeString;
 }
 
 function enemyDetector(x, y) {
@@ -752,11 +756,12 @@ function withinSight(cpuX, cpuY){
 	for (let i = 0; i < distance; i = i + epsilon){
 		currX += deltaX / (distance / epsilon);
 		currY += deltaY / (distance / epsilon);
-		
+		//console.log("hello");
 		const currXTile = Math.floor(parseInt(currX) / TILE_SIZE);
 		const currYTile = Math.floor(parseInt(currY) / TILE_SIZE);
-		const currTile = map[currYTile][currXTile];
-		
+		//const currTile = map[currYTile][currXTile];
+		const currTile = map[currXTile][currYTile];
+
 		if (userXTile === currXTile && userYTile === currYTile){
 			return true;
 		}
@@ -768,22 +773,6 @@ function withinSight(cpuX, cpuY){
 	return false;
 }
 
-// function startScreen() {
-//     let count = 0;
-//     let one = canvasbg.Sprite("/sprites/one.png");
-//     let two = canvasbg.Sprite("/sprites/two.png");
-//     let three = canvasbg.Sprite("/sprites/three.png");
-//     let x = 4;
-//     let y = 4;
-//     let now = Date.now();
-//     one.move(x,y);
-//
-//     while (Date.now() - now < 1000) {
-//         one.scale(3);
-//         one.update();
-//     }
-//     main();
-// }
 
 
 

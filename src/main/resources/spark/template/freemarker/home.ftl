@@ -13,7 +13,7 @@
 <img id = "img1" src = "images/stickynote.png" style="width:90%;height:90%;"></img>
 
 <div class="centeredOption">
-<a href= "/campaign">Play Campaign</a>
+<a href= "/campaign">Campaign</a>
 </div>
 
 </div>
@@ -21,7 +21,7 @@
 <div class="menuoption" style="position: absolute; width:25%;height:25%; right:5%;bottom: 55%;">
 <img id = "img2" src = "images/stickynote.png" style="width:90%;height:90%; right: 0px;bottom: 50%;" ></img>
 <div class="centeredOption">
-<a href= "/survival">Survival Mode</a>
+<a href= "/survival">Survival</a>
 </div>
 </div>
 
