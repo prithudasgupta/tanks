@@ -79,7 +79,6 @@ color: red;
 }
 
 #menuOp {
-    
 }
 
 #sjs0 {
