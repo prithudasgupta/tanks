@@ -101,14 +101,11 @@ public class GameMap {
 		else if(representation.equals("b")) {
 			return new BreakableWall();
 		}
-		else if(representation.equals("u")) {
-			return new UnbreakableWall();
-		}
 		else if(representation.equals("l")) {
 			return new Land();
 		}
 		else {
-			return null;
+			return new UnbreakableWall();
 		}
 	}
 

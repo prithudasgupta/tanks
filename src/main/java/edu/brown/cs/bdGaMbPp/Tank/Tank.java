@@ -19,6 +19,7 @@ public interface Tank {
 	
 	Angle getLauncherAngle();
 
+	String getType();
 }
 
 

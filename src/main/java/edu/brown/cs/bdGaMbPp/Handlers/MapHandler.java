@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import edu.brown.cs.bdGaMbPp.Collect.Pair;
 import edu.brown.cs.bdGaMbPp.Database.Querier;
 import edu.brown.cs.bdGaMbPp.GameLogic.Game;
+import edu.brown.cs.bdGaMbPp.GameLogic.GameInitializer;
 import edu.brown.cs.bdGaMbPp.Map.GameMap;
 import edu.brown.cs.bdGaMbPp.Map.MapBuilder;
 import edu.brown.cs.bdGaMbPp.Tank.Direction;
@@ -37,9 +38,9 @@ public class MapHandler implements Route {
 //    		String data = Querier.getMapById(Integer.parseInt(id));
 //    		if (data.equals("")) {
     			map = new MapBuilder().createMap(0.1, 0);
-    			System.out.println(map.withinSight(new Pair<Integer, Integer>(5, 5), new Pair<Integer, Integer>(6, 6)));
+    			Game aGame = GameInitializer.initializeGame(map, 5);
         		representations = map.getRepresentations();
-        		Querier.addMap(convertToDatabase(representations), -1);
+        		
 //    		}
 //    		else {
 //    			representations = convertFromDatabase(data);
@@ -61,26 +62,5 @@ public class MapHandler implements Route {
 	  }
   }
   
-  private static String convertToDatabase(List<List<String>> representations) {
-	  StringBuilder sb = new StringBuilder();
-	  for (int i = 0; i < representations.size(); i++) {
-		  List<String> currentRow = representations.get(i);
-		  for (int j = 0; j < currentRow.size(); j++) {
-			  sb.append(currentRow.get(j));
-		  }
-	  }
-	  return sb.toString();
-  }
   
-  private static List<List<String>> convertFromDatabase(String representations) {
-	  assert representations.length() == 384;
-	  List<List<String>> locs = new ArrayList<List<String>>();
-	  for (int r = 0; r < 16; r++) {
-	      locs.add(new ArrayList<>());
-	      for (int c = 0; c < 24; c++) {
-	        locs.get(r).add(Character.toString(representations.charAt(16 * r + c)));
-	      }
-	    }
-	  return locs;
-  }
 }

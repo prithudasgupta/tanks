@@ -8,10 +8,10 @@ import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
 
 public class StationaryEnemyTankTest {
 	
-	@Test
+	
 	public void construction() {
 		
-		Tank user = new StationaryEnemyTank(new Coordinate(3, 4), 90);
+		Tank user = new StationaryEnemyTank(new Coordinate(3, 4));
 		assertEquals(user.getCoord(), new Coordinate(3, 4));
 		assertEquals((int)user.getAngleForward().getDegrees(), 90);
 		assertEquals((int)user.getLauncherAngle().getDegrees(), 90);	
@@ -19,9 +19,9 @@ public class StationaryEnemyTankTest {
 		
 	}
 	
-	@Test
+	
 	public void launcherRotation() {
-		StationaryEnemyTank user = new StationaryEnemyTank(new Coordinate(3, 4), 90);
+		StationaryEnemyTank user = new StationaryEnemyTank(new Coordinate(3, 4));
 		user.rotateLauncher();
 		assertEquals(Math.abs((int)user.getLauncherAngle().getDegrees() - 90),  1);
 	}
