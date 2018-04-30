@@ -1,34 +1,53 @@
-
+let nextAngle = -1;
+let nextRow = 0;
+let nextCol = 0;
 
 
 function moveBetween(endRow, endCol, startRow, startCol, sprite){
-	let nextAngle;
+
+	const currAngle = sprite.angle % 6.28;
+	let angleDiff;
 	
-	if (endRow - startRow == 0){
-		if (endCol - startCol == 1){
-			nextAngle = 0;
+	if (nextAngle === -1){
+	
+		nextRow = endRow;
+		nextCol = endCol;
+		if (endRow - startRow == 0){
+			if (endCol - startCol == 1){
+				nextAngle = 0;	
+			}
+			else{
+				nextAngle = 3.1415;
+			}
+		}
+		else if(endRow - startRow == 1){
+			nextAngle = 1.5707;
 		}
 		else{
-			nextAngle = 180;
+			nextAngle = 4.712;
 		}
 	}
-	else if(endRow - startRow == 1){
-		nextAngle = 270;
+	if (currAngle - nextAngle < 0.05 || nextAngle - currAngle < 0.05){
+		let mov = forwardByAngle(sprite.angle, 2.5);
+        sprite.move(mov[0], mov[1]);
+       
+       	nextAngle = -1;
+   
 	}
-	else{
-		nextAngle = 90;
+	else {
+		console.log(currAngle, nextAngle);
+		if (currAngle > nextAngle){
+			sprite.rotate(-0.02);
+		}
+		else{
+			sprite.rotate(0.02);
+		}
 	}
-	
-	console.log(nextAngle);
-	sprite.setAngle(0);
-	sprite.rotate(nextAngle);
-	console.log("from " + sprite.x, sprite.y);
-	
-	console.log("moving it to " + (endRow *45) + ", "+ (endCol*45));
-	
-	console.log("diff " + " " + ((endRow * 45) - sprite.x) + " " + ((endCol*45) - sprite.y));
-	sprite.move((endRow * 45) - sprite.x, (endCol*45) - sprite.y);
 	sprite.update();
-	console.log("After " + sprite.x, sprite.y);
-	
+}
+
+function forwardByAngle(angRads, speed) {
+    let x = speed * Math.cos(angRads);
+    let y = speed * Math.sin(angRads);
+    return [x,y];
 }

@@ -463,12 +463,11 @@ function enemyLogic() {
 }
 
 function getBorderingLandTiles(xCoord, yCoord){
-	console.log(yCoord, xCoord);
+	
 	const yTile = Math.floor(yCoord / 45);
 	const xTile = Math.floor(xCoord / 45);
 	let landSpots = [];
 	
-	console.log(yTile, xTile);
 	if (map[yTile - 1][xTile] === "l"){
 		landSpots.push(new Coordinate(xTile, yTile - 1))
 	}
@@ -506,8 +505,7 @@ function movingEnemyLogic() {
         		const nextMove = landSpots[rand];
         		const yTile = Math.floor(movingEnemy.y / 45);
 			const xTile = Math.floor(movingEnemy.x / 45);
-			console.log("from " + yTile + ", " + xTile);
-			console.log("to " + nextMove.y + ", " + nextMove.x);
+			
         		moveBetween(nextMove.x, nextMove.y, xTile, yTile, movingEnemy);
         		}
       }
