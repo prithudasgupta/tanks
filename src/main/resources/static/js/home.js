@@ -202,6 +202,27 @@ $(document).ready(() => {
     document.getElementById("sjs0").style.position = "absolute";
     document.getElementById("sjs0").style.top = "25%";
     document.getElementById("sjs0").style.left = "5%";
+
+    $('#campBut').on('click', function () {
+        $('#campaign, #main').fadeIn(250);
+    });
+
+    $('#exit').on('click', function () {
+        $('#campaign').toggle();
+    });
+
+
+    for(let i = 0; i < 20; i++){
+        if (i === 0) {
+            $('div#levels').append("<div id='number' style='width: 65px; height: 65px;'><img id='level' src='images/mapIcon.png'/> </img>" +
+                "<div class='centeredOption'> 1 </div> </div>");
+        } else {
+            $('div#levels').append("<div id='number' style='width: 65px; height: 65px;'><img id='level' src='images/mapIcon_lock.png'/> </img></div>");
+        }
+
+
+    }
+
     loadMap();
 
 

@@ -1,7 +1,10 @@
 <#assign content>
     
-    
-<img src = "images/friendsIcon.png" onmouseover="this.src='/images/friendsIcon_selected.png';" onmouseout="this.src='/images/friendsIcon.png';">
+<div id="main" >
+
+<img id="friends" src = "images/friendsIcon.png" onmouseover="this.src='/images/friendsIcon_selected.png';"
+     onmouseout="this.src='/images/friendsIcon.png';">
+
 <center>    
 <h1>DESKTOP TANKS</h1>
 </center>
@@ -9,20 +12,29 @@
 <br />
 <br />
 
-<#--<img id = "tank" src = "images/homepagetank.png" style="width:30%;height:30%; margin-left: 10%;" ></img>-->
 
-<#--<img id = "img1" src = "/images/campaign.png">-->
-<#--<br />-->
-<#--<br />-->
-<img id="menuOp" src='/images/campaign.png' onmouseover="this.src='/images/campaign_hover.png';" onmouseout="this.src='/images/campaign.png';" style="position: absolute; right: 10%; top: 25%;" />
+<img id="campBut" src='/images/campaign.png' onmouseover="this.src='/images/campaign_hover.png';"
+     onmouseout="this.src='/images/campaign.png';" style="position: absolute; right: 10%; top: 25%;" />
 <br />
-<img id="menuOp" src='/images/survival.png' onmouseover="this.src='/images/survival_hover.png';" onmouseout="this.src='/images/survival.png';" style="position: absolute; right: 10%; top: 40%;"/>
+<img id="menuOp" src='/images/survival.png' onmouseover="this.src='/images/survival_hover.png';"
+     onmouseout="this.src='/images/survival.png';" style="position: absolute; right: 10%; top: 40%;"/>
 <br />
-<img id="menuOp" src='/images/mapBuilder.png' onmouseover="this.src='/images/mapBuilder_hover.png';" onmouseout="this.src='/images/mapBuilder.png';" style="position: absolute; right: 10%; top: 55%;" />
-<#--<img id = "img2" src = "/images/survival.png" ></img>-->
+<img id="menuOp" src='/images/mapBuilder.png' onmouseover="this.src='/images/mapBuilder_hover.png';"
+     onmouseout="this.src='/images/mapBuilder.png';" style="position: absolute; right: 10%; top: 55%;" />
 <br />
 <br />
 
+</div>
+
+<div id="campaign">
+    <img id="exit" src="/images/exit.png" onmouseover="this.src='/images/exit_hover.png';"
+         onmouseout="this.src='/images/exit.png';" style="position: absolute; top: 2px; right: 2px;">
+    <center>
+        <h2> Select level </h2>
+    </center>
+    <div id="levels" style="top: 15%; left: 25%; position: absolute; height: 75%; width: 50%;">
+    </div>
+</div>
 
 
 
@@ -71,7 +83,21 @@ h1 {
     font-size: 25px;
     color: black;
     font-style: italic;
+    z-index: 100;
 }
+
+#campaign {
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    width: 75%;
+    height: 75%;
+    background-image: url("/sprites/menu.png");
+    background-repeat: repeat;
+    display: none;
+    z-index: 99;
+ }
+
 
 a{
 color: black;
@@ -81,29 +107,22 @@ a:hover{
 color: red;
 }
 
-#menuOp {
-}
-
-
-
-#img1 {
-    background-image: url("/images/campaign.png");
-}
-
-#img1:hover {
-    background-image: url("/images/campaign_hover.png");
-}
-#img2:hover {
-    background-image: url("/images/survival_hover.png");
-}
-#img3:hover {
-    background-image: url("/images/mapBuilder_hover.png");
-}
-
-#sjs0 {
+#friends {
     position: absolute;
-    top: 0%;
-    left: 5%;
+    top: 0;
+    right: 5px;
+    padding: none;
+}
+
+#level {
+    position: relative;
+    padding: 0px;
+
+}
+
+#number {
+    position: relative;
+    padding: 20px;
 }
 
 </style>
