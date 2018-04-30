@@ -33,11 +33,13 @@ public class StagnantGraph<V, E> implements Graph<V, E> {
    * @param edges
    *          Map for each node its neighboring edges
    */
-  public StagnantGraph(List<V> nodes,  Map<V, List<V>> edges) {
+  public StagnantGraph(List<V> nodes, Map<String, List<String>> edgeIds,
+      Map<String, List<Double>> weights, Map<String, List<E>> edges) {
     graphMap = new HashMap<String, GraphNode<V, E>>();
     for (V node : nodes) {
-      GraphNode<V, E> newNode = new GraphNode<V, E>(node);
-      
+      String id = node.toString();
+      GraphNode<V, E> newNode = new GraphNode<V, E>(node, edgeIds.get(id),
+          weights.get(id), edges.get(id));
       graphMap.put(node.toString(), newNode);
     }
   }
