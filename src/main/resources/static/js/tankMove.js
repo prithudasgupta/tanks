@@ -1,49 +1,30 @@
-let nextAngle = -1;
-let nextRow = 0;
-let nextCol = 0;
+// let nextAngle = -1;
+// let nextRow = 0;
+// let nextCol = 0;
 
 
-function moveBetween(endRow, endCol, startRow, startCol, sprite){
+function moveBetween(enemyObj){
 
-	const currAngle = sprite.angle % 6.28;
+
+
+
+	let currAngle = enemyObj.sprite.angle % 6.28;
 	let angleDiff;
-	
-	if (nextAngle === -1){
-	
-		nextRow = endRow;
-		nextCol = endCol;
-		if (endRow - startRow == 0){
-			if (endCol - startCol == 1){
-				nextAngle = 0;	
-			}
-			else{
-				nextAngle = 3.1415;
-			}
-		}
-		else if(endRow - startRow == 1){
-			nextAngle = 1.5707;
-		}
-		else{
-			nextAngle = 4.712;
-		}
-	}
-	if (currAngle - nextAngle < 0.05 || nextAngle - currAngle < 0.05){
-		let mov = forwardByAngle(sprite.angle, 2.5);
-        sprite.move(mov[0], mov[1]);
-       
-       	nextAngle = -1;
-   
+	if (Math.abs(currAngle - enemyObj.nextAngle) < 0.019){
+		let mov = forwardByAngle(enemyObj.sprite.angle, 2.5);
+        enemyObj.sprite.move(mov[0], mov[1]);
+
 	}
 	else {
-		console.log(currAngle, nextAngle);
-		if (currAngle > nextAngle){
-			sprite.rotate(-0.02);
+		//console.log(currAngle, enemyObj.nextAngle);
+		if (currAngle > enemyObj.nextAngle){
+			enemyObj.sprite.rotate(-0.02);
 		}
 		else{
-			sprite.rotate(0.02);
+			enemyObj.sprite.rotate(0.02);
 		}
 	}
-	sprite.update();
+	enemyObj.sprite.update();
 }
 
 function forwardByAngle(angRads, speed) {

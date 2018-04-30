@@ -31,6 +31,7 @@ let explosions = [];
 let startTime;
 let currentTime = "00:00";
 let pauseTime = 0;
+let enemyObj;
 
 let movingEnemyX;
 let movingEnemyY;
@@ -47,6 +48,12 @@ class Coordinate {
 	constructor(x, y) {
         this.x = x;
         this.y = y; 
+    }
+}
+
+class Enemy {
+    constructor(sprite) {
+        this.sprite = sprite;
     }
 }
 
@@ -194,13 +201,15 @@ function loadMap() {
         user.lastFire = Date.now();
         uCannon = cannon;
         ready = true;
-        
+
+        // create moving enemy
         movingEnemy = canvasbg.Sprite("/sprites/imm_tank.png");
-        	movingEnemy.move(movingEnemyX, movingEnemyY);
+        movingEnemy.move(movingEnemyX, movingEnemyY);
         movingEnemy.update();
        	movingEnemy.lastFire = Date.now();
         collideable.push(movingEnemy);
         nonTrav.push(movingEnemy);
+        enemyObj = new Enemy(movingEnemy);
 
         // now loading screen
         three = canvasbg.Sprite("/sprites/one.png");
@@ -500,14 +509,42 @@ function movingEnemyLogic() {
             fire(movingEnemy);
         }
         else {
-        		let landSpots = getBorderingLandTiles(movingEnemy.x, movingEnemy.y);
-        		const rand = Math.floor(Math.random() * landSpots.length);
-        		const nextMove = landSpots[rand];
-        		const yTile = Math.floor(movingEnemy.y / 45);
-			const xTile = Math.floor(movingEnemy.x / 45);
-			
-        		moveBetween(nextMove.x, nextMove.y, xTile, yTile, movingEnemy);
-        		}
+            let movedSoFar = euclidDist(enemyObj.startX, enemyObj.startY, enemyObj.sprite.x, enemyObj.sprite.y);
+            // console.log(enemyObj.startX);
+            // console.log(enemyObj.startX);
+            // console.log(enemyObj.sprite.x);
+            // console.log(enemyObj.sprite.y);
+            // console.log(movedSoFar);
+            if (enemyObj.nextRow === undefined || movedSoFar >= 45) {
+                let landSpots = getBorderingLandTiles(movingEnemy.x, movingEnemy.y);
+                const rand = Math.floor(Math.random() * landSpots.length);
+                const nextMove = landSpots[rand];
+                enemyObj.nextRow = nextMove.y;
+                enemyObj.nextCol = nextMove.x;
+                let curRow = Math.floor(movingEnemy.y / 45);
+                let curCol = Math.floor(movingEnemy.x / 45);
+
+                if (enemyObj.nextRow - curRow == 0){
+                    if (enemyObj.nextCol - curCol == 1){
+                        enemyObj.nextAngle = 0;
+                    }
+                    else{
+                        enemyObj.nextAngle = 3.1415;
+                    }
+                }
+                else if(enemyObj.nextRow - curRow == 1){
+                    enemyObj.nextAngle = 1.5707;
+                }
+                else{
+                    enemyObj.nextAngle = 4.712;
+                }
+
+                enemyObj.startX = enemyObj.sprite.x;
+                enemyObj.startY = enemyObj.sprite.y;
+            }
+
+            moveBetween(enemyObj);
+        }
       }
 }
 
@@ -742,6 +779,13 @@ function updateTime(time){
 function enemyDetector(x, y) {
     // get row and col
     let dist = Math.sqrt((user.x - x)*(user.x - x) + (user.y - y)*(user.y - y));
+    return dist;
+}
+
+function euclidDist(x1, y1, x2, y2) {
+    console.log(x1 + ' ' + y1 + ' ' + x2 + ' ' + y2);
+    let dist = Math.sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
+    console.log(dist);
     return dist;
 }
 
