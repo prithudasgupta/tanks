@@ -124,5 +124,14 @@ public class UserTank implements Tank{
     
     return corners;
   }
+
+
+
+
+
+@Override
+public String getType() {
+	return "0";
+}
 	
 }

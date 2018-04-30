@@ -13,6 +13,8 @@ import java.util.List;
 import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
 import edu.brown.cs.bdGaMbPp.GameLogic.Game;
 import edu.brown.cs.bdGaMbPp.Map.GameMap;
+import edu.brown.cs.bdGaMbPp.Tank.DrunkWalkTank;
+import edu.brown.cs.bdGaMbPp.Tank.StationaryEnemyTank;
 import edu.brown.cs.bdGaMbPp.Tank.Tank;
 import edu.brown.cs.bdGaMbPp.Tank.UserTank;
 
@@ -102,6 +104,16 @@ public final class Querier {
 	          String type = rs.getString(2);
 	          String startRow = rs.getString(3);
 	          String startCol = rs.getString(4);
+	          
+	          if (type.equals("0")) {
+	        	  	return new UserTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow)));
+	          }
+	          else if (type.equals("1")) {
+	        	  return new StationaryEnemyTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow)));
+	          }
+	          else if (type.equals("2")) {
+	        	  return new DrunkWalkTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow)));
+	          }
 	        }
 	        prep.close();
 	        rs.close();
@@ -110,6 +122,17 @@ public final class Querier {
 			
 		}
 	        return null;
+	}
+	
+	private static Tank parseTankList(List<Tank> tankList) {
+		for (int i = 0; i < tankList.size(); i++) {
+			if (tankList.get(i) instanceof UserTank) {
+				Tank user = tankList.get(i);
+				tankList.remove(i);
+				return user;
+			}
+		}
+		return null;
 	}
 	
 	public static Game getGameById(int id) {
@@ -129,7 +152,9 @@ public final class Querier {
 	        prep.close();
 	        rs.close();
 	        
-	        return new Game(GameMap.representationToMap(convertFromDatabase(map)), new UserTank(new Coordinate(10, 10)), tanks);
+	        Tank user = parseTankList(tanks);
+	        
+	        return new Game(GameMap.representationToMap(convertFromDatabase(map)), user, tanks);
 	        
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
