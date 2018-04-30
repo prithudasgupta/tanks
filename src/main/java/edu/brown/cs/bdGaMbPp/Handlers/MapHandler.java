@@ -1,5 +1,6 @@
 package edu.brown.cs.bdGaMbPp.Handlers;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
 import edu.brown.cs.bdGaMbPp.Collect.Pair;
@@ -16,6 +17,7 @@ import spark.Route;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MapHandler implements Route {
 	
@@ -37,9 +39,11 @@ public class MapHandler implements Route {
 //    else {
 //    		String data = Querier.getMapById(Integer.parseInt(id));
 //    		if (data.equals("")) {
-    			map = new MapBuilder().createMap(0.1, 0);
-    			Game aGame = GameInitializer.initializeGame(map, 5);
-        		representations = map.getRepresentations();
+		map = new MapBuilder().createMap(0.1, 0);
+		Game aGame = GameInitializer.initializeGame(map, 5);
+		representations = map.getRepresentations();
+		//System.out.println("aGame.getEnemies() = " + aGame.getEnemies());
+		Map<String, Object> variables = ImmutableMap.of("map", representations, "game", aGame, "enemies", aGame.getEnemies());
         		
 //    		}
 //    		else {
@@ -48,7 +52,7 @@ public class MapHandler implements Route {
 //    }
     
     Gson GSON = new Gson();
-    return GSON.toJson(representations);
+    return GSON.toJson(variables);
   }
   
   private static String convertUrl(String url) {

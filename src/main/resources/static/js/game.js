@@ -35,6 +35,10 @@ let enemyObj;
 let pause = false;
 let pauseStart;
 let pauseSprite;
+let statEnemies = [];
+
+let enemyLoc = [];
+
 
 let movingEnemyX;
 let movingEnemyY;
@@ -95,12 +99,18 @@ for (let row = 0; row < 16; row++) {
 function getMap () {
     $.post('/map', {"url": window.location.href}, responseJSON => {
         const respObject = JSON.parse(responseJSON);
+        for (let i in respObject.enemies) {
+            enemyLoc.push(respObject.enemies[i].location.coordinates);
+        }
+        let mapLoc = respObject.map;
         for (let row = 0; row < 16; row++) {
             for (let col = 0; col < 24; col++) {
-                populateMap(row, col, respObject[row][col]);
+                populateMap(row, col, mapLoc[row][col]);
             }
         }
-        loadMap()
+        startX = (respObject.game.user.location.coordinates[0] * 45) + 5;
+        startY = (respObject.game.user.location.coordinates[1] * 45) + 5;
+        loadMap();
     });
 }
 
@@ -116,28 +126,28 @@ let collideable = [];
 function loadMap() {
     scene.loadImages(["/sprites/wall.png", "/sprites/freeSpace.png", "/sprites/pothole.png", "/sprites/breakable.png",
             "/sprites/imm_tank.png", "/sprites/tank_space.png"], function()  {
-            
+
             let next;
-            
+            console.log(map);
             for (let row = 0; row < 16; row++) {
                 for (let col = 0; col < 24; col++) {
-                    
+
                     if (map[row][col] === "u" || map[row][col] === "x") {
                         next = canvasbg.Sprite("/sprites/wall.png");
                         walls.push(next);
                         nonTrav.push(next);
                     } else if ([col] === "b") {
                         next = canvasbg.Sprite("/sprites/freeSpace.png");
-                        next.size(45,45);
+                        next.size(45, 45);
                         // put in location
-                        next.move(col*TILE_SIZE, row*TILE_SIZE);
+                        next.move(col * TILE_SIZE, row * TILE_SIZE);
                         // update it
                         next.update();
 
                         let breakable = canvasbg.Sprite("/sprites/breakable.png");
-                        breakable.size(45,45);
+                        breakable.size(45, 45);
                         // put in location
-                        breakable.move(col*TILE_SIZE, row*TILE_SIZE);
+                        breakable.move(col * TILE_SIZE, row * TILE_SIZE);
                         // update it
                         breakable.update();
                         collideable.push(breakable);
@@ -151,42 +161,42 @@ function loadMap() {
                     }
                     if (map[row][col] !== "b") {
                         // TEMP CODE
-                        if(row > 8 && col > 12 && !placedEnemy && map[row][col] !== "u") {
-                            placedEnemy = true;
-                            next = canvasbg.Sprite("/sprites/tank_space.png");
-                            enemy = canvasbg.Sprite("/sprites/imm_tank.png");
+                        // if (row > 8 && col > 12 && !placedEnemy && map[row][col] !== "u") {
+                        //     placedEnemy = true;
+                        //      next = canvasbg.Sprite("/sprites/freeSpace.png");
+                        //     // enemy = canvasbg.Sprite("/sprites/imm_tank.png");
+                        //     // // make sure that it is to size
+                        //     next.size(45, 45);
+                        //     // enemy.move(col * TILE_SIZE, row * TILE_SIZE);
+                        //     // // put in location
+                        //     next.move(col * TILE_SIZE, row * TILE_SIZE);
+                        //     next.update();
+                        //     // enemy.update();
+                        //     // enemy.lastFire = Date.now();
+                        //     // collideable.push(enemy);
+                        //     // nonTrav.push(enemy);
+                        // }
+                        // else {
                             // make sure that it is to size
-                            next.size(45,45);
-                            enemy.move(col*TILE_SIZE, row*TILE_SIZE);
+                            next.size(45, 45);
                             // put in location
-                            next.move(col*TILE_SIZE, row*TILE_SIZE);
-                            next.update();
-                            enemy.update();
-                            enemy.lastFire = Date.now();
-                            collideable.push(enemy);
-                            nonTrav.push(enemy);
-                        } 
-                        else {
-                            // make sure that it is to size
-                            next.size(45,45);
-                            // put in location
-                            next.move(col*TILE_SIZE, row*TILE_SIZE);
+                            next.move(col * TILE_SIZE, row * TILE_SIZE);
                             // update it
                             next.update();
-                        }
-                        if (startX === undefined && map[row][col] === "l") {
-                            startX = col*TILE_SIZE + 5;
-                            startY = row*TILE_SIZE + 5;
-                        }
-                        if (!placedMovingEnemy && map[row][col] !== "u" &&  row > 12 && col > 16){
-                        		placedMovingEnemy = true;
-                        		movingEnemyX = col*TILE_SIZE;
-                        		movingEnemyY = row*TILE_SIZE;
+                        //}
+                        // if (startX === undefined && map[row][col] === "l") {
+                        //     startX = col*TILE_SIZE + 5;
+                        //     startY = row*TILE_SIZE + 5;
+                        // }
+                        if (!placedMovingEnemy && map[row][col] !== "u" && row > 12 && col > 16) {
+                            placedMovingEnemy = true;
+                            movingEnemyX = col * TILE_SIZE;
+                            movingEnemyY = row * TILE_SIZE;
                         }
                     }
                 }
-                
             }
+
         });
     // load in the player
     scene.loadImages(["/sprites/one.png", "/sprites/two.png", "/sprites/three.png", "/sprites/tank.png",
@@ -213,10 +223,19 @@ function loadMap() {
         movingEnemy = canvasbg.Sprite("/sprites/imm_tank.png");
         movingEnemy.move(movingEnemyX, movingEnemyY);
         movingEnemy.update();
-       	movingEnemy.lastFire = Date.now();
+        movingEnemy.lastFire = Date.now();
         collideable.push(movingEnemy);
         nonTrav.push(movingEnemy);
         enemyObj = new Enemy(movingEnemy);
+        enemyObj.alive = false;
+
+        placedEnemy = true;
+
+        for(let i in enemyLoc) {
+            console.log(i);
+            let cur = enemyLoc[i];
+            createStationaryTank(cur[1], cur[0]);
+        }
 
         // now loading screen
         three = canvasbg.Sprite("/sprites/one.png");
@@ -231,6 +250,20 @@ function loadMap() {
         window.requestAnimationFrame(oneM);
 
     });
+
+}
+
+function createStationaryTank(row, col) {
+    let space = canvasbg.Sprite("/sprites/tank_space.png");
+    let tank = canvasbg.Sprite("/sprites/imm_tank.png");
+    space.move(col*TILE_SIZE, row*TILE_SIZE);
+    tank.move(col*TILE_SIZE, row*TILE_SIZE);
+    space.update();
+    tank.update();
+    tank.lastFire = Date.now();
+    collideable.push(tank);
+    nonTrav.push(tank);
+    statEnemies.push(tank);
 
 }
 
@@ -395,6 +428,11 @@ function updateBullet() {
                         if (collideable[i] === enemy) {
                             placedEnemy = false;
                         }
+
+                        if (statEnemies.includes(collideable[i])) {
+                            statEnemies.splice(statEnemies.indexOf(collideable[i]), 1);
+                        }
+
                         if (collideable[i] == enemyObj.sprite) {
                             enemyObj.alive = false;
                         }
@@ -463,7 +501,7 @@ function checkForWalls(x,y) {
     }
 }
 
-function enemyLogic() {
+function enemyLogic(enemy) {
     if (ready) {
         // let dx = mousX - user.x;
         // let dy = mousY - user.y;
@@ -611,7 +649,7 @@ function userMove() {
         } else {
             uCannon.update();
             user.update();
-            placeTread(user.x-mov[0], user.y-mov[1], user.angle);
+            //placeTread(user.x-mov[0], user.y-mov[1], user.angle);
         }
     }
     if (sKey) {
@@ -624,7 +662,7 @@ function userMove() {
         } else {
             uCannon.update();
             user.update();
-            placeTread(user.x-mov[0], user.y-mov[1], user.angle);
+            //placeTread(user.x-mov[0], user.y-mov[1], user.angle);
         }
     }
     if (aKey) {
@@ -701,8 +739,8 @@ function main() {
             }
             updateBullet();
             // check to see if the enemy is alive
-            if (placedEnemy) {
-                enemyLogic();
+            for (let i in statEnemies) {
+                enemyLogic(statEnemies[i]);
             }
 
             if (placedMovingEnemy && enemyObj.alive) {

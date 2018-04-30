@@ -19,9 +19,11 @@ public final class GameInitializer {
 	public static Game initializeGame(GameMap newMap, int difficulty) {
 		
 		List<Pair<Integer, Integer>> landIndices = newMap.indicesByType("l");
-		Pair<Integer, Integer> userTankStart = landIndices.get((int)(Math.random() * landIndices.size()));
+		int index = (int)(Math.random() * landIndices.size());
+		Pair<Integer, Integer> userTankStart = landIndices.get(index);
+		landIndices.remove(index);
 		Tank user = new UserTank(convertToCoordinate(userTankStart));
-		List<Tank> enemies = createTanks(difficulty, newMap);
+		List<Tank> enemies = createTanks(difficulty, landIndices);
 		
 		return new Game(newMap, user, enemies);
 		
@@ -29,28 +31,33 @@ public final class GameInitializer {
 	}
 	
 	private static Coordinate convertToCoordinate(Pair<Integer, Integer> indice) {
-		return new Coordinate(indice.getSecond() + 0.5, indice.getFirst() + 0.5);
+		return new Coordinate(indice.getSecond(), indice.getFirst());
 	}
 	
-	private static List<Tank> createTanks(int difficulty, GameMap newMap){
-		return createTanks(difficulty, new ArrayList<Tank>(), newMap);
+	private static List<Tank> createTanks(int difficulty, List<Pair<Integer, Integer>> landSpaces){
+		return createTanks(difficulty, new ArrayList<Tank>(), landSpaces);
 	}
 	
-	private static List<Tank> createTanks(int difficulty, List<Tank> currentList,  GameMap newMap){
+	private static List<Tank> createTanks(int difficulty, List<Tank> currentList,  List<Pair<Integer, Integer>> landIndices){
 		//template method need to add when more tank types added
-		List<Pair<Integer, Integer>> landIndices = newMap.indicesByType("l");
-		
-		int numTanks = (int) Math.random() * Math.min(difficulty, landIndices.size());
-		
+
+		int numTanks = (int) (Math.random() * Math.min(difficulty, landIndices.size()));
+
+		if (numTanks == 0) {
+			numTanks = 1;
+		}
+
 		for (int i = 0; i < numTanks; i++) {
-			int randIndex = (int) Math.random() * landIndices.size();
+			int randIndex = (int) (Math.random() * landIndices.size());
 			Pair<Integer, Integer> newStart = landIndices.get(randIndex);
 			landIndices.remove(randIndex);
 			
 			Tank newTank = new StationaryEnemyTank(convertToCoordinate(newStart));
 			currentList.add(newTank);
 		}
+		//System.out.println("currentList = " + currentList);
 		return currentList;
 	}
+
 
 }
