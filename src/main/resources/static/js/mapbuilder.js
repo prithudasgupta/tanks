@@ -145,6 +145,9 @@ function updateMouse() {
 }
 
     $(document).ready(() => {
+
+
+
 		let down = false;
         document.addEventListener("mousemove", function(e) {
             if (down) {
@@ -236,6 +239,8 @@ function updateMouse() {
             // render();
             // console.log(map);
     });
+
+
 
 function main() {
     updateMouse();
