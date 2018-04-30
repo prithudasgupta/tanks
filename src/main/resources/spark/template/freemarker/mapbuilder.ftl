@@ -1,10 +1,10 @@
 <#assign content>
 
-<button id="sumbitLevel"> Add tanks </button>
+<button id="submitLevel"> Add tanks </button>
 
 <style>
 
-    #sumbitLevel {
+    #submitLevel {
         position: absolute;
         z-index: 100;
         left: 1150px;
