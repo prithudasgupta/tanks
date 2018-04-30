@@ -3,8 +3,10 @@ package edu.brown.cs.bdGaMbPp.Map;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -20,7 +22,7 @@ public class GameMap {
 	private final int length;
 	private final int width;
 	private int id;
-	private final Graph<Pair<Integer, Integer>, String> graph;
+	private Graph<Pair<Integer, Integer>, Pair<Integer, Integer>> graph = null;
 
 	public GameMap(List<List<Location>> locations) {
 		tiles = locations;
@@ -32,11 +34,13 @@ public class GameMap {
 		else {
 			length = 0;
 		}
-		//combine two lists eventually (l and b)
-		graph = new StagnantGraph<Pair<Integer, Integer>, String>(this.indicesByType("l"));
+		
+		this.createGraph();
+		
+		
 	}
 
-	public GameMap(GameMap oldMap) {
+  public GameMap(GameMap oldMap) {
 		int oldLength = oldMap.getLength();
 		int oldWidth = oldMap.getWidth();
 		List<List<Location>> newLocations = new ArrayList<List<Location>>();
@@ -281,12 +285,43 @@ public class GameMap {
 
 		return null;
 		}
+	
+	 private void createGraph() {
+	   
+	   //combine two lists eventually (l and b)
+	     List<Pair<Integer, Integer>> lList = this.indicesByType("l");
+	     Map<String, List<String>> edgeIds = new HashMap<String, List<String>>();
+	     Map<String, List<Double>> weights = new HashMap<String, List<Double>>();
+	     Map<String, List<Pair<Integer, Integer>>> edges = new HashMap<String, List<Pair<Integer, Integer>>>();
+	     
+	     for(Pair<Integer, Integer> l : lList) {
 
-
-
-
-
+	       List<String> ids = new ArrayList<String>();
+	       List<Double> weight = new ArrayList<Double>();
+	       List<Pair<Integer, Integer>> edge = new ArrayList<Pair<Integer, Integer>>();
+	       String currID = "";
+	       
+	       List<Pair<Integer, Integer>> neighborsList = this.getValidNeighbors(l);
+	       for(Pair<Integer, Integer> neighbors : neighborsList) {
+	       
+	         ids.add(currID);
+	         weight.add(1.0);
+	         edge.add(neighbors);
+	         
+	       }
+	       
+	       edgeIds.put(l.toString(), ids);
+	       weights.put(l.toString(), weight);
+	       edges.put(l.toString(), edge);
+	       
+	     }
+	     
+	     graph = new StagnantGraph<Pair<Integer, Integer>, Pair<Integer, Integer>>(lList, edgeIds, weights, edges); 
+	   }
+	
 	}
+
+
 
 	class BfsComparator implements Comparator<Pair<Integer, Integer>> {
 
