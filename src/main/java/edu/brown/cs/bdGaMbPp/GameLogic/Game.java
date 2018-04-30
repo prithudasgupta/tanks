@@ -15,17 +15,23 @@ public class Game {
   private GameMap map;
   private Tank user;
   private List<Tank> enemies;
-  private List<Bullet> bullets;
 
   public Game(GameMap aMap, Tank userTank, List<Tank> enemyTanks) {
     map = aMap;
     user = userTank;
     enemies = enemyTanks;
-    bullets = new ArrayList<Bullet>();
   }
 
   public Tank getUser(){
     return user;
+  }
+  
+  public List<List<String>> getRepresentations(){
+	    return map.getRepresentations();
+	  }
+  
+  public List<Tank> getEnemies(){
+	  return enemies;
   }
   
   /**
@@ -42,8 +48,4 @@ public class Game {
 	  }
   }
   */
-  
-  public List<List<String>> getRepresentations(){
-    return map.getRepresentations();
-  }
 }

@@ -13,14 +13,12 @@ public class StationaryEnemyTank implements Tank{
 	private boolean isAlive;
 	
 	private static final double ROTATE_SPEED = 1;
-	
-	public StationaryEnemyTank(Coordinate startCoord, double startDegrees) {
-		location = startCoord;
-		angleForward = new Angle(startDegrees, ROTATE_SPEED);
-		launcherAngle = new Angle(startDegrees, ROTATE_SPEED);
+
+	public StationaryEnemyTank(Coordinate coordinate) {
+		location = coordinate;
 		isAlive = true;
 	}
-	
+
 
 	@Override
 	public void move(Direction d) {
@@ -68,15 +66,9 @@ public class StationaryEnemyTank implements Tank{
 	public Angle getLauncherAngle() {
 		return launcherAngle;
 	}
-
-
-	public Coordinate potenitalMove(Direction d) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	@Override
+	public String getType() {
+		return "1";
 	}
-
-public List<Coordinate> getCorners(double height, double width, Coordinate newCenter) {
-	// TODO Auto-generated method stub
-	return null;
-}
 }

@@ -16,31 +16,14 @@ public class UserTank implements Tank{
 	
 	private static final double EPSILON = .01;
 	
-	public UserTank(Coordinate startCoord, double movement, double rotate) {
+	public UserTank(Coordinate startCoord) {
 		location = startCoord;
-		movementSpeed = movement;
-		angleForward = new Angle(0, rotate);
-		launcherAngle = new Angle(0, rotate);
+		
 		isAlive = true;
 	}
 	
 
-	private List<Coordinate> initalizeCorners(Coordinate startCoord, double height, double width) {
-		double centerX = location.getCoordinate(0);
-		double centerY = location.getCoordinate(1);
-		
-		Coordinate topLeft = new Coordinate(centerX - (width / 2), centerY - (height / 2));
-		Coordinate topRight = new Coordinate(centerX + (width / 2), centerY - (height / 2));
-		Coordinate bottomLeft = new Coordinate(centerX - (width / 2), centerY + (height / 2));
-		Coordinate bottomRight = new Coordinate(centerX + (width / 2), centerY + (height / 2));
-		
-		List<Coordinate> newCoords = new ArrayList<Coordinate>();
-		newCoords.add(topLeft);
-		newCoords.add(topRight);
-		newCoords.add(bottomLeft);
-		newCoords.add(bottomRight);
-		return newCoords;
-	}
+	
 
 
 	@Override
@@ -141,5 +124,14 @@ public class UserTank implements Tank{
     
     return corners;
   }
+
+
+
+
+
+@Override
+public String getType() {
+	return "0";
+}
 	
 }

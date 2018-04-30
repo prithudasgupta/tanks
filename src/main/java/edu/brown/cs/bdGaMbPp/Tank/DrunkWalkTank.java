@@ -17,10 +17,8 @@ public class DrunkWalkTank implements Tank{
 	private static final double MOVE_SPEED = .01;
 	private static final double ROTATE_SPEED = .01;
 	
-	public DrunkWalkTank(Coordinate startCoord, double startDegrees) {
+	public DrunkWalkTank(Coordinate startCoord) {
 		location = startCoord;
-		angleForward = new Angle(startDegrees, ROTATE_SPEED);
-		launcherAngle = new Angle(startDegrees, ROTATE_SPEED);
 		isAlive = true;
 	}
 	
@@ -95,5 +93,12 @@ public class DrunkWalkTank implements Tank{
 	public List<Coordinate> getCorners(double height, double width, Coordinate newCenter) {
 	// TODO Auto-generated method stub
 	return null;
+	}
+
+
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return "2";
 	}
 }
