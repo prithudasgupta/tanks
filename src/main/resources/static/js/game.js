@@ -830,6 +830,7 @@ $(document).ready(() => {
     });
 
     let adWidth = (screen.width - 1080).toString();
+    console.log(screen.width);
     document.getElementById('sideMenu').setAttribute("style","width:" + adWidth + "px");
 });
 
