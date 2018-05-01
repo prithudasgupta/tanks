@@ -18,6 +18,7 @@ import spark.Route;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class MapBuilderHandler implements Route {
 	
@@ -28,8 +29,7 @@ public class MapBuilderHandler implements Route {
 		  String representation = qm.value("representation");
 		  String tanks = qm.value("tanks");
 		  String user = qm.value("user");
-			System.out.println("tanks = " + tanks);
-			System.out.println("user = " + user);
+			
 			String concat = tanks + "u," + user;
 			
 			List<Tank> tankList = parseTanks(concat);
@@ -42,10 +42,13 @@ public class MapBuilderHandler implements Route {
 	  }
 	  
 	  private static List<Tank> parseTanks(String concat) {
-		String [] parsed = concat.split("|");
+		Scanner delim = new Scanner(concat);
+		delim.useDelimiter("#");
 		List<Tank> tankList = new ArrayList<Tank>();
-		for (int i = 0; i < parsed.length; i++) {
-			String [] single = parsed[i].split(",");
+		while (delim.hasNext()) {
+			String parsed = delim.next();
+			
+			String [] single = parsed.split(",");
 			int xCoord = Integer.parseInt(single[1]);
 			int yCoord = Integer.parseInt(single[2]);
 			if (single[0].equals("u")) {
@@ -55,6 +58,7 @@ public class MapBuilderHandler implements Route {
 				tankList.add(new StationaryEnemyTank(new Coordinate(xCoord, yCoord)));
 			}
 		}
+		delim.close();
 		return tankList;  
 	  }
 }

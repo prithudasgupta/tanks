@@ -104,6 +104,7 @@ public final class Querier {
 			prep.setString(1, Integer.toString(id));
 			prep.setString(2, representation);
 			prep.setString(3, Integer.toString(user));
+			
 			prep.addBatch();
 			prep.executeBatch();
 	        prep.close();
@@ -117,39 +118,46 @@ public final class Querier {
 	public static void addGameToDatabase(int mapId, List<Tank> enemies) {
 		
 		int id = getNumGames();
+		int tankId = getNumTanks();
 		
 		try {
-			PreparedStatement prep = instance.conn
-			        .prepareStatement("INSERT INTO game VALUES (?, ?, ?);");
-			
 			for(int i = 0; i < enemies.size(); i++) {
-				String tankId = Integer.toString(getNumTanks());
-				prep.setString(1, Integer.toString(id));
-				prep.setString(2, Integer.toString(mapId));
-				prep.setString(3, tankId);
-				prep.addBatch();
-				prep.executeBatch();
-				addTankToDatabase(enemies.get(i), tankId);
+				addTankToDatabase(enemies.get(i), Integer.toString(tankId), id);
+				tankId++;
 			}
+			
+			
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("INSERT INTO game VALUES (?, ?);");
+			prep.setString(1, Integer.toString(id));
+			prep.setString(2, Integer.toString(mapId));
+			
+			prep.addBatch();
+			prep.executeBatch();
+			prep.close();
+			
 		}
 		catch (Exception e){
 			
 		}
 	}
 	
-	private static void addTankToDatabase(Tank tank, String id) {
+	private static void addTankToDatabase(Tank tank, String id, int gameId) {
 
 		
 		try {
 			PreparedStatement prep = instance.conn
-			        .prepareStatement("INSERT INTO tanks VALUES (?, ?, ?, ?);");
+			        .prepareStatement("INSERT INTO tanks VALUES (?, ?, ?, ?, ?);");
 			
 				prep.setString(1, id);
 				prep.setString(2, tank.getType());
 				prep.setString(3, Integer.toString((int)tank.getCoord().getCoordinate(0)));
 				prep.setString(4, Integer.toString((int)tank.getCoord().getCoordinate(1)));
+				prep.setString(5, Integer.toString(gameId));
+				
 				prep.addBatch();
 				prep.executeBatch();
+				prep.close();
 				
 		}
 		catch (Exception e){
@@ -177,29 +185,31 @@ public final class Querier {
 	        return representation;
 	}
 	
-	private static Tank getTanksById(int id){
+	private static List<Tank> getTanksById(int id){
 		try {
 			PreparedStatement prep = instance.conn
-			        .prepareStatement("SELECT * FROM tanks WHERE id = ?;");
+			        .prepareStatement("SELECT * FROM tanks WHERE game = ?;");
 			prep.setString(1, Integer.toString(id));
 	        ResultSet rs = prep.executeQuery();
-	        if (rs.next()) {
+	        List<Tank> tankList = new ArrayList<Tank>();
+	        while (rs.next()) {
 	          String type = rs.getString(2);
 	          String startRow = rs.getString(3);
 	          String startCol = rs.getString(4);
 	          
 	          if (type.equals("u")) {
-	        	  	return new UserTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow)));
+	        	  	tankList.add(new UserTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow))));
 	          }
 	          else if (type.equals("s")) {
-	        	  return new StationaryEnemyTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow)));
+	        	  	tankList.add(new StationaryEnemyTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow))));
 	          }
 	          else if (type.equals("d")) {
-	        	  return new DrunkWalkTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow)));
+	        	  	tankList.add(new DrunkWalkTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow))));
 	          }
 	        }
 	        prep.close();
 	        rs.close();
+	        return tankList;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			
@@ -222,26 +232,32 @@ public final class Querier {
 		String map = "";
 		try {
 			PreparedStatement prep = instance.conn
-			        .prepareStatement("SELECT * FROM game WHERE id = ?;");
+			        .prepareStatement("SELECT map FROM game WHERE id = ?;");
 			prep.setString(1, Integer.toString(id));
 	        ResultSet rs = prep.executeQuery();
-	        List<Tank> tanks = new ArrayList<Tank>();
-	        if (!rs.next()) {
-	        		return null;
-	        }
-	   
-	        while (rs.next()) {
-	          if (map.equals("")) {
-	        	  	map = Querier.getMapById(Integer.parseInt(rs.getString(2)));
-	          }
-	          tanks.add(Querier.getTanksById(Integer.parseInt(rs.getString(3)))); 
+	        int mapId = -1;
+	        if (rs.next()) {
+	        		mapId = Integer.parseInt(rs.getString(1));
 	        }
 	        prep.close();
 	        rs.close();
 	        
-	        Tank user = parseTankList(tanks);
+	        if	(id !=  -1) {
+	        		map = getMapById(mapId);
+	        		List<Tank> tanks = getTanksById(id);
+	        		Tank user = parseTankList(tanks);
+	        		Game theGame = new Game(GameMap.representationToMap(convertFromDatabase(map)), user, tanks);
+	        		
+	        		System.out.println(theGame.getRepresentations());
+	        		System.out.println(theGame.getUser());
+	        		System.out.println(theGame.getEnemies().size());
+	        		
+	        		return theGame;
+	        }
+	        else {
+	        		return null;
+	        }
 	        
-	        return new Game(GameMap.representationToMap(convertFromDatabase(map)), user, tanks);
 	        
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -262,7 +278,8 @@ public final class Querier {
 	  }
 	  
 	  private static List<List<String>> convertFromDatabase(String representations) {
-		  assert representations.length() == 384;
+		  System.out.println(representations);
+		  //assert representations.length() == 384;
 		  List<List<String>> locs = new ArrayList<List<String>>();
 		  for (int r = 0; r < 16; r++) {
 		      locs.add(new ArrayList<>());
