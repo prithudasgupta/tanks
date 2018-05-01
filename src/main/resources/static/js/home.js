@@ -228,8 +228,10 @@ $(document).ready(() => {
 });
 
 function loadCampLevel(level) {
-    console.log(level);
-    console.log(window.location.href);
+    let url = window.location.href;
+    let next = url.lastIndexOf("/");
+    let newUrl = url.substr(0, next) + "/game/" + level;
+    window.location.replace(newUrl);
 }
 
 function main() {
