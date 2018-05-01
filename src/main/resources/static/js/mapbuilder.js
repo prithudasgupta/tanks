@@ -23,6 +23,7 @@ let prev;
 let offScreen;
 const submit = $("#submitLevel");
 const finalSubmit = $("#submitLevelFinal");
+const idOfMap = $("#idEntry");
 
 
 
@@ -149,13 +150,15 @@ function loadMap() {
 
 
 		submit.click(event => {
-            let representation = "";
+            let representation = [];
             for (let row = 0; row < 16; row++) {
+                representation.push([]);
                 for (let col = 0; col < 24; col++) {
-                    representation += (map[row][col]).type;
+                    representation[row][col] = (map[row][col]).type;
                 }
             }
-            console.log(representation);
+            // console.log(idOfMap.val());
+
 			$.post('/mapBuilderSubmit', {"representation": representation}, responseJSON => {
 	        		console.log(responseJSON);
     		});
@@ -177,6 +180,11 @@ function loadMap() {
             cur = opt1;
             cur.sel = new Selected("user");
 		});
+
+		finalSubmit.click(event => {
+		    console.log(getLoTanks());
+		    console.log(["user", [userLoc[0],userLoc[1]]]);
+        });
 		
         document.addEventListener("mousemove", function(e) {
             if (stage === 0) {
@@ -184,11 +192,11 @@ function loadMap() {
                     if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080){
                         curRow = Math.floor(e.clientY/45);
                         curCol = Math.floor(e.clientX/45);
-                        //console.log(curRow, curCol);
+
                         if ((map[curRow][curCol]).perWall === false) {
                             if ((map[curRow][curCol]).type !== cur.sel.type) {
                                 map[curRow][curCol].type = cur.sel.type;
-                                //console.log(map[curRow][curCol].type);
+
                                 map[curRow][curCol].sprite.loadImg(cur.sel.string);
                                 map[curRow][curCol].sprite.update();
                             }
@@ -212,8 +220,9 @@ function loadMap() {
                     if ((map[curRow][curCol]).perWall === false) {
                         curRow = Math.floor(e.clientY/45);
                         curCol = Math.floor(e.clientX/45);
-                        if (map[curRow][curCol].type !== "p" || map[curRow][curCol].type !== "u"
-                            || map[curRow][curCol].type !== "b") {
+                        console.log(map[curRow][curCol].type);
+                        if (map[curRow][curCol].type !== "p" && map[curRow][curCol].type !== "u"
+                            && map[curRow][curCol].type !== "b") {
                             // only allow user to be placed once
                             if (cur.sel.type === "user" && userLoc === undefined) {
                                 userLoc = [curRow, curCol];
@@ -260,8 +269,6 @@ function loadMap() {
                     map[4][25].sprite.update();
                     sel = map[4][25].sprite;
                     cur = opt2;
-                    // console.log(sel);
-                    // console.log(cur);
                     if (stage === 0) {
                         cur.sel = new Selected("p");
                     } else {
@@ -302,12 +309,20 @@ function loadMap() {
         loadMap();
         
         main();
-            // getMap();
-            // render();
-            // console.log(map);
+
     });
 
-
+function getLoTanks() {
+    let loEnemies = [];
+    for (let row = 0; row < 16; row++) {
+        for (let col = 0; col < 24; col++) {
+            if (map[row][col].type === "stat") {
+                loEnemies.push(["s",[row, col]]);
+            }
+        }
+    }
+    return loEnemies;
+}
 
 function main() {
     

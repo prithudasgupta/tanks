@@ -29,7 +29,7 @@
 <style>
 
     body {
-        background-image: url("sprites/wall.png");
+        background-image: url("/sprites/wall.png");
         background-repeat: repeat;
     }
 
