@@ -58,6 +58,43 @@ public final class Querier {
 	        return num;
 	}
 	
+	private static int getNumTanks() {
+		int num = 0;
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("SELECT * FROM tanks;");
+	        ResultSet rs = prep.executeQuery();
+	        while (rs.next()) {
+	          num++;
+	        }
+	        prep.close();
+	        rs.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	        return num;
+	}
+	
+	private static int getNumGames() {
+		int num = 0;
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("SELECT * FROM game;");
+	        ResultSet rs = prep.executeQuery();
+	        while (rs.next()) {
+	          num++;
+	        }
+	        prep.close();
+	        rs.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	        return num;
+	}
+	
+
 	public static int addMap(String representation, int user) {
 		int id = -1;
 		try {
@@ -77,6 +114,48 @@ public final class Querier {
 		return id;
 	}
 	
+	public static void addGameToDatabase(int mapId, Tank user, List<Tank> enemies) {
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("INSERT INTO game VALUES (?, ?, ?);");
+			int id = getNumGames();
+			
+			for(int i = 0; i < enemies.size(); i++) {
+				String tankId = Integer.toString(getNumTanks());
+				prep.setString(1, Integer.toString(id));
+				prep.setString(2, Integer.toString(mapId));
+				prep.setString(3, tankId);
+				prep.addBatch();
+				prep.executeBatch();
+				addTankToDatabase(enemies.get(i), tankId);
+			}
+		}
+		catch (Exception e){
+			
+		}
+	}
+	
+	private static void addTankToDatabase(Tank tank, String id) {
+
+		
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("INSERT INTO tanks VALUES (?, ?, ?, ?);");
+			
+				prep.setString(1, id);
+				prep.setString(2, tank.getType());
+				prep.setString(3, Integer.toString((int)tank.getCoord().getCoordinate(0)));
+				prep.setString(4, Integer.toString((int)tank.getCoord().getCoordinate(1)));
+				prep.addBatch();
+				prep.executeBatch();
+				
+		}
+		catch (Exception e){
+			
+		}
+		
+	}
+
 	public static String getMapById(int id)  {
 		String representation = "";
 		try {
