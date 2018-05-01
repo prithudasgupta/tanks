@@ -58,12 +58,13 @@ public final class Querier {
 	        return num;
 	}
 	
-	public static void addMap(String representation, int user) {
-		
+	public static int addMap(String representation, int user) {
+		int id = -1;
 		try {
 			PreparedStatement prep = instance.conn
 			        .prepareStatement("INSERT INTO maps VALUES (?, ?, ?);");
-			prep.setString(1, Integer.toString(getNumMaps()));
+			id = getNumMaps();
+			prep.setString(1, Integer.toString(id));
 			prep.setString(2, representation);
 			prep.setString(3, Integer.toString(user));
 			prep.addBatch();
@@ -73,6 +74,7 @@ public final class Querier {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return id;
 	}
 	
 	public static String getMapById(int id)  {

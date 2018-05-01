@@ -12,6 +12,8 @@ let prev;
 let offScreen;
 const submit = $("#submitLevel");
 
+
+
 // create the Scene object and create the map
 let scene = sjs.Scene({w:1305, h:720});
 let game = scene.Layer('background', {useCanvas:false, autoClear:true});
@@ -52,7 +54,7 @@ for (let row = 0; row < 16; row++) {
         if (row === 0 || row === 15 || col === 0 || col === 23) {
             map[row][col] = "u";
         } else {
-            map[row][col] = "t";
+            map[row][col] = "l";
         }
     }
 }
@@ -74,7 +76,7 @@ function loadMap() {
                     map[row][col].perWall = true;
                 } else {
                     next = game.Sprite("/sprites/freeSpace.png");
-                    map[row][col] = new Tile(next, "t");
+                    map[row][col] = new Tile(next, "l");
                 }
                 next.move(col * TILE_SIZE, row * TILE_SIZE);
                 next.update();
@@ -92,27 +94,27 @@ function loadMap() {
                     next = game.Sprite("/sprites/wall.png");
                     wall = next;
                     cur = wall;
-                    map[row][col] = new Tile(next, "t");
+                    cur.sel = new Selected("u");
+                    map[row][col] = new Tile(next, "l");
                     map[row][col - 1 ].sprite.loadImg("/sprites/select.png");
                     map[row][col - 1 ].sprite.update();
                     sel = map[row][col - 1 ].sprite;
                 } else if (row === 4 && col === 26) {
                     next = game.Sprite("/sprites/pothole.png");
                     pot = next;
-                    map[row][col] = new Tile(next, "t");
+                    map[row][col] = new Tile(next, "p");
                 } else if (row === 6 && col === 26) {
                     next = game.Sprite("/sprites/breakable.png");
                     brek = next;
-                    map[row][col] = new Tile(next, "t");
+                    map[row][col] = new Tile(next, "b");
                 } else if (row === 8 && col === 26) {
                     next = game.Sprite("/sprites/freeSpace.png");
                     land = next;
                     map[row][col] = new Tile(next, "l");
                 }
-                
                 else {
                     next = game.Sprite("/sprites/menu.png");
-                    map[row][col] = new Tile(next, "t");
+                    map[row][col] = new Tile(next, "l");
                 }
                 next.move(col * TILE_SIZE, row * TILE_SIZE);
                 next.update();
@@ -124,20 +126,19 @@ function loadMap() {
 
     $(document).ready(() => {
 
-
-
 		let down = false;
-		let representation = "";
-		for (let row = 0; row < 16; row++) {
-		    for (let col = 0; col < 24; col++) {
-		        representation += map[row][col];
-		    }
-		}
-		
-		
+
+
 		submit.click(event => {
+            let representation = "";
+            for (let row = 0; row < 16; row++) {
+                for (let col = 0; col < 24; col++) {
+                    representation += (map[row][col]).type;
+                }
+            }
+            console.log(representation);
 			$.post('/mapBuilderSubmit', {"representation": representation}, responseJSON => {
-	        		
+	        		console.log(responseJSON);
     		});
 	
 		});
@@ -147,10 +148,11 @@ function loadMap() {
                 if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080){
                 		curRow = Math.floor(e.clientY/45);
                 		curCol = Math.floor(e.clientX/45);
-                		console.log(curRow, curCol);
+                		//console.log(curRow, curCol);
                 		if ((map[curRow][curCol]).perWall === false) {
                             if ((map[curRow][curCol]).type !== cur.sel.type) {
                                 map[curRow][curCol].type = cur.sel.type;
+                                //console.log(map[curRow][curCol].type);
                                 map[curRow][curCol].sprite.loadImg(cur.sel.string);
                                 map[curRow][curCol].sprite.update();
                             }
@@ -168,16 +170,16 @@ function loadMap() {
 		});
 
         document.addEventListener("click", function(e) {
-            if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080) {
-            
-                if ((map[curRow][curCol]).perWall === false) {
-                    if (map[curRow][curCol].type !== cur.sel.type) {
-                        map[curRow][curCol].type = cur.sel.type;
-                        map[curRow][curCol].sprite.loadImg(cur.sel.string);
-                        map[curRow][curCol].sprite.update();
-                    }
-                }
-            }
+            //fix this
+            // if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080) {
+            //     if ((map[curRow][curCol]).perWall === false) {
+            //         if (map[curRow][curCol].type !== cur.sel.type) {
+            //             map[curRow][curCol].type = cur.sel.type;
+            //             map[curRow][curCol].sprite.loadImg(cur.sel.string);
+            //             map[curRow][curCol].sprite.update();
+            //         }
+            //     }
+            // }
             if (wall.isPointIn(e.clientX, e.clientY)) {
                 if (cur !== wall) {
                     sel.loadImg("/sprites/menu.png");
@@ -197,9 +199,10 @@ function loadMap() {
                     map[4][25].sprite.update();
                     sel = map[4][25].sprite;
                     cur = pot;
-                    console.log(sel);
-                    console.log(cur);
+                    // console.log(sel);
+                    // console.log(cur);
                     cur.sel = new Selected("p");
+                    console.log(cur.sel);
                 }
             }
             if (brek.isPointIn(e.clientX, e.clientY)) {

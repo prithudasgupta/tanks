@@ -16,9 +16,9 @@ public class MapBuilderHandler implements Route {
 		  QueryParamsMap qm = request.queryMap();
 		  String representation = qm.value("representation");
 		  
-		  Querier.addMap(representation, 0);
+		  int id = Querier.addMap(representation, 0);
 		  System.out.println(representation);
-		  
-		  return new Gson().toString();
+		  Gson resp = new Gson();
+		  return resp.toJson(id);
 	  }
 }
