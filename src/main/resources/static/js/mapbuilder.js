@@ -16,6 +16,9 @@ let opt3;
 // free, smart tank
 let opt4;
 
+// copy of map
+let representation;
+
 // set variables for mouse display
 let curRow = 0;
 let curCol = 0;
@@ -150,7 +153,7 @@ function loadMap() {
 
 
 		submit.click(event => {
-            let representation = [];
+            representation = [];
             for (let row = 0; row < 16; row++) {
                 representation.push([]);
                 for (let col = 0; col < 24; col++) {
@@ -158,10 +161,9 @@ function loadMap() {
                 }
             }
             // console.log(idOfMap.val());
-
-			$.post('/mapBuilderSubmit', {"representation": representation}, responseJSON => {
-	        		console.log(responseJSON);
-    		});
+            // $.post('/mapBuilderSubmit', {"representation": representation}, responseJSON => {
+	        	// 	console.log(responseJSON);
+            // });
 	        opt1.loadImg("/sprites/userTankSelect.png");
 	        opt1.update();
             opt2.loadImg("/sprites/statTankSelect.png");
@@ -182,8 +184,12 @@ function loadMap() {
 		});
 
 		finalSubmit.click(event => {
-		    console.log(getLoTanks());
-		    console.log(["user", [userLoc[0],userLoc[1]]]);
+		    let tanks = getLoTanks();
+		    let loc = (userLoc[0]).toString() + "," + (userLoc[1]).toString();
+            $.post('/mapBuilderSubmit', {"representation": representation,
+                "tanks": tanks, "user": loc}, responseJSON => {
+                console.log(responseJSON);
+            });
         });
 		
         document.addEventListener("mousemove", function(e) {
@@ -313,11 +319,11 @@ function loadMap() {
     });
 
 function getLoTanks() {
-    let loEnemies = [];
+    let loEnemies = "";
     for (let row = 0; row < 16; row++) {
         for (let col = 0; col < 24; col++) {
             if (map[row][col].type === "stat") {
-                loEnemies.push(["s",[row, col]]);
+                loEnemies += "s," + row.toString() + "," + col.toString() + "|";
             }
         }
     }
