@@ -115,10 +115,12 @@ public final class Querier {
 	}
 	
 	public static void addGameToDatabase(int mapId, List<Tank> enemies) {
+		
+		int id = getNumGames();
+		
 		try {
 			PreparedStatement prep = instance.conn
 			        .prepareStatement("INSERT INTO game VALUES (?, ?, ?);");
-			int id = getNumGames();
 			
 			for(int i = 0; i < enemies.size(); i++) {
 				String tankId = Integer.toString(getNumTanks());
