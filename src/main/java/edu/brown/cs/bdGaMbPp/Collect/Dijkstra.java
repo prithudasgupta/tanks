@@ -62,11 +62,9 @@ public class Dijkstra<V, E> {
 
     // iterate until queue is empty and no more of graph can be traverse
     while (!dijsktraQueue.isEmpty()) {
-
       // pop the top element of priority queue
       Pair<String, Double> currentNodePair = dijsktraQueue.poll();
       String currentNodeID = currentNodePair.getFirst();
-
       // if id is destination, we have found shortest path and create path
       if (currentNodeID.equals(destination)) {
 
@@ -84,11 +82,13 @@ public class Dijkstra<V, E> {
 
         // add to visited and find current node's neighbors
         visited.add(currentNodeID);
+
         Set<String> neighbors = graph.buildNeighbors(currentNodeID);
 
         // iterate through neighbors and update dictionaries if shorter path
         // found
         for (String neighbor : neighbors) {
+
           double testDistance = bestDistances.get(currentNodeID)
               + graph.getEdgeWeight(currentNodeID, neighbor);
           if (!bestDistances.containsKey(neighbor)

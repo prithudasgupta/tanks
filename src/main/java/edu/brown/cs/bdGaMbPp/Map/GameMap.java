@@ -11,8 +11,10 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 import edu.brown.cs.bdGaMbPp.Collect.Angle;
+import edu.brown.cs.bdGaMbPp.Collect.Dijkstra;
 import edu.brown.cs.bdGaMbPp.Collect.Graph;
 import edu.brown.cs.bdGaMbPp.Collect.Pair;
+import edu.brown.cs.bdGaMbPp.Collect.PathNode;
 import edu.brown.cs.bdGaMbPp.Collect.StagnantGraph;
 import edu.brown.cs.bdGaMbPp.Tank.Direction;
 
@@ -22,7 +24,7 @@ public class GameMap {
 	private final int length;
 	private final int width;
 	private int id;
-	private Graph<Pair<Integer, Integer>, Pair<Integer, Integer>> graph = null;
+	private Graph<Pair<Integer, Integer>, String> graph = null;
 
 	public GameMap(List<List<Location>> locations) {
 		tiles = locations;
@@ -286,27 +288,37 @@ public class GameMap {
 		return null;
 		}
 	
+		public List<Pair<Integer,Integer>> getRoute(Pair<Integer, Integer> start, Pair<Integer, Integer> end){
+			List<PathNode<Pair<Integer, Integer>, String>> path = new Dijkstra(graph, start.toString(), end.toString()).findShortestPath().getPath();
+			List<Pair<Integer, Integer>> output = new ArrayList<Pair<Integer, Integer>>();
+			for(PathNode<Pair<Integer, Integer>, String> node: path) {
+				output.add(node.getSource());
+			}
+			output.add(path.get(path.size()-1).getDestination());
+			return output;
+		}
+	
 	 private void createGraph() {
 	   
 	   //combine two lists eventually (l and b)
 	     List<Pair<Integer, Integer>> lList = this.indicesByType("l");
+	     lList.addAll(this.indicesByType("b"));
 	     Map<String, List<String>> edgeIds = new HashMap<String, List<String>>();
 	     Map<String, List<Double>> weights = new HashMap<String, List<Double>>();
-	     Map<String, List<Pair<Integer, Integer>>> edges = new HashMap<String, List<Pair<Integer, Integer>>>();
+	     Map<String, List<String>> edges = new HashMap<String, List<String>>();
 	     
 	     for(Pair<Integer, Integer> l : lList) {
 
 	       List<String> ids = new ArrayList<String>();
 	       List<Double> weight = new ArrayList<Double>();
-	       List<Pair<Integer, Integer>> edge = new ArrayList<Pair<Integer, Integer>>();
-	       String currID = "";
+	       List<String> edge = new ArrayList<String>();
+	       String currID = l.toString();
 	       
 	       List<Pair<Integer, Integer>> neighborsList = this.getValidNeighbors(l);
 	       for(Pair<Integer, Integer> neighbors : neighborsList) {
-	       
-	         ids.add(currID);
+	         ids.add(neighbors.toString());
 	         weight.add(1.0);
-	         edge.add(neighbors);
+	         edge.add(neighbors.toString());
 	         
 	       }
 	       
@@ -316,7 +328,7 @@ public class GameMap {
 	       
 	     }
 	     
-	     graph = new StagnantGraph<Pair<Integer, Integer>, Pair<Integer, Integer>>(lList, edgeIds, weights, edges); 
+	     graph = new StagnantGraph<Pair<Integer, Integer>, String>(lList, edgeIds, weights, edges); 
 	   }
 	
 	}
