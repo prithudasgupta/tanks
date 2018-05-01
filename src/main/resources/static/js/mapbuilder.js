@@ -153,11 +153,10 @@ function loadMap() {
 
 
 		submit.click(event => {
-            representation = [];
+            representation = "";
             for (let row = 0; row < 16; row++) {
-                representation.push([]);
                 for (let col = 0; col < 24; col++) {
-                    representation[row][col] = (map[row][col]).type;
+                    representation += (map[row][col]).type;
                 }
             }
             // console.log(idOfMap.val());
@@ -186,6 +185,8 @@ function loadMap() {
 		finalSubmit.click(event => {
 		    let tanks = getLoTanks();
 		    let loc = (userLoc[0]).toString() + "," + (userLoc[1]).toString();
+		    console.log(loc);
+		    console.log(representation);
             $.post('/mapBuilderSubmit', {"representation": representation,
                 "tanks": tanks, "user": loc}, responseJSON => {
                 console.log(responseJSON);
