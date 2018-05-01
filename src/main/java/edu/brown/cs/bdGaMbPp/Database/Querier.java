@@ -114,7 +114,7 @@ public final class Querier {
 		return id;
 	}
 	
-	public static void addGameToDatabase(int mapId, Tank user, List<Tank> enemies) {
+	public static void addGameToDatabase(int mapId, List<Tank> enemies) {
 		try {
 			PreparedStatement prep = instance.conn
 			        .prepareStatement("INSERT INTO game VALUES (?, ?, ?);");
@@ -186,13 +186,13 @@ public final class Querier {
 	          String startRow = rs.getString(3);
 	          String startCol = rs.getString(4);
 	          
-	          if (type.equals("0")) {
+	          if (type.equals("u")) {
 	        	  	return new UserTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow)));
 	          }
-	          else if (type.equals("1")) {
+	          else if (type.equals("s")) {
 	        	  return new StationaryEnemyTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow)));
 	          }
-	          else if (type.equals("2")) {
+	          else if (type.equals("d")) {
 	        	  return new DrunkWalkTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow)));
 	          }
 	        }

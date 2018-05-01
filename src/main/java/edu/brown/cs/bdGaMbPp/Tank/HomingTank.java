@@ -68,7 +68,7 @@ public class HomingTank implements Tank {
 	@Override
 	public String getType() {
 		// TODO Auto-generated method stub
-		return "3";
+		return "h";
 	}
 	
 	
