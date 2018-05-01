@@ -289,7 +289,7 @@ public class GameMap {
 		}
 	
 		public List<Pair<Integer,Integer>> getRoute(Pair<Integer, Integer> start, Pair<Integer, Integer> end){
-			List<PathNode<Pair<Integer, Integer>, String>> path = new Dijkstra(graph, start.toString(), end.toString()).findShortestPath().getPath();
+			List<PathNode<Pair<Integer, Integer>, String>> path = new Dijkstra<Pair<Integer, Integer>, String>(graph, start.toString(), end.toString()).findShortestPath().getPath();
 			List<Pair<Integer, Integer>> output = new ArrayList<Pair<Integer, Integer>>();
 			for(PathNode<Pair<Integer, Integer>, String> node: path) {
 				output.add(node.getSource());
@@ -312,7 +312,6 @@ public class GameMap {
 	       List<String> ids = new ArrayList<String>();
 	       List<Double> weight = new ArrayList<Double>();
 	       List<String> edge = new ArrayList<String>();
-	       String currID = l.toString();
 	       
 	       List<Pair<Integer, Integer>> neighborsList = this.getValidNeighbors(l);
 	       for(Pair<Integer, Integer> neighbors : neighborsList) {

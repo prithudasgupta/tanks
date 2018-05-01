@@ -21,6 +21,8 @@ import java.util.Map;
 
 public class MapHandler implements Route {
 	
+	private GameMap theMap;
+	
   @Override
   public String handle(Request request, Response response) {
     QueryParamsMap qm = request.queryMap();
@@ -40,6 +42,7 @@ public class MapHandler implements Route {
 //    		String data = Querier.getMapById(Integer.parseInt(id));
 //    		if (data.equals("")) {
 		map = new MapBuilder().createMap(0.1, 0);
+		theMap = map;
 		Game aGame = GameInitializer.initializeGame(map, 5);
 		representations = map.getRepresentations();
 		//System.out.println("aGame.getEnemies() = " + aGame.getEnemies());
@@ -53,6 +56,10 @@ public class MapHandler implements Route {
     
     Gson GSON = new Gson();
     return GSON.toJson(variables);
+  }
+  
+  public GameMap getMap() {
+	  return theMap;
   }
   
   private static String convertUrl(String url) {
