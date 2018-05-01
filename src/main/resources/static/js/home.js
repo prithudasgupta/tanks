@@ -230,7 +230,7 @@ $(document).ready(() => {
 function loadCampLevel(level) {
     let url = window.location.href;
     let next = url.lastIndexOf("/");
-    let newUrl = url.substr(0, next) + "/game/" + level;
+    let newUrl = url.substr(0, next) + "/tank/game/" + level;
     window.location.replace(newUrl);
 }
 

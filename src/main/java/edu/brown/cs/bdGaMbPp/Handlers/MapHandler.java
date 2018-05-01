@@ -25,24 +25,33 @@ public class MapHandler implements Route {
 	
   @Override
   public String handle(Request request, Response response) {
+		GameMap map;
+		List<List<String>> representations;
+		Map<String, Object> variables;
     QueryParamsMap qm = request.queryMap();
     String url = qm.value("url");
     String id = convertUrl(url);
-    GameMap map;
-    List<List<String>> representations;
-    
-    Map<String, Object> variables;
-    Game data = Querier.getGameById(Integer.parseInt(id));
-    	if (data == null) {
-		map = new MapBuilder().createMap(0.1, 0);
-		theMap = map;
-		Game aGame = GameInitializer.initializeGame(map, 5);
-		representations = map.getRepresentations();
-		 variables = ImmutableMap.of("map", representations, "game", aGame, "enemies", aGame.getEnemies());
-    	}
-    	else {
-    		 variables = ImmutableMap.of("map", data.getRepresentations(), "game", data, "enemies", data.getEnemies());
-    	}
+    if (id.equals("")) {
+			map = new MapBuilder().createMap(0.1, 0);
+			theMap = map;
+
+			Game aGame = GameInitializer.initializeGame(map, 5);
+			representations = map.getRepresentations();
+			variables = ImmutableMap.of("map", representations, "game", aGame, "enemies", aGame.getEnemies());
+		} else {
+			Game data = Querier.getGameById(Integer.parseInt(id));
+			if (data == null) {
+				map = new MapBuilder().createMap(0.1, 0);
+				theMap = map;
+
+				Game aGame = GameInitializer.initializeGame(map, 5);
+				representations = map.getRepresentations();
+				variables = ImmutableMap.of("map", representations, "game", aGame, "enemies", aGame.getEnemies());
+			}
+			else {
+				variables = ImmutableMap.of("map", data.getRepresentations(), "game", data, "enemies", data.getEnemies());
+			}
+		}
     
     Gson GSON = new Gson();
     return GSON.toJson(variables);
@@ -53,14 +62,13 @@ public class MapHandler implements Route {
   }
   
   private static String convertUrl(String url) {
-	  int index = url.indexOf("id");
-	  String id = url.substring(index);;
-	  if (id.equals("id")) {
-		  return "-1";
-	  }
-	  else {
-		  return id.substring(2);
-	  }
+	  int index = url.lastIndexOf("me/");
+	  if (index == -1) {
+	  	return "";
+		}
+	  String id = url.substring(index + 3);
+		System.out.println("id = " + id);
+	  return id;
   }
   
   
