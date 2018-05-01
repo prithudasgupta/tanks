@@ -54,7 +54,9 @@ public class GraphNode<V, E> {
     node = newNode;
     nodeID = newNode.toString();
     neighbors = new HashMap<String, Pair<E, Double>>();
+
     for (int i = 0; i < neighborIds.size(); i++) {
+
       neighbors.put(neighborIds.get(i),
           new Pair<E, Double>(edges.get(i), weights.get(i)));
     }

@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.bdGaMbPp.Handlers.GameHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.HomeHandler;
+import edu.brown.cs.bdGaMbPp.Handlers.HomingTankHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.MapBuilderHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.MapHandler;
 
@@ -114,7 +115,9 @@ public final class Main {
 
     Spark.get("/home", new HomeHandler(), freeMarker);
     Spark.get("/test", new TestHandler(), freeMarker);
-    Spark.post("/map", new MapHandler());
+    MapHandler mapHandler = new MapHandler();
+    Spark.post("/map", mapHandler);
+    Spark.post("/homing", new HomingTankHandler(mapHandler.getMap()));
     Spark.post("/mapBuilderSubmit", new MapBuilderHandler());
     Spark.get("/mapbuilder", new MapBuilderHomeHandler(), freeMarker);
 
