@@ -145,6 +145,10 @@ public final class Querier {
 			prep.setString(1, Integer.toString(id));
 	        ResultSet rs = prep.executeQuery();
 	        List<Tank> tanks = new ArrayList<Tank>();
+	        if (!rs.next()) {
+	        		return null;
+	        }
+	   
 	        while (rs.next()) {
 	          if (map.equals("")) {
 	        	  	map = Querier.getMapById(Integer.parseInt(rs.getString(2)));
