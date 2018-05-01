@@ -214,7 +214,7 @@ $(document).ready(() => {
 
     for(let i = 0; i < 20; i++){
         if (i < 5) {
-            $('div#levels').append("<img id='level' src='images/mapIcons/mapIcon" + i + ".png'/> </img>");
+            $('div#levels').append("<img id='level' onclick='loadCampLevel(" + i + ")' src='images/mapIcons/mapIcon" + i + ".png'/> </img>");
         } else {
             $('div#levels').append("<img id='level' src='images/mapIcon_lock.png'/> </img>");
         }
@@ -226,6 +226,11 @@ $(document).ready(() => {
 
 
 });
+
+function loadCampLevel(level) {
+    console.log(level);
+    console.log(window.location.href);
+}
 
 function main() {
         // let now = Date.now();

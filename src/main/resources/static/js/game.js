@@ -752,9 +752,9 @@ let firstIteration = true;
 
 function main() {
     if (isGameOver) {
-        $('#enemyKill').innerHTML = "Tanks destroyed : " + kills.toString();
-        // $('#time').innerHTML = "Time : " + currentTime;
-        document.getElementById("#time").innerHTML = "time";
+        // $('#enemyKill').innerHTML = "Tanks destroyed : " + kills.toString();
+        // // $('#time').innerHTML = "Time : " + currentTime;
+        // document.getElementById("#time").innerHTML = "time";
         $('#endGame').toggle();
     } else {
         if (firstIteration) {

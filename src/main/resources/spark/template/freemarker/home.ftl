@@ -38,21 +38,6 @@
 
 
 
-<#--<div class="menuoption" style="position: absolute; width:25%;height:25%; right:30%;bottom: 15%;">-->
-<#--<img id = "img4" src = "images/stickynote.png" style="width:90%;height:90%;" ></img>-->
-<#--<div class="centeredOption">-->
-<#--<a >Multiplayer</a>-->
-<#--</div>-->
-<#--</div>-->
-
-<#--<div class="menuoption" style="position: absolute; width:25%;height:25%; right:5%;bottom: 15%;">-->
-<#--<img id = "img5" src = "images/stickynote.png" style="width:90%;height:90%;" ></img>-->
-<#--<div class="centeredOption">-->
-<#--<a >Leaderboards</a>-->
-<#--</div>-->
-<#--</div>-->
-
-
 <style>
 body {
    background-image: url("sprites/freeSpace.png");
