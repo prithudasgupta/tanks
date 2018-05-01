@@ -26,33 +26,23 @@ public class MapHandler implements Route {
   @Override
   public String handle(Request request, Response response) {
     QueryParamsMap qm = request.queryMap();
-//    String url = qm.value("url");
-//    String id = convertUrl(url);
+    String url = qm.value("url");
+    String id = convertUrl(url);
     GameMap map;
     List<List<String>> representations;
     
-//    //get id from url based on webpage structure
-//    if (id.equals("-1")) {
-//    		map = new MapBuilder().createMap(.1, .1);
-//    		representations = map.getRepresentations();
-//    		Querier.addMap(convertToDatabase(representations), -1);
-//
-//    }
-//    else {
-//    		String data = Querier.getMapById(Integer.parseInt(id));
-//    		if (data.equals("")) {
+    Map<String, Object> variables;
+    Game data = Querier.getGameById(Integer.parseInt(id));
+    	if (data == null) {
 		map = new MapBuilder().createMap(0.1, 0);
 		theMap = map;
 		Game aGame = GameInitializer.initializeGame(map, 5);
 		representations = map.getRepresentations();
-		//System.out.println("aGame.getEnemies() = " + aGame.getEnemies());
-		Map<String, Object> variables = ImmutableMap.of("map", representations, "game", aGame, "enemies", aGame.getEnemies());
-        		
-//    		}
-//    		else {
-//    			representations = convertFromDatabase(data);
-//    		}
-//    }
+		 variables = ImmutableMap.of("map", representations, "game", aGame, "enemies", aGame.getEnemies());
+    	}
+    	else {
+    		 variables = ImmutableMap.of("map", data.getRepresentations(), "game", data, "enemies", data.getEnemies());
+    	}
     
     Gson GSON = new Gson();
     return GSON.toJson(variables);

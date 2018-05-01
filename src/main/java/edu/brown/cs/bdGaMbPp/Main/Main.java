@@ -83,6 +83,14 @@ public final class Main {
     }
   }
   
+  private static class GamePageHandler implements TemplateViewRoute {
+	    @Override
+	    public ModelAndView handle(Request req, Response res) {
+	      Map<String, Object> variables = ImmutableMap.of("title", "Tanks: Play a game!");
+	      return new ModelAndView(variables, "game.ftl");
+	    }
+	  }
+  
   private static class MapBuilderHomeHandler implements TemplateViewRoute {
 	  @Override
 	    public ModelAndView handle(Request req, Response res) {
@@ -117,6 +125,8 @@ public final class Main {
     Spark.get("/test", new TestHandler(), freeMarker);
     MapHandler mapHandler = new MapHandler();
     Spark.post("/map", mapHandler);
+    Spark.get("/tank/game/:id", new GamePageHandler(), freeMarker);
+    Spark.get("/gameHandler", new GameHandler(), freeMarker);
     Spark.post("/homing", new HomingTankHandler(mapHandler.getMap()));
     Spark.post("/mapBuilderSubmit", new MapBuilderHandler());
     Spark.get("/mapbuilder", new MapBuilderHomeHandler(), freeMarker);
