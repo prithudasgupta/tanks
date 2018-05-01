@@ -31,6 +31,7 @@ let pause = false;
 let pauseStart;
 let pauseSprite;
 let statEnemies = [];
+let randomEnemies = [];
 
 let kills = 0;
 
@@ -642,7 +643,6 @@ function randomWalkLogic(movingEnemy) {
             moveBetween(enemyObj);
         }
       }
-}
 
 
 function placeTread(x , y, ang) {
