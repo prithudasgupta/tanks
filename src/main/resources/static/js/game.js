@@ -560,7 +560,36 @@ function checkEndGame() {
     return (statEnemies.length === 0);
 }
 
-function movingEnemyLogic() {
+function moveToTile(enemyObj, nextMove){
+
+                enemyObj.nextRow = nextMove.y;
+                enemyObj.nextCol = nextMove.x;
+                let curRow = Math.floor(movingEnemy.y / 45);
+                let curCol = Math.floor(movingEnemy.x / 45);
+
+                if (enemyObj.nextRow - curRow == 0){
+                    if (enemyObj.nextCol - curCol == 1){
+                        enemyObj.nextAngle = 0;
+                    }
+                    else{
+                        enemyObj.nextAngle = 3.1415;
+                    }
+                }
+                else if(enemyObj.nextRow - curRow == 1){
+                    enemyObj.nextAngle = 1.5707;
+                }
+                else{
+                    enemyObj.nextAngle = 4.712;
+                }
+
+                enemyObj.startX = enemyObj.sprite.x;
+                enemyObj.startY = enemyObj.sprite.y;
+            
+
+            moveBetween(enemyObj);
+        }
+
+function randomWalkLogic(movingEnemy) {
 	
 	if (ready) {
         // let dx = mousX - user.x;
@@ -578,15 +607,14 @@ function movingEnemyLogic() {
         }
         else {
             let movedSoFar = euclidDist(enemyObj.startX, enemyObj.startY, enemyObj.sprite.x, enemyObj.sprite.y);
-            // console.log(enemyObj.startX);
-            // console.log(enemyObj.startX);
-            // console.log(enemyObj.sprite.x);
-            // console.log(enemyObj.sprite.y);
-            // console.log(movedSoFar);
+            
             if (enemyObj.nextRow === undefined || movedSoFar >= 45) {
                 let landSpots = getBorderingLandTiles(movingEnemy.x, movingEnemy.y);
                 const rand = Math.floor(Math.random() * landSpots.length);
                 const nextMove = landSpots[rand];
+                }
+                
+                
                 enemyObj.nextRow = nextMove.y;
                 enemyObj.nextCol = nextMove.x;
                 let curRow = Math.floor(movingEnemy.y / 45);
@@ -756,10 +784,10 @@ function main() {
             for (let i in statEnemies) {
                 enemyLogic(statEnemies[i]);
             }
-
-            if (placedMovingEnemy && enemyObj.alive) {
-                movingEnemyLogic();
+			for (let i in randomEnemies) {
+	             randomWalkLogic(randomEnemies[i]);
             }
+            
 
             updateExplosions();
 
