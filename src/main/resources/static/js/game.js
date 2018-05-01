@@ -1,8 +1,3 @@
-// GOKUL TODO:
-// make enemy class
-// make alive, variable, stage variable
-//
-
 // TODO:
 // Enemy tanks
 // Load in screen and process to get to the first campaign levels
@@ -36,6 +31,8 @@ let pause = false;
 let pauseStart;
 let pauseSprite;
 let statEnemies = [];
+
+let kills = 0;
 
 let enemyLoc = [];
 
@@ -200,11 +197,11 @@ function loadMap() {
                         //     startX = col*TILE_SIZE + 5;
                         //     startY = row*TILE_SIZE + 5;
                         // }
-                        if (!placedMovingEnemy && map[row][col] !== "u" && row > 12 && col > 16) {
-                            placedMovingEnemy = true;
-                            movingEnemyX = col * TILE_SIZE;
-                            movingEnemyY = row * TILE_SIZE;
-                        }
+                        // if (!placedMovingEnemy && map[row][col] !== "u" && row > 12 && col > 16) {
+                        //     placedMovingEnemy = true;
+                        //     movingEnemyX = col * TILE_SIZE;
+                        //     movingEnemyY = row * TILE_SIZE;
+                        // }
                     }
                 }
             }
@@ -231,17 +228,17 @@ function loadMap() {
         uCannon = cannon;
         ready = true;
 
-        // create moving enemy
-        movingEnemy = canvasbg.Sprite("/sprites/imm_tank.png");
-        movingEnemy.move(movingEnemyX, movingEnemyY);
-        movingEnemy.update();
-        movingEnemy.lastFire = Date.now();
-        collideable.push(movingEnemy);
-        nonTrav.push(movingEnemy);
-        enemyObj = new Enemy(movingEnemy);
-        enemyObj.alive = false;
+        // // create moving enemy
+        // movingEnemy = canvasbg.Sprite("/sprites/imm_tank.png");
+        // movingEnemy.move(movingEnemyX, movingEnemyY);
+        // movingEnemy.update();
+        // movingEnemy.lastFire = Date.now();
+        // collideable.push(movingEnemy);
+        // nonTrav.push(movingEnemy);
+        // enemyObj = new Enemy(movingEnemy);
+        // enemyObj.alive = false;
 
-        placedEnemy = true;
+        // placedEnemy = true;
 
         for(let i in enemyLoc) {
             //console.log(i);
@@ -443,11 +440,13 @@ function updateBullet() {
 
                         if (statEnemies.includes(collideable[i])) {
                             statEnemies.splice(statEnemies.indexOf(collideable[i]), 1);
+                            kills++;
                         }
 
-                        if (collideable[i] == enemyObj.sprite) {
-                            enemyObj.alive = false;
-                        }
+                        // if (collideable[i] == enemyObj.sprite) {
+                        //     enemyObj.alive = false;
+                        // }
+
                         // find it in non-traversable and remove, so player can drive over dead body
                         let ind = nonTrav.indexOf(collideable[i]);
                         if (ind >= 0) {
@@ -473,7 +472,7 @@ function updateBullet() {
                 }
                 if (bullet.sprite.collidesWith(user)) {
                     isGameOver = true;
-                    window.alert("Game OVER!");
+                    //window.alert("Game OVER!");
                 }
                 if (!collided) {
                     bullet.sprite.update();
@@ -558,7 +557,7 @@ function getBorderingLandTiles(xCoord, yCoord){
 }
 
 function checkEndGame() {
-    return (!placedEnemy && !(enemyObj.alive));
+    return (statEnemies.length === 0);
 }
 
 function movingEnemyLogic() {
@@ -725,7 +724,10 @@ let firstIteration = true;
 
 function main() {
     if (isGameOver) {
-        window.alert("You won!");
+        $('#enemyKill').innerHTML = "Tanks destroyed : " + kills.toString();
+        // $('#time').innerHTML = "Time : " + currentTime;
+        document.getElementById("#time").innerHTML = "time";
+        $('#endGame').toggle();
     } else {
         if (firstIteration) {
             let now1 = Date.now();
