@@ -69,6 +69,6 @@ public class StationaryEnemyTank implements Tank{
 	
 	@Override
 	public String getType() {
-		return "1";
+		return "s";
 	}
 }

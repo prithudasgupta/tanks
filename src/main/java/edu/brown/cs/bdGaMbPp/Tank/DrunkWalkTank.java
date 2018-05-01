@@ -99,6 +99,6 @@ public class DrunkWalkTank implements Tank{
 	@Override
 	public String getType() {
 		// TODO Auto-generated method stub
-		return "2";
+		return "d";
 	}
 }

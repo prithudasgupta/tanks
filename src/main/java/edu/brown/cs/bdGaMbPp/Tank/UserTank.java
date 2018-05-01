@@ -131,7 +131,7 @@ public class UserTank implements Tank{
 
 @Override
 public String getType() {
-	return "0";
+	return "u";
 }
 	
 }
