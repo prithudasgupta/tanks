@@ -2,8 +2,19 @@ let TILE_SIZE = 45;
 let BOARD_WIDTH = 24;
 let BOARD_HEIGHT = 16;
 let sel;
+let stage = 0;
 
-let wall, pot, brek, land, cur;
+let userLoc;
+
+let cur;
+// wall, user tank
+let opt1;
+// pot, stationary tank
+let opt2;
+// breakable, dumb tank
+let opt3;
+// free, smart tank
+let opt4;
 
 // set variables for mouse display
 let curRow = 0;
@@ -11,6 +22,7 @@ let curCol = 0;
 let prev;
 let offScreen;
 const submit = $("#submitLevel");
+const finalSubmit = $("#submitLevelFinal");
 
 
 
@@ -40,8 +52,14 @@ class Selected {
             this.string = "/sprites/pothole.png";
         } else if (type === "b") {
             this.string = "/sprites/breakable.png";
-        } else {
+        } else if (type === "l") {
             this.string = "/sprites/freeSpace.png";
+        } else if (type === "user") {
+            this.string = "/sprites/userTankSelect.png";
+        } else if (type === "stat") {
+            this.string = "/sprites/statTankSelect.png";
+        } else if (type === "dumb") {
+            this.string = "/sprites/dumbTankSelect.png";
         }
     }
 }
@@ -64,7 +82,8 @@ let walls = [];
 
 
 function loadMap() {
-    scene.loadImages(["/sprites/wall.png", "/sprites/freeSpace.png", "/sprites/pothole.png", "/sprites/breakable.png",
+    scene.loadImages(["/sprites/userTankSelect.png","/sprites/statTankSelect.png","/sprites/dumbTankSelect.png","/sprites/wall.png",
+        "/sprites/freeSpace.png", "/sprites/pothole.png", "/sprites/breakable.png",
         "/sprites/imm_tank.png", "/sprites/tank_space.png", "/sprites/selected.png", "/sprites/menu.png", "/sprites/select.png"], function () {
         // loading map into view
         for (let row = 0; row < 16; row++) {
@@ -92,8 +111,8 @@ function loadMap() {
                     map[row][col] = new Tile(next, "u");
                 } else if (row === 2 && col === 26) {
                     next = game.Sprite("/sprites/wall.png");
-                    wall = next;
-                    cur = wall;
+                    opt1 = next;
+                    cur = opt1;
                     cur.sel = new Selected("u");
                     map[row][col] = new Tile(next, "l");
                     map[row][col - 1 ].sprite.loadImg("/sprites/select.png");
@@ -101,15 +120,15 @@ function loadMap() {
                     sel = map[row][col - 1 ].sprite;
                 } else if (row === 4 && col === 26) {
                     next = game.Sprite("/sprites/pothole.png");
-                    pot = next;
+                    opt2 = next;
                     map[row][col] = new Tile(next, "p");
                 } else if (row === 6 && col === 26) {
                     next = game.Sprite("/sprites/breakable.png");
-                    brek = next;
+                    opt3 = next;
                     map[row][col] = new Tile(next, "b");
                 } else if (row === 8 && col === 26) {
                     next = game.Sprite("/sprites/freeSpace.png");
-                    land = next;
+                    opt4 = next;
                     map[row][col] = new Tile(next, "l");
                 }
                 else {
@@ -140,27 +159,44 @@ function loadMap() {
 			$.post('/mapBuilderSubmit', {"representation": representation}, responseJSON => {
 	        		console.log(responseJSON);
     		});
-	
+	        opt1.loadImg("/sprites/userTankSelect.png");
+	        opt1.update();
+            opt2.loadImg("/sprites/statTankSelect.png");
+            opt2.update();
+            opt3.loadImg("/sprites/dumbTankSelect.png");
+            opt3.update();
+            submit.toggle();
+            finalSubmit.toggle();
+            stage = 1;
+            // reset selected block
+            sel.loadImg("/sprites/menu.png");
+            sel.update();
+            map[2][25].sprite.loadImg("/sprites/select.png");
+            map[2][25].sprite.update();
+            sel = map[2][25].sprite;
+            cur = opt1;
+            cur.sel = new Selected("user");
 		});
 		
         document.addEventListener("mousemove", function(e) {
-            if (down) {
-                if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080){
-                		curRow = Math.floor(e.clientY/45);
-                		curCol = Math.floor(e.clientX/45);
-                		//console.log(curRow, curCol);
-                		if ((map[curRow][curCol]).perWall === false) {
+            if (stage === 0) {
+                if (down) {
+                    if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080){
+                        curRow = Math.floor(e.clientY/45);
+                        curCol = Math.floor(e.clientX/45);
+                        //console.log(curRow, curCol);
+                        if ((map[curRow][curCol]).perWall === false) {
                             if ((map[curRow][curCol]).type !== cur.sel.type) {
                                 map[curRow][curCol].type = cur.sel.type;
                                 //console.log(map[curRow][curCol].type);
                                 map[curRow][curCol].sprite.loadImg(cur.sel.string);
                                 map[curRow][curCol].sprite.update();
                             }
-                		}
+                        }
+                    }
+                    offScreen = false;
                 }
-                offScreen = false;
             }
-
         });
         
         $(document).mousedown(function() {
@@ -171,59 +207,93 @@ function loadMap() {
 
         document.addEventListener("click", function(e) {
             //fix this
-            // if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080) {
-            //     if ((map[curRow][curCol]).perWall === false) {
-            //         if (map[curRow][curCol].type !== cur.sel.type) {
-            //             map[curRow][curCol].type = cur.sel.type;
-            //             map[curRow][curCol].sprite.loadImg(cur.sel.string);
-            //             map[curRow][curCol].sprite.update();
-            //         }
-            //     }
-            // }
-            if (wall.isPointIn(e.clientX, e.clientY)) {
-                if (cur !== wall) {
+            if (stage === 1) {
+                if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080) {
+                    if ((map[curRow][curCol]).perWall === false) {
+                        curRow = Math.floor(e.clientY/45);
+                        curCol = Math.floor(e.clientX/45);
+                        if (map[curRow][curCol].type !== "p" || map[curRow][curCol].type !== "u"
+                            || map[curRow][curCol].type !== "b") {
+                            // only allow user to be placed once
+                            if (cur.sel.type === "user" && userLoc === undefined) {
+                                userLoc = [curRow, curCol];
+                            } else if (cur.sel.type === "user") {
+                                map[userLoc[0]][userLoc[1]].type = "l";
+                                map[userLoc[0]][userLoc[1]].sprite.loadImg("/sprites/freeSpace.png");
+                                map[userLoc[0]][userLoc[1]].sprite.update();
+                                userLoc = [curRow,curCol];
+                            }
+
+                            // if they are replacing the user with land
+                            if (map[curRow][curCol].type === "user") {
+                                userLoc = undefined;
+                            }
+
+                            map[curRow][curCol].type = cur.sel.type;
+                            map[curRow][curCol].sprite.loadImg(cur.sel.string);
+                            map[curRow][curCol].sprite.update();
+                        }
+                    }
+                }
+            }
+            if (opt1.isPointIn(e.clientX, e.clientY)) {
+                if (cur !== opt1) {
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[2][25].sprite.loadImg("/sprites/select.png");
                     map[2][25].sprite.update();
                     sel = map[2][25].sprite;
-                    cur = wall;
-                    cur.sel = new Selected("u");
+                    cur = opt1;
+                    if (stage === 0) {
+                        cur.sel = new Selected("u");
+                    } else {
+                        cur.sel = new Selected("user");
+                    }
+
                 }
             }
-            if (pot.isPointIn(e.clientX, e.clientY)) {
-                if (pot !== wall) {
+            if (opt2.isPointIn(e.clientX, e.clientY)) {
+                if (opt2 !== opt1) {
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[4][25].sprite.loadImg("/sprites/select.png");
                     map[4][25].sprite.update();
                     sel = map[4][25].sprite;
-                    cur = pot;
+                    cur = opt2;
                     // console.log(sel);
                     // console.log(cur);
-                    cur.sel = new Selected("p");
-                    console.log(cur.sel);
+                    if (stage === 0) {
+                        cur.sel = new Selected("p");
+                    } else {
+                        cur.sel = new Selected("stat");
+                    }
+
                 }
             }
-            if (brek.isPointIn(e.clientX, e.clientY)) {
-                if (brek !== wall) {
+            if (opt3.isPointIn(e.clientX, e.clientY)) {
+                if (opt3 !== opt1) {
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[6][25].sprite.loadImg("/sprites/select.png");
                     map[6][25].sprite.update();
                     sel = map[6][25].sprite;
-                    cur = brek;
-                    cur.sel = new Selected("b");
+                    cur = opt3;
+                    if (stage === 0) {
+                        cur.sel = new Selected("b");
+                    } else {
+                        cur.sel = new Selected("dumb");
+                    }
+
                 }
             }
-            if (land.isPointIn(e.clientX, e.clientY)){
-            		if (land !== wall) {
+            if (opt4.isPointIn(e.clientX, e.clientY)){
+            		if (opt4 !== opt1) {
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[8][25].sprite.loadImg("/sprites/select.png");
                     map[8][25].sprite.update();
                     sel = map[8][25].sprite;
-                    cur = land;
+                    cur = opt4;
                     cur.sel = new Selected("l");
                 }
             }
