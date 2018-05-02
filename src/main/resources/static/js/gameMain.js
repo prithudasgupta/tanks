@@ -364,7 +364,7 @@ function fire(sprite) {
             b.move(sprite.x + direction[0], sprite.y + direction[1]);
         } else {
             direction = forwardByAngle(sprite.angle, 25);
-            b.move(sprite.x + 22 + direction[0], sprite.y + 22 + direction[1]);
+            b.move((sprite.x + 22) + (direction[0] * 1.1), (sprite.y + 22) + (direction[1] * 1.1));
         }
 
 
@@ -438,16 +438,13 @@ function updateBullet() {
 
                     if(direction == 0){
                         bullet.movDir[1] = -bullet.movDir[1];
-                    }else{
+                    } else {
                         bullet.movDir[0] = -bullet.movDir[0];
                     }
-
-                }else{
-
+                } else {
                     bullet.sprite.remove();
                     bullets.splice(b, 1);
                 }
-
             }
             // otherwise check for collision with other entities (tanks, breakable walls)
             else {
@@ -499,12 +496,6 @@ function updateBullet() {
                             collided = true;
                             break;
                         }
-
-                        // if (collideable[i] == enemyObj.sprite) {
-                        //     enemyObj.alive = false;
-                        // }
-
-                        // find it in non-traversable and remove, so player can drive over dead body
 
                     }
                 }
@@ -601,10 +592,7 @@ function checkEndGame() {
 function movingEnemyLogic() {
 
     if (ready) {
-        // let dx = mousX - user.x;
-        // let dy = mousY - user.y;
-        // rot = Math.atan2(dy, dx);
-        // uCannon.setAngle(0);
+        
         if (user !== undefined && false) {
             let dx = movingEnemy.x - user.x;
             let dy = movingEnemy.y - user.y;

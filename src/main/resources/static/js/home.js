@@ -219,6 +219,13 @@ $(document).ready(() => {
         $('#profile').toggle();
     });
 
+    $('#mapBuild').on('click', function () {
+        let url = window.location.href;
+        let next = url.lastIndexOf("/");
+        let newUrl = url.substr(0, next) + "/mapbuilder";
+        window.location.replace(newUrl);
+    });
+
 
     for(let i = 0; i < 20; i++){
         if (i < 5) {

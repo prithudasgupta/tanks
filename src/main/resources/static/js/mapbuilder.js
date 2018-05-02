@@ -184,13 +184,19 @@ function loadMap() {
 
 		finalSubmit.click(event => {
 		    let tanks = getLoTanks();
-		    let loc = (userLoc[0]).toString() + "," + (userLoc[1]).toString();
-		    console.log(loc);
-		    console.log(representation);
-            $.post('/mapBuilderSubmit', {"representation": representation,
-                "tanks": tanks, "user": loc}, responseJSON => {
-                console.log(responseJSON);
-            });
+		    // check to see atleast 1 enemy and user is placed
+		    if (userLoc !== undefined && tanks !== "") {
+                let loc = (userLoc[0]).toString() + "," + (userLoc[1]).toString();
+                $.post('/mapBuilderSubmit', {"representation": representation,
+                    "tanks": tanks, "user": loc}, responseJSON => {
+                    let url = window.location.href;
+                    let next = url.lastIndexOf("/");
+                    let newUrl = url.substr(0, next) + "/tank/game/" + responseJSON;
+                    window.location.replace(newUrl);
+                });
+            } else {
+                window.alert("Add a user tanks and atleast 1 enemy!");
+            }
         });
 		
         document.addEventListener("mousemove", function(e) {
