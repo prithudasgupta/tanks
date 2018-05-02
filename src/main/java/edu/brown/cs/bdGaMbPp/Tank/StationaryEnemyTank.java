@@ -11,6 +11,7 @@ public class StationaryEnemyTank implements Tank{
 	private Angle angleForward;
 	private Angle launcherAngle;
 	private boolean isAlive;
+	private String type = "s";
 	
 	private static final double ROTATE_SPEED = 1;
 
@@ -69,6 +70,6 @@ public class StationaryEnemyTank implements Tank{
 	
 	@Override
 	public String getType() {
-		return "s";
+		return type;
 	}
 }

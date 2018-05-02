@@ -13,6 +13,7 @@ public class UserTank implements Tank{
 	private Angle launcherAngle;
 	private double movementSpeed;
 	private boolean isAlive;
+	private String type = "u";
 	
 	private static final double EPSILON = .01;
 	
@@ -131,7 +132,7 @@ public class UserTank implements Tank{
 
 @Override
 public String getType() {
-	return "u";
+	return type;
 }
 	
 }

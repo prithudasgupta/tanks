@@ -11,6 +11,7 @@ public class DrunkWalkTank implements Tank{
 	private Angle angleForward;
 	private Angle launcherAngle;
 	private boolean isAlive;
+	private String type = "d";
 	private Direction [] directions = Direction.values();
 	
 	
@@ -99,6 +100,6 @@ public class DrunkWalkTank implements Tank{
 	@Override
 	public String getType() {
 		// TODO Auto-generated method stub
-		return "d";
+		return type;
 	}
 }
