@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 
 import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
 import edu.brown.cs.bdGaMbPp.Database.Querier;
+import edu.brown.cs.bdGaMbPp.Tank.DrunkWalkTank;
 import edu.brown.cs.bdGaMbPp.Tank.StationaryEnemyTank;
 import edu.brown.cs.bdGaMbPp.Tank.Tank;
 import edu.brown.cs.bdGaMbPp.Tank.UserTank;
@@ -56,6 +57,12 @@ public class MapBuilderHandler implements Route {
 			}
 			else if(single[0].equals("s")) {
 				tankList.add(new StationaryEnemyTank(new Coordinate(xCoord, yCoord)));
+			}
+			else if(single[0].equals("d")) {
+				tankList.add(new DrunkWalkTank(new Coordinate(xCoord, yCoord)));
+			}
+			else if(single[0].equals("h")) {
+				
 			}
 		}
 		delim.close();
