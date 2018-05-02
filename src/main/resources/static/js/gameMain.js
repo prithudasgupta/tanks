@@ -31,6 +31,9 @@ let pause = false;
 let pauseStart;
 let pauseSprite;
 let statEnemies = [];
+let dumbEnemies = [];
+
+
 
 let kills = 0;
 
@@ -141,7 +144,7 @@ function populateMap(row, col, type) {
 }
 
 function setStatTankMap(list) {
-    console.log(list);
+    // console.log(list);
     for (let i in list) {
         let row = (list[i])[1];
         let col = (list[i])[0];
@@ -169,11 +172,7 @@ function loadMap() {
                 } else if (map[row][col] === "b") {
                     next = canvasbg.Sprite("/sprites/freeSpace.png");
                     next.size(45, 45);
-                    // put in location
-                    // next.move(col * TILE_SIZE, row * TILE_SIZE);
-                    // // update it
-                    // next.update();
-                    
+
                     let breakable = canvasbg.Sprite("/sprites/breakable.png");
                     breakable.size(45, 45);
                     // put in location
@@ -192,39 +191,13 @@ function loadMap() {
                     next = canvasbg.Sprite("/sprites/freeSpace.png");
                 }
                 if (map[row][col] !== "b") {
-                    // TEMP CODE
-                    // if (row > 8 && col > 12 && !placedEnemy && map[row][col] !== "u") {
-                    //     placedEnemy = true;
-                    //      next = canvasbg.Sprite("/sprites/freeSpace.png");
-                    //     // enemy = canvasbg.Sprite("/sprites/imm_tank.png");
-                    //     // // make sure that it is to size
-                    //     next.size(45, 45);
-                    //     // enemy.move(col * TILE_SIZE, row * TILE_SIZE);
-                    //     // // put in location
-                    //     next.move(col * TILE_SIZE, row * TILE_SIZE);
-                    //     next.update();
-                    //     // enemy.update();
-                    //     // enemy.lastFire = Date.now();
-                    //     // collideable.push(enemy);
-                    //     // nonTrav.push(enemy);
-                    // }
-                    // else {
-                    // make sure that it is to size
+
                     next.size(45, 45);
                     // put in location
                     next.move(col * TILE_SIZE, row * TILE_SIZE);
                     // update it
                     next.update();
-                    //}
-                    // if (startX === undefined && map[row][col] === "l") {
-                    //     startX = col*TILE_SIZE + 5;
-                    //     startY = row*TILE_SIZE + 5;
-                    // }
-                    // if (!placedMovingEnemy && map[row][col] !== "u" && row > 12 && col > 16) {
-                    //     placedMovingEnemy = true;
-                    //     movingEnemyX = col * TILE_SIZE;
-                    //     movingEnemyY = row * TILE_SIZE;
-                    // }
+
                 }
             }
         }
