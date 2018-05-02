@@ -26,7 +26,6 @@ let prev;
 let offScreen;
 const submit = $("#submitLevel");
 const finalSubmit = $("#submitLevelFinal");
-const idOfMap = $("#idEntry");
 
 
 

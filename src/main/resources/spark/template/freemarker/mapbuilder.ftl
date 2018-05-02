@@ -4,8 +4,6 @@
 
 <button id="submitLevelFinal"> Submit </button>
 
-<textarea id="idEntry"> </textarea>
-
 <style>
 
     body {
