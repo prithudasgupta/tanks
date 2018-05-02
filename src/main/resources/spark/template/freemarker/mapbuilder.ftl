@@ -4,7 +4,7 @@
 
 <button id="submitLevelFinal"> Submit </button>
 
-<textarea id="idEntry"> </textarea>
+<#--<textarea id="idEntry"> </textarea>-->
 
 <style>
 

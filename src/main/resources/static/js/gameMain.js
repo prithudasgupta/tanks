@@ -21,7 +21,12 @@ let BULLET_SPEED = 5;
 let USER_ROT = 0.02;
 let lastFire = Date.now();
 let gameTime = false;
+
+
 let isGameOver;
+let winner = false;
+
+
 let explosions = [];
 let startTime;
 let currentTime = "00:00";
@@ -762,12 +767,26 @@ function updateExplosions() {
 
 let firstIteration = true;
 
+function displayEndGame() {
+
+    $('#next').toggle();
+    document.getElementById("result").innerHTML = "GAME OVER!";
+    $('#endGame').toggle();
+}
+
+
+function displayWinGame() {
+
+    document.getElementById("result").innerHTML = "GAME WON!";
+    $('#endGame').toggle();
+}
+
 function main() {
     if (isGameOver) {
-        // $('#enemyKill').innerHTML = "Tanks destroyed : " + kills.toString();
-        // // $('#time').innerHTML = "Time : " + currentTime;
-        // document.getElementById("#time").innerHTML = "time";
-        $('#endGame').toggle();
+        displayEndGame();
+    }
+    else if (winner) {
+        displayWinGame();
     } else {
         if (firstIteration) {
             let now1 = Date.now();
@@ -809,7 +828,7 @@ function main() {
             count++;
         }
         if(checkEndGame()) {
-            isGameOver = true;
+            winner = true;
         }
         window.requestAnimationFrame(main);
 
@@ -820,6 +839,9 @@ function main() {
 
 $(document).ready(() => {
 
+    let urlArr = document.URL.split("/");
+    let level = parseInt(urlArr[urlArr.length -1]) + 1;
+    document.getElementById("levNumber").innerHTML = "Game Level : " + level.toString();
     // add event listeners for movement of the user tank
 
     document.addEventListener('keydown', function (e) {
@@ -905,11 +927,21 @@ function updateTime(time){
         timeString += "0";
     }
     timeString += seconds.toString();
-
+    timeString = "Time : " + timeString;
     // console.log(timeString);
     if (timeString !== document.getElementById("timer").innerHTML) {
         document.getElementById("timer").innerHTML = timeString;
+        document.getElementById("time").innerHTML = timeString;
+
     }
+
+    let killString = "Kills : " + kills.toString();
+    if (killString != document.getElementById("kills").innerHTML) {
+        document.getElementById("kills").innerHTML = killString;
+        document.getElementById("enemyKill").innerHTML = killString;
+    }
+
+
     //gets time just need to display to user
     return timeString;
 }

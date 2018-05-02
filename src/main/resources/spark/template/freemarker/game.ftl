@@ -4,25 +4,57 @@
     <canvas id="canvas"></canvas>
 
     <div id="sideMenu">
-        side menu
-        <header id="timer"> 0:00 </header>
-        <button id="menu"> menu </button>
+        <center>
+            <header id="levNumber"> Game Level : </header>
+        <header id="timer"> Time : 0:00 </header>
+        <header id="kills"> Kills : 0 </header>
+        <button id="menu" onclick="visitPage('Main')"> Menu </button>
+
+            <table id="leaders" style="width:100%">
+                <tr>
+                    <th>User</th>
+                    <th>Time</th>
+                </tr>
+                <tr>
+                    <td>Ben</td>
+                    <td>00:01</td>
+                </tr>
+                <tr>
+                    <td>Bob</td>
+                    <td>00:02</td>
+                </tr>
+                <tr>
+                    <td>Mike</td>
+                    <td>00:30</td>
+                </tr>
+                <tr>
+                    <td>Prithu</td>
+                    <td>01:11</td>
+                </tr>
+                <tr>
+                    <td>Gokul</td>
+                    <td>05:32</td>
+                </tr>
+            </table>
+
+        </center>
     </div>
 
     <div id="endGame">
         <center>
-            <h3> Game over! </h3>
+            <h3 id="result"> GAME WON!</h3>
 
-        <button id="Main" onclick="visitPage('Main')">
+        <button class="endBut" id="Main" onclick="visitPage('Main')">
             Return to Main Menu
         </button>
-        <br>
-        <button onclick="visitPage('')">
+
+        <button class="endBut" onclick="visitPage('')">
             Retry?
         </button>
-        <h1 id="enemyKill"></h1>
-        <h1 id="time"></h1>
-        <button onclick="visitPage('Next')"> Next Level </button>
+        <header id="enemyKill"> </header>
+        <header id="time"> </header>
+        <header id="bestTime"> Best Time : 00:00 </header>
+        <button class="endBut" id="next" onclick="visitPage('Next')"> Next Level </button>
         </center>
     </div>
 
@@ -54,6 +86,57 @@
         background-repeat: repeat;
         display: none;
         z-index: 100;
+    }
+
+    #timer {
+        color: white;
+        font-size: xx-large;
+        top: 12%;
+        left: 15%;
+        position: absolute;
+    }
+
+    #levNumber {
+        color: white;
+        font-size: xx-large;
+        top: 4%;
+        left: 15%;
+        position: absolute;
+    }
+
+    #kills {
+        color: white;
+        font-size: xx-large;
+        top: 20%;
+        left: 15%;
+        position: absolute;
+    }
+
+    #menu {
+        display: block;
+        margin-right: 25%;
+        width: 50%;
+        height: 45px;
+        top: 30%;
+    }
+
+    .endBut {
+        display: block;
+        width: 40%;
+        height: 45px;
+        padding: none;
+
+    }
+
+    th, td {
+        padding: 5px;
+        text-align: center;
+    }
+
+    #leaders {
+        position: absolute;
+        top: 50%;
+        font-size: x-large;
     }
 
 </style>
