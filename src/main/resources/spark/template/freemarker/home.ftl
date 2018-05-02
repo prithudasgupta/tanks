@@ -19,7 +19,7 @@
 <img id="menuOp" src='/images/survival.png' onmouseover="this.src='/images/survival_hover.png';"
      onmouseout="this.src='/images/survival.png';" style="position: absolute; right: 10%; top: 27%;"/>
 <br />
-<img id="menuOp" src='/images/mapBuilder.png' onmouseover="this.src='/images/mapBuilder_hover.png';"
+<img id="mapBuild" src='/images/mapBuilder.png' onmouseover="this.src='/images/mapBuilder_hover.png';"
      onmouseout="this.src='/images/mapBuilder.png';" style="position: absolute; right: 10%; top: 44%;" />
 <br />
 <img id="menuOp" src='/images/multiplayer.png' onmouseover="this.src='/images/multiplayer_hover.png';"

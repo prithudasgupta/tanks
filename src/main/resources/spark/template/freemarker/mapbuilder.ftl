@@ -8,6 +8,11 @@
 
 <style>
 
+    body {
+        background-image: url("/sprites/menu.png");
+        background-repeat: repeat;
+    }
+
     #submitLevel {
         position: absolute;
         z-index: 101;
