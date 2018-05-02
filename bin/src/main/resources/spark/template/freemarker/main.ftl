@@ -10,6 +10,22 @@
     <link rel="stylesheet" href="/css/normalize.css">
     <link rel="stylesheet" href="/css/html5bp.css">
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="image" href="/sprites/tank.png">
+    <link rel="image" href="/sprites/bullet.png">
+    <link rel="image" href="/sprites/tTreads.png">
+    <link rel="image" href="/sprites/tank_cannon.png">
+    <link rel="image" href="/sprites/wall.png">
+    <link rel="image" href="/sprites/pothole.png">
+    <link rel="image" href="/sprites/breakable.png">
+    <link rel="image" href="/sprites/freeSpace.png">
+    <link rel="image" href="/sprites/explo1.png">
+    <link rel="image" href="/sprites/explo2.png">
+    <link rel="image" href="/sprites/explo3.png">
+    <link rel="image" href="/sprites/imm_tank.png">
+    <link rel="image" href="/sprites/tank_space.png">
+    <link rel="image" href="/sprites/one.png">
+    <link rel="image" href="/sprites/two.png">
+    <link rel="image" href="/sprites/three.png">
   </head>
   <body>
 
@@ -17,7 +33,12 @@
      <!-- Again, we're serving up the unminified source for clarity. -->
      <script src="/js/jquery-2.1.1.js"></script>
      <script src="/js/jquery-3.1.1.js"></script>
-     <script src="/js/map.js"></script>
+     <script src="/js/sprite.js"></script>
+     <script src="/js/collision.js"></script>
+     <script src="/js/tankMove.js"></script>
+     
+
+
 
 
   </body>

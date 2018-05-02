@@ -59,4 +59,4 @@
 </style>
 </#assign>
 <#include "main.ftl">
-<script src="/js/game.js"></script>
+<script src="/js/gameMain.js"></script>

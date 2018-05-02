@@ -3,7 +3,7 @@
 // Load in screen and process to get to the first campaign levels
 // a system to load each game individually
 // A start screen for the game
-// a way to pause and end the game.
+    // a way to pause and end the game.
 
 // let canvas;
 let TILE_SIZE = 45;
@@ -31,10 +31,7 @@ let pause = false;
 let pauseStart;
 let pauseSprite;
 let statEnemies = [];
-let dumbEnemies = [];
-// dumb enemies start location
-let dumbStart = [];
-
+let randomEnemies = [];
 
 let kills = 0;
 
@@ -55,9 +52,9 @@ class Explosion {
 }
 
 class Coordinate {
-    constructor(x, y) {
+	constructor(x, y) {
         this.x = x;
-        this.y = y;
+        this.y = y; 
     }
 }
 
@@ -97,39 +94,11 @@ for (let row = 0; row < 16; row++) {
         map[row][col] = 0;
     }
 }
-
-function visitPage(whereTo){
-	const urlArr = document.URL.split("/");
-	let newUrl = "";
-	switch(whereTo){
-		case "Main":
-			newUrl = "/home";
-		break;
-		case "Next":
-			const nextLevel = parseInt(urlArr[urlArr.length -1])+1;
-			if(nextLevel > 20){
-				alert("Congratulations! you finished all campaign levels");
-				return;
-			}
-			newUrl = nextLevel;
-		
-		break;
-		
-	}
-	window.location.href = newUrl;
-	
-}
-
 function getMap () {
     $.post('/map', {"url": window.location.href}, responseJSON => {
         const respObject = JSON.parse(responseJSON);
         for (let i in respObject.enemies) {
-            if (respObject.enemies[i].type === "s") {
-                enemyLoc.push(respObject.enemies[i].location.coordinates);
-            }
-            if (respObject.enemies[i].type === "d") {
-                dumbStart.push(respObject.enemies[i].location.coordinates);
-            }
+            enemyLoc.push(respObject.enemies[i].location.coordinates);
         }
         let mapLoc = respObject.map;
         for (let row = 0; row < 16; row++) {
@@ -150,7 +119,7 @@ function populateMap(row, col, type) {
 }
 
 function setStatTankMap(list) {
-    // console.log(list);
+    console.log(list);
     for (let i in list) {
         let row = (list[i])[1];
         let col = (list[i])[0];
@@ -164,56 +133,86 @@ let collideable = [];
 // // load in the map
 function loadMap() {
     scene.loadImages(["/sprites/wall.png", "/sprites/freeSpace.png", "/sprites/pothole.png", "/sprites/breakable.png",
-        "/sprites/imm_tank.png", "/sprites/tank_space.png"], function()  {
+            "/sprites/imm_tank.png", "/sprites/tank_space.png"], function()  {
 
-        let next;
-        //console.log(map);
-        for (let row = 0; row < 16; row++) {
-            for (let col = 0; col < 24; col++) {
+            let next;
+            //console.log(map);
+            for (let row = 0; row < 16; row++) {
+                for (let col = 0; col < 24; col++) {
 
-                if (map[row][col] === "u" || map[row][col] === "x") {
-                    next = canvasbg.Sprite("/sprites/wall.png");
-                    walls.push(next);
-                    nonTrav.push(next);
-                } else if (map[row][col] === "b") {
-                    next = canvasbg.Sprite("/sprites/freeSpace.png");
-                    next.size(45, 45);
+                    if (map[row][col] === "u" || map[row][col] === "x") {
+                        next = canvasbg.Sprite("/sprites/wall.png");
+                        walls.push(next);
+                        nonTrav.push(next);
+                    } else if ([col] === "b") {
+                        next = canvasbg.Sprite("/sprites/freeSpace.png");
+                        next.size(45, 45);
+                        // put in location
+                        // next.move(col * TILE_SIZE, row * TILE_SIZE);
+                        // // update it
+                        // next.update();
 
-                    let breakable = canvasbg.Sprite("/sprites/breakable.png");
-                    breakable.size(45, 45);
-                    // put in location
-                    breakable.move(col * TILE_SIZE, row * TILE_SIZE);
-                    // update it
-                    breakable.update();
-                    collideable.push(breakable);
-                    nonTrav.push(breakable);
+                        let breakable = canvasbg.Sprite("/sprites/breakable.png");
+                        breakable.size(45, 45);
+                        // put in location
+                        breakable.move(col * TILE_SIZE, row * TILE_SIZE);
+                        // update it
+                        breakable.update();
+                        collideable.push(breakable);
+                        nonTrav.push(breakable);
 
-                } else if (map[row][col] === "p") {
-                    next = canvasbg.Sprite("/sprites/pothole.png");
-                    nonTrav.push(next);
-                } else if (map[row][col] === "st") {
-                    next = canvasbg.Sprite("/sprites/tank_space.png");
-                } else {
-                    next = canvasbg.Sprite("/sprites/freeSpace.png");
-                }
-                if (map[row][col] !== "b") {
-
-                    next.size(45, 45);
-                    // put in location
-                    next.move(col * TILE_SIZE, row * TILE_SIZE);
-                    // update it
-                    next.update();
-
+                    } else if (map[row][col] === "p") {
+                        next = canvasbg.Sprite("/sprites/pothole.png");
+                        nonTrav.push(next);
+                    } else if (map[row][col] === "st") {
+                        next = canvasbg.Sprite("/sprites/tank_space.png");
+                    } else {
+                        next = canvasbg.Sprite("/sprites/freeSpace.png");
+                    }
+                    if (map[row][col] !== "b") {
+                        // TEMP CODE
+                        // if (row > 8 && col > 12 && !placedEnemy && map[row][col] !== "u") {
+                        //     placedEnemy = true;
+                        //      next = canvasbg.Sprite("/sprites/freeSpace.png");
+                        //     // enemy = canvasbg.Sprite("/sprites/imm_tank.png");
+                        //     // // make sure that it is to size
+                        //     next.size(45, 45);
+                        //     // enemy.move(col * TILE_SIZE, row * TILE_SIZE);
+                        //     // // put in location
+                        //     next.move(col * TILE_SIZE, row * TILE_SIZE);
+                        //     next.update();
+                        //     // enemy.update();
+                        //     // enemy.lastFire = Date.now();
+                        //     // collideable.push(enemy);
+                        //     // nonTrav.push(enemy);
+                        // }
+                        // else {
+                            // make sure that it is to size
+                            next.size(45, 45);
+                            // put in location
+                            next.move(col * TILE_SIZE, row * TILE_SIZE);
+                            // update it
+                            next.update();
+                        //}
+                        // if (startX === undefined && map[row][col] === "l") {
+                        //     startX = col*TILE_SIZE + 5;
+                        //     startY = row*TILE_SIZE + 5;
+                        // }
+                        // if (!placedMovingEnemy && map[row][col] !== "u" && row > 12 && col > 16) {
+                        //     placedMovingEnemy = true;
+                        //     movingEnemyX = col * TILE_SIZE;
+                        //     movingEnemyY = row * TILE_SIZE;
+                        // }
+                    }
                 }
             }
-        }
 
-    });
+        });
     // load in the player
     scene.loadImages(["/sprites/one.png", "/sprites/two.png", "/sprites/three.png", "/sprites/tank.png",
         "/sprites/tank_cannon.png", "/sprites/bullet.png", "/sprites/tTreads.png",
         "/sprites/explo2.png", "/sprites/explo1.png", "/sprites/explo3.png", "/sprites/pause.png",
-        "/sprites/pause_blank.png", "/sprites/dumbTank.png"], function() {
+        "/sprites/pause_blank.png"], function() {
         let userTank = canvasbg.Sprite("/sprites/tank.png");
         let cannon = canvasbg.Sprite("/sprites/tank_cannon.png")
         // put in location
@@ -248,11 +247,6 @@ function loadMap() {
             createStationaryTank(cur[1], cur[0]);
         }
 
-        for (let i in dumbStart) {
-            let cur = dumbStart[i];
-            createDumbTank(cur[1], cur[0]);
-        }
-
         // now loading screen
         three = canvasbg.Sprite("/sprites/one.png");
         two = canvasbg.Sprite("/sprites/two.png");
@@ -281,21 +275,6 @@ function createStationaryTank(row, col) {
     nonTrav.push(tank);
     statEnemies.push(tank);
 
-}
-
-function createDumbTank(row, col) {
-    //let space = canvasbg.Sprite("/sprites/tank_space.png");
-    let tank = canvasbg.Sprite("/sprites/dumbTank.png");
-    //space.move(col*TILE_SIZE, row*TILE_SIZE);
-    tank.move(col*TILE_SIZE, row*TILE_SIZE);
-    //space.update();
-    tank.update();
-    tank.startX = tank.x;
-    tank.startY = tank.y;
-    tank.lastFire = Date.now();
-    collideable.push(tank);
-    nonTrav.push(tank);
-    dumbEnemies.push(tank);
 }
 
 function oneM() {
@@ -355,7 +334,6 @@ class Bullet {
 function fire(sprite) {
     if (ready && (Date.now() - sprite.lastFire) > 400) {
         let b = canvasbg.Sprite("/sprites/bullet.png");
-
         // make sure that it is to size
         // put in location
         let direction;
@@ -364,7 +342,7 @@ function fire(sprite) {
             b.move(sprite.x + direction[0], sprite.y + direction[1]);
         } else {
             direction = forwardByAngle(sprite.angle, 25);
-            b.move((sprite.x + 22) + (direction[0] * 1.1), (sprite.y + 22) + (direction[1] * 1.1));
+            b.move(sprite.x + 22 + direction[0], sprite.y + 22 + direction[1]);
         }
 
 
@@ -390,44 +368,23 @@ function fire(sprite) {
 }
 
 function findCollisionDirection(x1, y1, x2, y2){
-    let left = x2;
-    let bottom = y2;
-    let right = x2 + TILE_SIZE;
-    let top = y2 + TILE_SIZE;
-    console.log("coord " + x1 + ", " + y1);
-    console.log("X from: " + left + " to " + right + "and Y from: " + bottom + " to " + top);
-    
-    /*left = Math.abs(left - x1);
-    bottom = Math.abs(bottom - y1);
-    right = Math.abs(right - x1);
-    top = Math.abs(top - y1);*/
-    
-    /*if(x1 >= left && x1 <= right){
-        console.log("vert");
-        return 0;
-    }else{
-        console.log("hori");
-
-        return 1;
-    }*/
-    left = x1 - left;
-    bottom = y1 - bottom;
-    right = right - x1;
-    top = top - y1;
-
-
-    let min = Math.min(left, bottom, right, top);
-
-    if(min == bottom || min == top){
-         console.log("vert");
-
-        return 0;
-
-    }else{
-        console.log("hori");
-
-        return 1;
-    }
+	let left = x2;
+	let bottom = y2;
+	let right = x2 + TILE_SIZE;
+	let top = y2 + TILE_SIZE;
+	
+	left = Math.abs(left - x1);
+	bottom = Math.abs(bottom - y1);
+	right = Math.abs(right - x1);
+	top = Math.abs(top - y1);
+	
+	let min = Math.min(left, bottom, right, top);
+	
+	if(min == bottom || min == top){
+		return 0;
+	}else{
+		return 1;
+	}
 }
 
 
@@ -439,53 +396,36 @@ function updateBullet() {
         for(let b in bullets) {
             // retrieve bullet from array
             let bullet = bullets[b];
-
+            
             // get previous (non collided cords)
             let prevX = bullet.sprite.x;
             let prevY = bullet.sprite.y;
-
+            
             // direction the bullet is moving
             let cord = bullet.movDir;
             bullet.sprite.move(cord[0],cord[1]);
             // if the bullet collides with a wall, remove it
             if (bullet.sprite.collidesWithArray(walls)) {
-
-                let wall = bullet.sprite.collidesWithArray(walls);
-
+                
+            	let wall = bullet.sprite.collidesWithArray(walls);
+            		
                 if(bullet.type == 1 && bullet.bounces < 3){
-                    let bulletAng = angleBetweenVectors(bullet.movDir, [1,0]);
-                    if(bulletAng < 0){
-                        bulletAng += 2*Math.PI;
-                    }
-                    
-                    console.log("start");
-                    console.log("bull ang " + (180*bulletAng/Math.PI));
-                    console.log("actual " + bullet.sprite.x + ", " + bullet.sprite.y)
-                    const diff = forwardByAngle(bulletAng, 2);
-                    console.log("diff is " + diff);
-                    const newVector = shortenVector(bullet.movDir, 4);
-                    let direction = findCollisionDirection(bullet.sprite.x - diff[0], bullet.sprite.y + diff[1], wall.x, wall.y);
-                    //let direction = findCollisionDirection(newVector[0], newVector[1], wall.x, wall.y);
-                    bullet.bounces++;
+                		
+                		let direction = findCollisionDirection(bullet.sprite.x, bullet.sprite.y, wall.x, wall.y);
+                		bullet.bounces++;
+                		
+                		if(direction == 0){
+                			bullet.movDir[1] = -bullet.movDir[1];
+                		}else{
+                			bullet.movDir[0] = -bullet.movDir[0];
+                		}
 
-                    
-                   // console.log("Prev: " + bullet.movDir);
-                    let old = [];
-                    old[0] =  bullet.movDir[0];
-                    old[1] =  bullet.movDir[1];
-
-                    if(direction == 0){
-                        bullet.movDir[1] = -bullet.movDir[1];
-                    } else {
-                        bullet.movDir[0] = -bullet.movDir[0];
-                    }
-                    bullet.sprite.rotate(angleBetweenVectors(old,bullet.movDir));
-                    
-                } else {
-                    console.log("removed");
-                    bullet.sprite.remove();
+                }else{
+                		
+                		bullet.sprite.remove();
                     bullets.splice(b, 1);
                 }
+                
             }
             // otherwise check for collision with other entities (tanks, breakable walls)
             else {
@@ -502,62 +442,33 @@ function updateBullet() {
                         if (statEnemies.includes(collideable[i])) {
                             statEnemies.splice(statEnemies.indexOf(collideable[i]), 1);
                             kills++;
-                            let ind = nonTrav.indexOf(collideable[i]);
-                            if (ind >= 0) {
-                                nonTrav.splice(ind, 1);
-                            }
-                            // remove from collideable
-
-                            // we dont want to remove bullet, we want to change the sprite... and set up some type of
-                            // timeline to change from different parts of the explosion
-                            let explosion = new Explosion(collideable[i]);
-                            explosion.sprite.loadImg("/sprites/explo1.png");
-                            explosion.sprite.update();
-                            explosions.push(explosion);
-                            //collideable[i].remove();
-                            collideable.splice(i, 1);
-                            // ABOVE
-
-                            bullet.sprite.remove();
-                            bullets.splice(b,1);
-                            collided = true;
-                            break;
-                        } else if (dumbEnemies.includes(collideable[i])) {
-                                dumbEnemies.splice(dumbEnemies.indexOf(collideable[i]), 1);
-                                kills++;
-                                let ind = nonTrav.indexOf(collideable[i]);
-                                if (ind >= 0) {
-                                    nonTrav.splice(ind, 1);
-                                }
-
-                                let explosion = new Explosion(collideable[i]);
-                                explosion.sprite.loadImg("/sprites/explo1.png");
-                                explosion.sprite.update();
-                                explosions.push(explosion);
-                                //collideable[i].remove();
-                                collideable.splice(i, 1);
-                                // ABOVE
-
-                                bullet.sprite.remove();
-                                bullets.splice(b,1);
-                                collided = true;
-                                break;
-                        } else {
-                            let ind = nonTrav.indexOf(collideable[i]);
-                            if (ind >= 0) {
-                                nonTrav.splice(ind, 1);
-                            }
-                            collideable[i].loadImg("/sprites/freeSpace.png");
-                            collideable[i].update();
-
-                            collideable.splice(i, 1);
-
-                            bullet.sprite.remove();
-                            bullets.splice(b,1);
-                            collided = true;
-                            break;
                         }
 
+                        // if (collideable[i] == enemyObj.sprite) {
+                        //     enemyObj.alive = false;
+                        // }
+
+                        // find it in non-traversable and remove, so player can drive over dead body
+                        let ind = nonTrav.indexOf(collideable[i]);
+                        if (ind >= 0) {
+                            nonTrav.splice(ind, 1);
+                        }
+                        // remove from collideable
+                        // GOKUL CHANGE
+                        // we dont want to remove bullet, we want to change the sprite... and set up some type of
+                        // timeline to change from different parts of the explosion
+                        let explosion = new Explosion(collideable[i]);
+                        explosion.sprite.loadImg("/sprites/explo1.png");
+                        explosion.sprite.update();
+                        explosions.push(explosion);
+                        //collideable[i].remove();
+                        collideable.splice(i, 1);
+                        // ABOVE
+
+                        bullet.sprite.remove();
+                        bullets.splice(b,1);
+                        collided = true;
+                        break;
                     }
                 }
                 if (bullet.sprite.collidesWith(user)) {
@@ -573,29 +484,6 @@ function updateBullet() {
     }
 
 }
-
-function shortenVector(v1, shortenValue){
-    const x1 = v1[0];
-    const y1 = v1[1];
-    
-    const length = Math.sqrt(Math.pow(x1, 2) + Math.pow(y1, 2));
-    let output = [];
-    output[0] = x1 - ((x1/length)*shortenValue);
-    output[1] = y1 - ((y1/length)*shortenValue);
-    return output;
-
-    
-}
-
-function angleBetweenVectors(v1, v2){
-    const x1 = v1[0];
-    const x2 = v2[0];
-    const y1 = v1[1];
-    const y2 = v2[1];
-    return Math.atan2(x1*y2-y1*x2,x1*x2+y1*y2);
-
-}
-
 
 function checkForWalls(x,y) {
     let row = Math.floor(y/45);
@@ -649,35 +537,68 @@ function enemyLogic(enemy) {
 }
 
 function getBorderingLandTiles(xCoord, yCoord){
-
-    const yTile = Math.floor(yCoord / 45);
-    const xTile = Math.floor(xCoord / 45);
-    let landSpots = [];
-
-    if (map[yTile - 1][xTile] === "l"){
-        landSpots.push(new Coordinate(xTile, yTile - 1))
-    }
-    if (map[yTile + 1][xTile] === "l"){
-        landSpots.push(new Coordinate( xTile, yTile + 1))
-    }
-    if (map[yTile][xTile - 1] === "l"){
-        landSpots.push(new Coordinate( xTile - 1,yTile))
-    }
-    if (map[yTile][xTile + 1] === "l"){
-        landSpots.push(new Coordinate(xTile + 1, yTile))
-    }
-    return landSpots;
+	
+	const yTile = Math.floor(yCoord / 45);
+	const xTile = Math.floor(xCoord / 45);
+	let landSpots = [];
+	
+	if (map[yTile - 1][xTile] === "l"){
+		landSpots.push(new Coordinate(xTile, yTile - 1))
+	}
+	if (map[yTile + 1][xTile] === "l"){
+		landSpots.push(new Coordinate( xTile, yTile + 1))
+	}
+	if (map[yTile][xTile - 1] === "l"){
+		landSpots.push(new Coordinate( xTile - 1,yTile))
+	}
+	if (map[yTile][xTile + 1] === "l"){
+		landSpots.push(new Coordinate(xTile + 1, yTile))
+	}
+	return landSpots;	
 }
 
 function checkEndGame() {
-    return (statEnemies.length === 0 && dumbEnemies.length === 0);
+    return (statEnemies.length === 0);
 }
 
-function movingEnemyLogic(movingEnemy) {
+function moveToTile(enemyObj, nextMove){
 
-    if (ready) {
-        if (user !== undefined && withinSight(movingEnemy.x, movingEnemy.y)) {
-            let dx = movingEnemy.x - user.x;
+                enemyObj.nextRow = nextMove.y;
+                enemyObj.nextCol = nextMove.x;
+                let curRow = Math.floor(movingEnemy.y / 45);
+                let curCol = Math.floor(movingEnemy.x / 45);
+
+                if (enemyObj.nextRow - curRow == 0){
+                    if (enemyObj.nextCol - curCol == 1){
+                        enemyObj.nextAngle = 0;
+                    }
+                    else{
+                        enemyObj.nextAngle = 3.1415;
+                    }
+                }
+                else if(enemyObj.nextRow - curRow == 1){
+                    enemyObj.nextAngle = 1.5707;
+                }
+                else{
+                    enemyObj.nextAngle = 4.712;
+                }
+
+                enemyObj.startX = enemyObj.sprite.x;
+                enemyObj.startY = enemyObj.sprite.y;
+            
+
+            moveBetween(enemyObj);
+        }
+
+function randomWalkLogic(movingEnemy) {
+	
+	if (ready) {
+        // let dx = mousX - user.x;
+        // let dy = mousY - user.y;
+        // rot = Math.atan2(dy, dx);
+        // uCannon.setAngle(0);
+        if (user !== undefined && false) {
+        		let dx = movingEnemy.x - user.x;
             let dy = movingEnemy.y - user.y;
             rot = Math.atan2(-dy, -dx);
             movingEnemy.setAngle(0);
@@ -686,40 +607,42 @@ function movingEnemyLogic(movingEnemy) {
             fire(movingEnemy);
         }
         else {
-            let movedSoFar = euclidDist(movingEnemy.startX, movingEnemy.startY, movingEnemy.x, movingEnemy.y);
-
-            if (movingEnemy.nextRow === undefined || movedSoFar >= 45) {
+            let movedSoFar = euclidDist(enemyObj.startX, enemyObj.startY, enemyObj.sprite.x, enemyObj.sprite.y);
+            
+            if (enemyObj.nextRow === undefined || movedSoFar >= 45) {
                 let landSpots = getBorderingLandTiles(movingEnemy.x, movingEnemy.y);
                 const rand = Math.floor(Math.random() * landSpots.length);
                 const nextMove = landSpots[rand];
-                movingEnemy.nextRow = nextMove.y;
-                movingEnemy.nextCol = nextMove.x;
+                }
+                
+                
+                enemyObj.nextRow = nextMove.y;
+                enemyObj.nextCol = nextMove.x;
                 let curRow = Math.floor(movingEnemy.y / 45);
                 let curCol = Math.floor(movingEnemy.x / 45);
 
-                if (movingEnemy.nextRow - curRow == 0){
-                    if (movingEnemy.nextCol - curCol == 1){
-                        movingEnemy.nextAngle = 0;
+                if (enemyObj.nextRow - curRow == 0){
+                    if (enemyObj.nextCol - curCol == 1){
+                        enemyObj.nextAngle = 0;
                     }
                     else{
-                        movingEnemy.nextAngle = 3.1415;
+                        enemyObj.nextAngle = 3.1415;
                     }
                 }
-                else if(movingEnemy.nextRow - curRow == 1){
-                    movingEnemy.nextAngle = 1.5707;
+                else if(enemyObj.nextRow - curRow == 1){
+                    enemyObj.nextAngle = 1.5707;
                 }
                 else{
-                    movingEnemy.nextAngle = 4.712;
+                    enemyObj.nextAngle = 4.712;
                 }
 
-                movingEnemy.startX = movingEnemy.x;
-                movingEnemy.startY = movingEnemy.y;
+                enemyObj.startX = enemyObj.sprite.x;
+                enemyObj.startY = enemyObj.sprite.y;
             }
 
-            moveBetween(movingEnemy);
+            moveBetween(enemyObj);
         }
-    }
-}
+      }
 
 
 function placeTread(x , y, ang) {
@@ -861,16 +784,16 @@ function main() {
             for (let i in statEnemies) {
                 enemyLogic(statEnemies[i]);
             }
-
-            for (let i in dumbEnemies) {
-                movingEnemyLogic(dumbEnemies[i]);
+			for (let i in randomEnemies) {
+	             randomWalkLogic(randomEnemies[i]);
             }
+            
 
             updateExplosions();
 
             lastTime = now;
 
-            currentTime = updateTime((Date.now() - startTime) - pauseTime);
+            currentTime = updateTime(Date.now() - startTime + pauseTime);
             count++;
         }
         if(checkEndGame()) {
@@ -907,13 +830,12 @@ $(document).ready(() => {
             case "p":
                 if (pause) {
                     pause = false;
-                    let timePaused = (Date.now() - pauseStart);
-                    console.log(timePaused);
-					pauseTime += timePaused;
-                     
-                     pauseSprite.loadImg("/sprites/pause_blank.png");
-                     pauseSprite.update();
-                    
+                    if (pauseStart !== undefined) {
+                        pauseTime += Date.now() - pauseStart;
+                        pauseStart = undefined;
+                        pauseSprite.loadImg("/sprites/pause_blank.png");
+                        pauseSprite.update();
+                    }
                 } else {
                     pause = true;
                     pauseStart = Date.now();
@@ -956,27 +878,27 @@ $(document).ready(() => {
 
 
 function updateTime(time){
-    const totalSeconds = parseInt(time / 1000);
-    const seconds = totalSeconds % 60;
-    const minutes = parseInt(totalSeconds / 60);
-
-    let timeString = "";
-    if (minutes < 10){
-        timeString += "0";
-    }
-    timeString += minutes.toString();
-    timeString += ":";
-    if (seconds < 10){
-        timeString += "0";
-    }
-    timeString += seconds.toString();
-
-    // console.log(timeString);
+	const totalSeconds = parseInt(time / 1000);
+	const seconds = totalSeconds % 60;
+	const minutes = parseInt(totalSeconds / 60);
+	
+	let timeString = "";
+	if (minutes < 10){
+		timeString += "0";
+	}
+	timeString += minutes.toString();
+	timeString += ":";
+	if (seconds < 10){
+		timeString += "0";
+	}
+	timeString += seconds.toString();
+	
+	// console.log(timeString);
     if (timeString !== document.getElementById("timer").innerHTML) {
         document.getElementById("timer").innerHTML = timeString;
     }
-    //gets time just need to display to user
-    return timeString;
+	//gets time just need to display to user
+	 return timeString;
 }
 
 function enemyDetector(x, y) {
@@ -993,32 +915,37 @@ function euclidDist(x1, y1, x2, y2) {
 }
 
 function withinSight(cpuX, cpuY){
-    const deltaY = user.y - cpuY;
-    const deltaX = user.x - cpuX;
-    const distance = enemyDetector(cpuX, cpuY);
-    const epsilon = 5;
+	const deltaY = user.y - cpuY;
+	const deltaX = user.x - cpuX;
+	const distance = enemyDetector(cpuX, cpuY);
+	const epsilon = 5;
+	
+	const userXTile = Math.floor(parseInt(user.x) / TILE_SIZE);
+	const userYTile = Math.floor(parseInt(user.y) / TILE_SIZE);
+	
+	let currX = cpuX;
+	let currY = cpuY;
+	
+	for (let i = 0; i < distance; i = i + epsilon){
+		currX += deltaX / (distance / epsilon);
+		currY += deltaY / (distance / epsilon);
+		const currXTile = Math.floor(currX / TILE_SIZE);
+		const currYTile = Math.floor(currY / TILE_SIZE);
+		const currTile = map[currYTile][currXTile];
 
-    const userXTile = Math.floor(parseInt(user.x) / TILE_SIZE);
-    const userYTile = Math.floor(parseInt(user.y) / TILE_SIZE);
-
-    let currX = cpuX;
-    let currY = cpuY;
-
-    for (let i = 0; i < distance; i = i + epsilon){
-        currX += deltaX / (distance / epsilon);
-        currY += deltaY / (distance / epsilon);
-        const currXTile = Math.floor(currX / TILE_SIZE);
-        const currYTile = Math.floor(currY / TILE_SIZE);
-        const currTile = map[currYTile][currXTile];
-
-        if (userXTile === currXTile && userYTile === currYTile){
-            return true;
-        }
-        else if(currTile === "u"){
-            return false;
-        }
-    }
-
-    return false;
+		if (userXTile === currXTile && userYTile === currYTile){
+			return true;
+		}
+		else if(currTile === "u"){
+			return false;
+		}
+	}
+	
+	return false;
 }
+
+
+
+
+
 
