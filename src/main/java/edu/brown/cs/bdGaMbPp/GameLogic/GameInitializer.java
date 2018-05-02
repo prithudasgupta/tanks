@@ -8,12 +8,14 @@ import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
 import edu.brown.cs.bdGaMbPp.Collect.Pair;
 import edu.brown.cs.bdGaMbPp.Map.GameMap;
 import edu.brown.cs.bdGaMbPp.Tank.UserTank;
+import edu.brown.cs.bdGaMbPp.Tank.DrunkWalkTank;
 import edu.brown.cs.bdGaMbPp.Tank.StationaryEnemyTank;
 import edu.brown.cs.bdGaMbPp.Tank.Tank;
 
 public final class GameInitializer {
 	
 	private static final int MAX_DIFFICULTY = 10;
+	private static final int DUMB_PROB = 2;
 	
 	
 	public static Game initializeGame(GameMap newMap, int difficulty) {
@@ -51,8 +53,14 @@ public final class GameInitializer {
 			int randIndex = (int) (Math.random() * landIndices.size());
 			Pair<Integer, Integer> newStart = landIndices.get(randIndex);
 			landIndices.remove(randIndex);
-			
-			Tank newTank = new StationaryEnemyTank(convertToCoordinate(newStart));
+			int randProb = (int) (Math.random() * difficulty);
+			Tank newTank = null;
+			if (randProb < DUMB_PROB) {
+				newTank = new DrunkWalkTank(convertToCoordinate(newStart));
+			}
+			else {
+			 newTank = new StationaryEnemyTank(convertToCoordinate(newStart));
+			}
 			currentList.add(newTank);
 		}
 		//System.out.println("currentList = " + currentList);
