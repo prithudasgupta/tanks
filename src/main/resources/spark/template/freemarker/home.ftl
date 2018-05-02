@@ -6,7 +6,7 @@
      onmouseout="this.src='/images/friendsIcon.png';">
 
 <center>    
-<h1>DESKTOP TANKS</h1>
+<img id="logo" src="images/logo.png" >
 </center>
 
 <br />
@@ -83,6 +83,13 @@ h1 {
     z-index: 99;
  }
 
+#logo {
+    float: left;
+    top: 0;
+    left: 0;
+    padding: none;
+    position: absolute;
+}
 
 a{
 color: black;
