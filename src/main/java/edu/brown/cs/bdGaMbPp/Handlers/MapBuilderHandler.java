@@ -35,10 +35,10 @@ public class MapBuilderHandler implements Route {
 			List<Tank> tankList = parseTanks(concat);
 			int id = Querier.addMap(representation, 0);
 			
-			Querier.addGameToDatabase(id, tankList);
+			int gameId = Querier.addGameToDatabase(id, tankList);
 
 		  Gson resp = new Gson();
-		  return resp.toJson("");
+		  return resp.toJson(gameId);
 	  }
 	  
 	  private static List<Tank> parseTanks(String concat) {

@@ -116,7 +116,7 @@ public final class Querier {
 		return id;
 	}
 	
-	public static void addGameToDatabase(int mapId, List<Tank> enemies) {
+	public static int addGameToDatabase(int mapId, List<Tank> enemies) {
 		
 		int id = getNumGames();
 		int tankId = getNumTanks();
@@ -136,11 +136,11 @@ public final class Querier {
 			prep.addBatch();
 			prep.executeBatch();
 			prep.close();
-			
 		}
 		catch (Exception e){
 			
 		}
+		return id;
 	}
 	
 	private static void addTankToDatabase(Tank tank, String id, int gameId) {
