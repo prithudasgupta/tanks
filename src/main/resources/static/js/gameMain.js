@@ -95,8 +95,27 @@ for (let row = 0; row < 16; row++) {
 }
 
 function visitPage(whereTo){
-	console.log(document.URL);
+	const urlArr = document.URL.split("/");
+	let newUrl = "";
+	switch(whereTo){
+		case "Main":
+			newUrl = "/home";
+		break;
+		case "Next":
+			const nextLevel = parseInt(urlArr[urlArr.length -1])+1;
+			if(nextLevel > 20){
+				alert("Congratulations! you finished all campaign levels");
+				return;
+			}
+			newUrl = nextLevel;
+		
+		break;
+		
+	}
+	window.location.href = newUrl;
+	
 }
+
 function getMap () {
     $.post('/map', {"url": window.location.href}, responseJSON => {
         const respObject = JSON.parse(responseJSON);
