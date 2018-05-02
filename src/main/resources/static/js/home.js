@@ -207,8 +207,16 @@ $(document).ready(() => {
         $('#campaign, #main').fadeIn(250);
     });
 
-    $('#exit').on('click', function () {
+    $('#exitCamp').on('click', function () {
         $('#campaign').toggle();
+    });
+
+    $('#profileBut').on('click', function () {
+        $('#profile, #main').fadeIn(250);
+    });
+
+    $('#exitProf').on('click', function () {
+        $('#profile').toggle();
     });
 
 

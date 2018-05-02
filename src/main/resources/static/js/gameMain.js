@@ -464,6 +464,40 @@ function updateBullet() {
                         if (statEnemies.includes(collideable[i])) {
                             statEnemies.splice(statEnemies.indexOf(collideable[i]), 1);
                             kills++;
+                            let ind = nonTrav.indexOf(collideable[i]);
+                            if (ind >= 0) {
+                                nonTrav.splice(ind, 1);
+                            }
+                            // remove from collideable
+
+                            // we dont want to remove bullet, we want to change the sprite... and set up some type of
+                            // timeline to change from different parts of the explosion
+                            let explosion = new Explosion(collideable[i]);
+                            explosion.sprite.loadImg("/sprites/explo1.png");
+                            explosion.sprite.update();
+                            explosions.push(explosion);
+                            //collideable[i].remove();
+                            collideable.splice(i, 1);
+                            // ABOVE
+
+                            bullet.sprite.remove();
+                            bullets.splice(b,1);
+                            collided = true;
+                            break;
+                        } else {
+                            let ind = nonTrav.indexOf(collideable[i]);
+                            if (ind >= 0) {
+                                nonTrav.splice(ind, 1);
+                            }
+                            collideable[i].loadImg("/sprites/freeSpace.png");
+                            collideable[i].update();
+
+                            collideable.splice(i, 1);
+
+                            bullet.sprite.remove();
+                            bullets.splice(b,1);
+                            collided = true;
+                            break;
                         }
 
                         // if (collideable[i] == enemyObj.sprite) {
@@ -471,26 +505,7 @@ function updateBullet() {
                         // }
 
                         // find it in non-traversable and remove, so player can drive over dead body
-                        let ind = nonTrav.indexOf(collideable[i]);
-                        if (ind >= 0) {
-                            nonTrav.splice(ind, 1);
-                        }
-                        // remove from collideable
-                        // GOKUL CHANGE
-                        // we dont want to remove bullet, we want to change the sprite... and set up some type of
-                        // timeline to change from different parts of the explosion
-                        let explosion = new Explosion(collideable[i]);
-                        explosion.sprite.loadImg("/sprites/explo1.png");
-                        explosion.sprite.update();
-                        explosions.push(explosion);
-                        //collideable[i].remove();
-                        collideable.splice(i, 1);
-                        // ABOVE
 
-                        bullet.sprite.remove();
-                        bullets.splice(b,1);
-                        collided = true;
-                        break;
                     }
                 }
                 if (bullet.sprite.collidesWith(user)) {
