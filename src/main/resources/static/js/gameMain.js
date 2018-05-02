@@ -32,7 +32,8 @@ let pauseStart;
 let pauseSprite;
 let statEnemies = [];
 let dumbEnemies = [];
-
+// dumb enemies start location
+let dumbStart = [];
 
 
 let kills = 0;
@@ -122,8 +123,15 @@ function visitPage(whereTo){
 function getMap () {
     $.post('/map', {"url": window.location.href}, responseJSON => {
         const respObject = JSON.parse(responseJSON);
+        console.log(respObject.enemies);
         for (let i in respObject.enemies) {
-            enemyLoc.push(respObject.enemies[i].location.coordinates);
+            if (respObject.enemies[i].type === "s") {
+                enemyLoc.push(respObject.enemies[i].location.coordinates);
+            }
+            if (respObject.enemies[i].type === "d") {
+                dumbStart.push(respObject.enemies[i].location.coordinates);
+                console.log("hello");
+            }
         }
         let mapLoc = respObject.map;
         for (let row = 0; row < 16; row++) {
@@ -224,6 +232,7 @@ function loadMap() {
         uCannon = cannon;
         ready = true;
 
+        console.log(dumbStart);
         // // create moving enemy
         // movingEnemy = canvasbg.Sprite("/sprites/imm_tank.png");
         // movingEnemy.move(movingEnemyX, movingEnemyY);
