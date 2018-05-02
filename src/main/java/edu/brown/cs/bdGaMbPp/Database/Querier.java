@@ -13,6 +13,7 @@ import java.util.List;
 import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
 import edu.brown.cs.bdGaMbPp.GameLogic.Game;
 import edu.brown.cs.bdGaMbPp.Map.GameMap;
+import edu.brown.cs.bdGaMbPp.Map.Location;
 import edu.brown.cs.bdGaMbPp.Tank.DrunkWalkTank;
 import edu.brown.cs.bdGaMbPp.Tank.StationaryEnemyTank;
 import edu.brown.cs.bdGaMbPp.Tank.Tank;
@@ -246,7 +247,7 @@ public final class Querier {
 	        		map = getMapById(mapId);
 	        		List<Tank> tanks = getTanksById(id);
 	        		Tank user = parseTankList(tanks);
-	        		Game theGame = new Game(GameMap.representationToMap(convertFromDatabase(map)), user, tanks);
+	        		Game theGame = new Game(convertFromDatabase(map), user, tanks);
 	        		
 	        		System.out.println(theGame.getRepresentations());
 	        		System.out.println(theGame.getUser());
@@ -276,18 +277,31 @@ public final class Querier {
 		  }
 		  return sb.toString();
 	  }
+	
+	private static GameMap convertMapFromDatabase(String representation) {
+		List<List<Location>> locs = new ArrayList<List<Location>>();
+		for (int i = 0; i < 16; i++) {
+			String nextRow = representation.substring(i * 24, (i + 1) * 24);
+			List<Location> temp = new ArrayList<Location>();
+			for (int j = 0; j < nextRow.length(); j++) {
+				temp.add(GameMap.representationToLocation(Character.toString(nextRow.charAt(j))));
+			}	
+		}
+		return new GameMap(locs);
+	}
 	  
-	  private static List<List<String>> convertFromDatabase(String representations) {
+	  private static GameMap convertFromDatabase(String representations) {
 		  System.out.println(representations);
 		  //assert representations.length() == 384;
-		  List<List<String>> locs = new ArrayList<List<String>>();
+		  List<List<Location>> locs = new ArrayList<List<Location>>();
 		  for (int r = 0; r < 16; r++) {
-		      locs.add(new ArrayList<>());
+		      List<Location> temp = new ArrayList<Location>();
 		      for (int c = 0; c < 24; c++) {
-		        locs.get(r).add(Character.toString(representations.charAt(16 * r + c)));
+		        temp.add(GameMap.representationToLocation(Character.toString(representations.charAt((24 * r) + c))));
 		      }
+		      locs.add(temp);
 		    }
-		  return locs;
+		  return new GameMap(locs);
 	  }
 
 }
