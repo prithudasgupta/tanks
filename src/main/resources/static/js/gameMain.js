@@ -791,7 +791,7 @@ function main() {
 
             lastTime = now;
 
-            currentTime = updateTime(Date.now() - startTime + pauseTime);
+            currentTime = updateTime((Date.now() - startTime) - pauseTime);
             count++;
         }
         if(checkEndGame()) {
@@ -828,12 +828,13 @@ $(document).ready(() => {
             case "p":
                 if (pause) {
                     pause = false;
-                    if (pauseStart !== undefined) {
-                        pauseTime += Date.now() - pauseStart;
-                        pauseStart = undefined;
-                        pauseSprite.loadImg("/sprites/pause_blank.png");
-                        pauseSprite.update();
-                    }
+                    let timePaused = (Date.now() - pauseStart);
+                    console.log(timePaused);
+					pauseTime += timePaused;
+                     
+                     pauseSprite.loadImg("/sprites/pause_blank.png");
+                     pauseSprite.update();
+                    
                 } else {
                     pause = true;
                     pauseStart = Date.now();
