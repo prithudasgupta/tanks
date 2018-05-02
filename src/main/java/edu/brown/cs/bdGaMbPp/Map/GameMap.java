@@ -17,6 +17,7 @@ import edu.brown.cs.bdGaMbPp.Collect.Pair;
 import edu.brown.cs.bdGaMbPp.Collect.PathNode;
 import edu.brown.cs.bdGaMbPp.Collect.StagnantGraph;
 import edu.brown.cs.bdGaMbPp.Tank.Direction;
+import edu.brown.cs.bdGaMbPp.Tank.Tank;
 
 public class GameMap {
 
@@ -208,6 +209,10 @@ public class GameMap {
 		return Math.sqrt(Math.pow(row2 - row1, 2) + Math.pow(col2 - col1, 2));
 
 	}
+	
+	/*public Map<Tank, List<Pair<Integer, Integer>>> getTankLocations(){
+		
+	}*/
 	
 	public boolean withinSight(Pair<Integer, Integer> cpu, Pair<Integer, Integer> user) {
 		double deltaY = (user.getSecond() - cpu.getSecond());

@@ -93,6 +93,10 @@ for (let row = 0; row < 16; row++) {
         map[row][col] = 0;
     }
 }
+
+function visitPage(whereTo){
+	console.log(document.URL);
+}
 function getMap () {
     $.post('/map', {"url": window.location.href}, responseJSON => {
         const respObject = JSON.parse(responseJSON);

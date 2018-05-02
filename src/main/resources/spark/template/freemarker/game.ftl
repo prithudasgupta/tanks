@@ -17,7 +17,7 @@
             Return to Main Menu
         </button>
         <br>
-        <button>
+        <button">
             Retry?
         </button>
         <h1 id="enemyKill"></h1>
