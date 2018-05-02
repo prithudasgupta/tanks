@@ -249,10 +249,6 @@ public final class Querier {
 	        		Tank user = parseTankList(tanks);
 	        		Game theGame = new Game(convertFromDatabase(map), user, tanks);
 	        		
-	        		System.out.println(theGame.getRepresentations());
-	        		System.out.println(theGame.getUser());
-	        		System.out.println(theGame.getEnemies().size());
-	        		
 	        		return theGame;
 	        }
 	        else {
@@ -291,7 +287,7 @@ public final class Querier {
 	}
 	  
 	  private static GameMap convertFromDatabase(String representations) {
-		  System.out.println(representations);
+		  
 		  //assert representations.length() == 384;
 		  List<List<Location>> locs = new ArrayList<List<Location>>();
 		  for (int r = 0; r < 16; r++) {
