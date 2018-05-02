@@ -147,14 +147,14 @@ function loadMap() {
                     next = canvasbg.Sprite("/sprites/wall.png");
                     walls.push(next);
                     nonTrav.push(next);
-                } else if ([col] === "b") {
+                } else if (map[row][col] === "b") {
                     next = canvasbg.Sprite("/sprites/freeSpace.png");
                     next.size(45, 45);
                     // put in location
                     // next.move(col * TILE_SIZE, row * TILE_SIZE);
                     // // update it
                     // next.update();
-
+                    
                     let breakable = canvasbg.Sprite("/sprites/breakable.png");
                     breakable.size(45, 45);
                     // put in location
