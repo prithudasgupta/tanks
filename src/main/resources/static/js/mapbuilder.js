@@ -334,7 +334,6 @@ function getLoTanks() {
             }
             if (map[row][col].type === "dumb") {
                 loEnemies += "d," + row.toString() + "," + col.toString() + "#";
-                console.log("adding dumb tank");
             }
         }
     }
