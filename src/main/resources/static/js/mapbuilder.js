@@ -324,7 +324,7 @@ function getLoTanks() {
     for (let row = 0; row < 16; row++) {
         for (let col = 0; col < 24; col++) {
             if (map[row][col].type === "stat") {
-                loEnemies += "s," + row.toString() + "," + col.toString() + "|";
+                loEnemies += "s," + row.toString() + "," + col.toString() + "#";
             }
         }
     }

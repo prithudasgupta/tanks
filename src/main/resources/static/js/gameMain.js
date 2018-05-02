@@ -93,6 +93,29 @@ for (let row = 0; row < 16; row++) {
         map[row][col] = 0;
     }
 }
+
+function visitPage(whereTo){
+	const urlArr = document.URL.split("/");
+	let newUrl = "";
+	switch(whereTo){
+		case "Main":
+			newUrl = "/home";
+		break;
+		case "Next":
+			const nextLevel = parseInt(urlArr[urlArr.length -1])+1;
+			if(nextLevel > 20){
+				alert("Congratulations! you finished all campaign levels");
+				return;
+			}
+			newUrl = nextLevel;
+		
+		break;
+		
+	}
+	window.location.href = newUrl;
+	
+}
+
 function getMap () {
     $.post('/map', {"url": window.location.href}, responseJSON => {
         const respObject = JSON.parse(responseJSON);
@@ -143,14 +166,14 @@ function loadMap() {
                     next = canvasbg.Sprite("/sprites/wall.png");
                     walls.push(next);
                     nonTrav.push(next);
-                } else if ([col] === "b") {
+                } else if (map[row][col] === "b") {
                     next = canvasbg.Sprite("/sprites/freeSpace.png");
                     next.size(45, 45);
                     // put in location
                     // next.move(col * TILE_SIZE, row * TILE_SIZE);
                     // // update it
                     // next.update();
-
+                    
                     let breakable = canvasbg.Sprite("/sprites/breakable.png");
                     breakable.size(45, 45);
                     // put in location

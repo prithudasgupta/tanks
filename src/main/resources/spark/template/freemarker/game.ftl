@@ -13,16 +13,16 @@
         <center>
             <h3> Game over! </h3>
 
-        <button id="Main">
+        <button id="Main" onclick="visitPage('Main')">
             Return to Main Menu
         </button>
         <br>
-        <button>
+        <button onclick="visitPage('')">
             Retry?
         </button>
         <h1 id="enemyKill"></h1>
         <h1 id="time"></h1>
-        <button> Next Level </button>
+        <button onclick="visitPage('Next')"> Next Level </button>
         </center>
     </div>
 
