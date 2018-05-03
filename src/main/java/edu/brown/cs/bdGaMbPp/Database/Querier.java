@@ -37,10 +37,6 @@ public final class Querier {
 		}
 	}
 	
-	public static Profile signIn(String username, String potentialPassword) {
-		return null;
-	}
-	
 	private static int getNumMaps() {
 		int num = 0;
 		try {
@@ -82,6 +78,24 @@ public final class Querier {
 		try {
 			PreparedStatement prep = instance.conn
 			        .prepareStatement("SELECT * FROM game;");
+	        ResultSet rs = prep.executeQuery();
+	        while (rs.next()) {
+	          num++;
+	        }
+	        prep.close();
+	        rs.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	        return num;
+	}
+	
+	private static int getNumProfiles() {
+		int num = 0;
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("SELECT * FROM profiles;");
 	        ResultSet rs = prep.executeQuery();
 	        while (rs.next()) {
 	          num++;
@@ -262,29 +276,6 @@ public final class Querier {
 		}
 		return null;
 	}
-	
-	private static String convertToDatabase(List<List<String>> representations) {
-		  StringBuilder sb = new StringBuilder();
-		  for (int i = 0; i < representations.size(); i++) {
-			  List<String> currentRow = representations.get(i);
-			  for (int j = 0; j < currentRow.size(); j++) {
-				  sb.append(currentRow.get(j));
-			  }
-		  }
-		  return sb.toString();
-	  }
-	
-	private static GameMap convertMapFromDatabase(String representation) {
-		List<List<Location>> locs = new ArrayList<List<Location>>();
-		for (int i = 0; i < 16; i++) {
-			String nextRow = representation.substring(i * 24, (i + 1) * 24);
-			List<Location> temp = new ArrayList<Location>();
-			for (int j = 0; j < nextRow.length(); j++) {
-				temp.add(GameMap.representationToLocation(Character.toString(nextRow.charAt(j))));
-			}	
-		}
-		return new GameMap(locs);
-	}
 	  
 	  private static GameMap convertFromDatabase(String representations) {
 		  
@@ -299,5 +290,119 @@ public final class Querier {
 		    }
 		  return new GameMap(locs);
 	  }
+
+	public static List<String> getUsernames() {
+		List<String> usernames = new ArrayList<String>();
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("SELECT username FROM profiles;");
+	        ResultSet rs = prep.executeQuery();
+	        while (rs.next()) {
+	          usernames.add(rs.getString(1));
+	        }
+	        prep.close();
+	        rs.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	        return usernames;
+	}
+
+	public static void createNewAccount(String username, String password) {
+		int nextId = getNumProfiles();
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("INSERT INTO profiles VALUES (?, ?, ?, ?);");
+			
+				prep.setString(1, Integer.toString(nextId));
+				prep.setString(2, username);
+				prep.setString(3, password);
+				prep.setString(4, "1");
+				
+				prep.addBatch();
+				prep.executeBatch();
+				prep.close();
+				
+		}
+		catch (Exception e){
+			
+		}
+	}
+	
+	public static void addFriend(int id1, int id2) {
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("INSERT INTO friends VALUES (?, ?);");
+			
+				prep.setString(1, Integer.toString(id1));
+				prep.setString(2, Integer.toString(id2));
+				
+				prep.addBatch();
+				prep.executeBatch();
+				prep.close();
+				
+		}
+		catch (Exception e){
+			
+		}
+	}
+	
+	public static List<Integer> getFriendIds(int id){
+		List<Integer> friends = new ArrayList<Integer>();
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("SELECT second FROM friends WHERE first = ?");
+			
+				prep.setString(1, Integer.toString(id));
+				ResultSet rs = prep.executeQuery();
+		        while (rs.next()) {
+		          friends.add(Integer.parseInt(rs.getString(1)));
+		        }
+		        prep.close();
+		        rs.close();
+			
+		        PreparedStatement prep2 = instance.conn
+				        .prepareStatement("SELECT first FROM friends WHERE second = ?");
+				
+					prep2.setString(1, Integer.toString(id));
+					ResultSet rs2 = prep.executeQuery();
+			        while (rs2.next()) {
+			          friends.add(Integer.parseInt(rs2.getString(1)));
+			        }
+			        prep2.close();
+			        rs2.close();			
+		}
+		catch (Exception e){
+			
+		}
+		return friends;
+	}
+	
+	public static Profile signIn(String username, String password) {
+		try {
+		PreparedStatement prep = instance.conn
+		        .prepareStatement("SELECT * FROM profiles WHERE username = ?");
+		
+			prep.setString(1, username);
+			ResultSet rs = prep.executeQuery();
+	        if (rs.next()) {
+	        		int id = Integer.parseInt(rs.getString(1));
+	        		String actualPassword = rs.getString(3);
+	        		int bestSurvival = Integer.parseInt(rs.getString(4));
+	        		
+	        		if (password.equals(actualPassword)) {
+	        			return new Profile(id, username, password, bestSurvival);
+	        		}
+	        }
+	        
+	        prep.close();
+	        rs.close();
+		}
+		catch(Exception e) {
+			
+		}
+		return null;
+	}
 
 }
