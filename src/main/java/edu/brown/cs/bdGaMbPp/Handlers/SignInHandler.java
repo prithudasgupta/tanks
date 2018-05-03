@@ -12,6 +12,7 @@ import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+import spark.Session;
 
 public class SignInHandler implements Route {
 	
@@ -25,10 +26,15 @@ public class SignInHandler implements Route {
 		boolean signedIn = false;
 		
 		Profile check = Querier.signIn(username, password);
+		//Session session = null
 		
 		if (check != null) {
 			signedIn = true;
+			//session = request.session(true);   // create and return session 
+			//session.attribute("user", check.getId());
+			//request.session().attribute("user",check.getId()); 
 		}
+		
 		
 		Map<String, Object> variables = ImmutableMap.of("signedIn", signedIn, "profile", check);
 		Gson GSON = new Gson();

@@ -21,8 +21,20 @@ public class Profile {
 		friendId = new ArrayList<Integer>();
 	}
 	
-	public boolean signIn(String testPassword) {
-		return testPassword.equals(password);
+	public int getId() {
+		return id;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+	
+	public int getSurvival() {
+		return bestSurvival;
+	}
+	
+	public void setSurvival(int newSurvival) {
+		bestSurvival = newSurvival;
 	}
 	
 

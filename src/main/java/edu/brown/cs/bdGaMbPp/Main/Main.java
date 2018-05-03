@@ -2,13 +2,13 @@ package edu.brown.cs.bdGaMbPp.Main;
 
 import com.google.common.collect.ImmutableMap;
 
-
+import edu.brown.cs.bdGaMbPp.Handlers.CreateProfileHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.GameHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.HomeHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.HomingTankHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.MapBuilderHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.MapHandler;
-
+import edu.brown.cs.bdGaMbPp.Handlers.SignInHandler;
 import edu.brown.cs.bdGaMbPp.Map.MapBuilder;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
@@ -122,6 +122,9 @@ public final class Main {
     FreeMarkerEngine freeMarker = createEngine();
 
     Spark.get("/home", new HomeHandler(), freeMarker);
+    Spark.post("/createAccount", new CreateProfileHandler());
+    Spark.post("/signIn", new SignInHandler());
+    
     Spark.get("/test", new TestHandler(), freeMarker);
     MapHandler mapHandler = new MapHandler();
     Spark.post("/map", mapHandler);

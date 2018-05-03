@@ -36,6 +36,8 @@
      <script src="/js/sprite.js"></script>
      <script src="/js/collision.js"></script>
      <script src="/js/tankMove.js"></script>
+     <script src="/js/profile.js"></script>
+     
      
 
 

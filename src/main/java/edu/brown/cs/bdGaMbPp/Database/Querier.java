@@ -37,10 +37,6 @@ public final class Querier {
 		}
 	}
 	
-	public static Profile signIn(String username, String potentialPassword) {
-		return null;
-	}
-	
 	private static int getNumMaps() {
 		int num = 0;
 		try {
@@ -383,7 +379,7 @@ public final class Querier {
 		return friends;
 	}
 	
-	public static Profile getProfile(String username, String password) {
+	public static Profile signIn(String username, String password) {
 		try {
 		PreparedStatement prep = instance.conn
 		        .prepareStatement("SELECT * FROM profiles WHERE username = ?");
