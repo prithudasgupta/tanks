@@ -6,7 +6,7 @@ let numCols = 12;
 
 let USER_SPEED = 2.5;
 let BULLET_SPEED = 5;
-let USER_ROT = 0.02;
+let USER_ROT = 0.04;
 
 let sKey, aKey, wKey, dKey, space;
 let mousX, mousY;
@@ -228,7 +228,7 @@ $(document).ready(() => {
 
 
     for(let i = 0; i < 20; i++){
-        if (i < 5) {
+        if (i < 10) {
             $('div#levels').append("<img id='level' onclick='loadCampLevel(" + i + ")' src='images/mapIcons/mapIcon" + i + ".png'/> </img>");
         } else {
             $('div#levels').append("<img id='level' src='images/mapIcon_lock.png'/> </img>");
@@ -250,25 +250,8 @@ function loadCampLevel(level) {
 }
 
 function main() {
-        // let now = Date.now();
-        // let timeChange = (now - lastTime) / 1000.0;
-
-        // // update all the entities on the screen
-        // update(timeChange);
-        // // redraw all the objects
-        // render();
 
         userMove();
-        // (Date.now() - lastFire) > 800
-        // if (space) {
-        //     fire(user);
-        // }
-        // updateBullet();
-        // // check to see if the enemy is alive
-        // if (placedEnemy) {
-        //     enemyLogic();
-        // }
-
 
         // lastTime = now;
         window.requestAnimationFrame(main);

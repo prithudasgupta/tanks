@@ -18,7 +18,7 @@ let nonTrav = [];
 let treads = [];
 let USER_SPEED = 2.5;
 let BULLET_SPEED = 5;
-let USER_ROT = 0.02;
+let USER_ROT = 0.04;
 let lastFire = Date.now();
 let gameTime = false;
 
