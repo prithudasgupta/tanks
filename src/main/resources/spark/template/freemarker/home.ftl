@@ -48,6 +48,10 @@
     <center>
         <h2> Profile </h2>
     </center>
+    <p> Username: <input type="text" id="username"> </p>
+    <p> Password: <input type="password" id="password"></p>
+    <button id="signIn"> Sign In </button>
+    <button id="createAccount"> Create Account </button>
 </div>
 
 
