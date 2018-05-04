@@ -62,13 +62,10 @@
          onmouseout="this.src='/images/exit.png';" style="position: absolute; top: 2px; right: 2px;">
 	<center>
         <h2 id="user-heading"> Profile: </h2>
-        <br>
-        <p id="numWins"Number of Wins: ></p>
-        <p id="bestSurvival">Best Survival: </p>
+       
+        
     </center>
-    <ul id="friend-list>
-    
-    </ul>
+ 
     <button id="logout"> Logout </button>
 
 </div>
