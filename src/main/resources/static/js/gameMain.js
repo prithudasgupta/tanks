@@ -42,7 +42,7 @@ let statEnemies = [];
 let dumbEnemies = [];
 // dumb enemies start location
 let dumbStart = [];
-
+let mapLand = [];
 
 
 let kills = 0;
@@ -102,8 +102,10 @@ let walls = [];
 
 for (let row = 0; row < 16; row++) {
     map[row] = [];
+    mapLand[row] = [];
     for (let col = 0; col < 24; col++) {
         map[row][col] = 0;
+        mapLand[row][col] = 0;
     }
 }
 
@@ -176,6 +178,7 @@ function getMap () {
 
 function populateMap(row, col, type) {
     map[row][col] = type;
+
 }
 
 function setRepresentation() {
@@ -210,6 +213,7 @@ function loadMap() {
 
                 if (map[row][col] === "u" || map[row][col] === "x") {
                     next = canvasbg.Sprite("/sprites/wall.png");
+                    mapLand[row][col] = next;
                     walls.push(next);
                     nonTrav.push(next);
                 } else if (map[row][col] === "b") {
@@ -701,21 +705,21 @@ function enemyLogic(enemy) {
 
 function getBorderingLandTiles(xCoord, yCoord){
 
-    const yTile = Math.floor(yCoord / 45);
-    const xTile = Math.floor(xCoord / 45);
+    const row = Math.floor(yCoord / 45);
+    const col = Math.floor(xCoord / 45);
     let landSpots = [];
 
-    if (map[yTile - 1][xTile] === "l"){
-        landSpots.push(new Coordinate(xTile, yTile - 1))
+    if (map[row - 1][col] === "l"){
+        landSpots.push([row - 1, col])
     }
-    if (map[yTile + 1][xTile] === "l"){
-        landSpots.push(new Coordinate( xTile, yTile + 1))
+    if (map[row + 1][col] === "l"){
+        landSpots.push([row + 1, col])
     }
-    if (map[yTile][xTile - 1] === "l"){
-        landSpots.push(new Coordinate(xTile - 1, yTile))
+    if (map[row][col - 1] === "l"){
+        landSpots.push([row, col - 1])
     }
-    if (map[yTile][xTile + 1] === "l"){
-        landSpots.push(new Coordinate(xTile + 1, yTile))
+    if (map[row][col + 1] === "l"){
+        landSpots.push([row, col + 1])
     }
     return landSpots;
 }
@@ -779,19 +783,25 @@ function movingEnemyLogic(movingEnemy) {
 
         let movedSoFar = euclidDist(movingEnemy.startX, movingEnemy.startY, movingEnemy.x, movingEnemy.y);
 
-        if (movingEnemy.nextRow === undefined || movedSoFar >= 22) {
+        // movingEnemy.collidesWith(mapLand[movingEnemy.nextRow][movingEnemy.nextCol])
+        // movedSoFar >= 22
+        if (movingEnemy.nextRow === undefined || movingEnemy.collidesWith(mapLand[movingEnemy.nextRow][movingEnemy.nextCol])) {
 
             // here is where the next location is needed
 
             let landSpots = getBorderingLandTiles(movingEnemy.x, movingEnemy.y);
-            const rand = Math.floor(Math.random() * landSpots.length);
+            const rand = Math.floor(Math.random() * (landSpots.length));
+            console.log(rand);
             const nextMove = landSpots[rand];
+            console.log(nextMove);
 
             // const nMove = homingHelper(movingEnemy);
             // console.log(nMove);
 
-            movingEnemy.nextRow = nextMove.y;
-            movingEnemy.nextCol = nextMove.x;
+            // movingEnemy.nextRow = nextMove[0];
+            // movingEnemy.nextCol = nextMove[1];
+            movingEnemy.nextRow = 15;
+            movingEnemy.nextCol = 20;
             let curRow = Math.floor(movingEnemy.y / 45);
             let curCol = Math.floor(movingEnemy.x / 45);
 
