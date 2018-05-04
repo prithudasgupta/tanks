@@ -11,13 +11,15 @@ public class Profile {
 	
 	private int numWins;
 	private int bestSurvival;
+	private int campaign;
 	private List<Integer> friendId;
 	
-	public Profile(int newId, String newUsername, String newPassword, int newBestSurvival){
+	public Profile(int newId, String newUsername, String newPassword, int newBestSurvival, int campaignBest){
 		id = newId;
 		username = newUsername;
 		password = newPassword;
 		bestSurvival = newBestSurvival;
+		campaign = campaignBest;
 		friendId = new ArrayList<Integer>();
 	}
 	

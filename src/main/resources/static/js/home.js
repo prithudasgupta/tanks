@@ -152,7 +152,7 @@ function userMove() {
 
 $(document).ready(() => {
 
-
+	document.getElementById("login").style.display = "none";
 	
     document.addEventListener('keydown', function (e) {
         switch (e.key) {
@@ -204,27 +204,64 @@ $(document).ready(() => {
     document.getElementById("sjs0").style.left = "5%";
 
     $('#campBut').on('click', function () {
-        $('#campaign, #main').fadeIn(250);
+    $.post('/authenticate', {}, responseJSON => {
+		const respObject = JSON.parse(responseJSON);
+		if (respObject.id === -1){
+			console.log("invalid");
+			document.getElementById("login").style.display = "block";
+		}
+		else{
+			$('#campaign, #main').fadeIn(250);
+		}
+	});
     });
 
     $('#exitCamp').on('click', function () {
         $('#campaign').toggle();
     });
+    
+    $('#logout').on('click', function () {
+        logout();
+        location.reload();
+    });
 
     $('#profileBut').on('click', function () {
-        $('#profile, #main').fadeIn(250);
+    		$.post('/authenticate', {}, responseJSON => {
+		const respObject = JSON.parse(responseJSON);
+		if (respObject.id === -1){
+			console.log("here");
+			$('#signin, #main').fadeIn(250);
+		}
+		else{
+			$('#profile, #main').fadeIn(250);
+			displayProfileScreen(respObject.id);
+		}
+	});
     });
 
     $('#exitProf').on('click', function () {
+        $('#signin').toggle();
+    });
+    
+    $('#exitProfile').on('click', function () {
         $('#profile').toggle();
     });
 
     $('#mapBuild').on('click', function () {
-        let url = window.location.href;
-        let next = url.lastIndexOf("/");
-        let newUrl = url.substr(0, next) + "/mapbuilder";
-        window.location.replace(newUrl);
-    });
+    		$.post('/authenticate', {}, responseJSON => {
+		const respObject = JSON.parse(responseJSON);
+		if (respObject.id === -1){
+			console.log("invalid");
+			document.getElementById("login").style.display = "block";
+		}
+		else{
+			let url = window.location.href;
+	        let next = url.lastIndexOf("/");
+	        let newUrl = url.substr(0, next) + "/mapbuilder";
+	        window.location.replace(newUrl);
+		}
+	});
+ });
 
 
     for(let i = 0; i < 20; i++){

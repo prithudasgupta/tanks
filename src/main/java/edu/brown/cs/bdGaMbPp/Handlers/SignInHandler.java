@@ -17,7 +17,7 @@ import spark.Session;
 public class SignInHandler implements Route {
 	
 	@Override
-	public Object handle(Request request, Response arg1) throws Exception {
+	public Object handle(Request request, Response rep) throws Exception {
 		
 		QueryParamsMap qm = request.queryMap();
 		String username = qm.value("username");
@@ -30,6 +30,8 @@ public class SignInHandler implements Route {
 		
 		if (check != null) {
 			signedIn = true;
+			request.session(true);
+			request.session().attribute("user", Integer.toString(check.getId())); 
 			//session = request.session(true);   // create and return session 
 			//session.attribute("user", check.getId());
 			//request.session().attribute("user",check.getId()); 

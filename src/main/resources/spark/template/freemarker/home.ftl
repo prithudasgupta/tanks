@@ -42,16 +42,42 @@
     </div>
 </div>
 
-<div id="profile">
+<div id="signin">
     <img id="exitProf" src="/images/exit.png" onmouseover="this.src='/images/exit_hover.png';"
          onmouseout="this.src='/images/exit.png';" style="position: absolute; top: 2px; right: 2px;">
     <center>
-        <h2> Profile </h2>
+        <h2> Sign In </h2>
+        <p> Username: <input type="text" id="username"> </p>
+	    <br>
+	    <p> Password: <input type="password" id="password"></p>
+	    <br>
+	    <p>
+	    <button id="signIn"> Sign In </button> 
+	    <button id="createAccount"> Create Account </button> </p>
     </center>
-    <p> Username: <input type="text" id="username"> </p>
-    <p> Password: <input type="password" id="password"></p>
-    <button id="signIn"> Sign In </button>
-    <button id="createAccount"> Create Account </button>
+</div>
+
+<div id="profile">
+	<img id="exitProfile" src="/images/exit.png" onmouseover="this.src='/images/exit_hover.png';"
+         onmouseout="this.src='/images/exit.png';" style="position: absolute; top: 2px; right: 2px;">
+	<center>
+        <h2 id="user-heading"> Profile: </h2>
+        <br>
+        <p id="numWins"Number of Wins: ></p>
+        <p id="bestSurvival">Best Survival: </p>
+    </center>
+    <ul id="friend-list>
+    
+    </ul>
+    <button id="logout"> Logout </button>
+
+</div>
+
+<div id="login" style="display: none">
+    <center>
+        <h2> You must login first </h2>
+        <a href="http://localhost:4567/home">Go home to login</a>
+    </center>
 </div>
 
 
@@ -100,13 +126,35 @@ h1 {
     z-index: 99;
  }
 
+#signin {
+    position: absolute;
+    top: 12.5%;
+    left: 30%;
+    width: 40%;
+    height: 75%;
+    background-color: #1E90FF;
+    display: none;
+    z-index: 99;
+}
+
 #profile {
+	position: absolute;
+    top: 12.5%;
+    left: 10%;
+    width: 75%;
+    height: 75%;
+    background-color: yellow;
+    display: none;
+    z-index: 99;
+}
+
+#login {
     position: absolute;
     top: 12.5%;
     left: 10%;
     width: 75%;
     height: 75%;
-    background-color: limegreen;
+    background-color: red;
     display: none;
     z-index: 99;
 }

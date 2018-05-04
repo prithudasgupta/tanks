@@ -10,17 +10,43 @@ function createAccount(username, password){
 	});
 }
 
-function signIn(username, password){
-	$.post('/signIn', {"username": username, "password": password}, responseJSON => {
+function getUser(){
+	$.post('/authenticate', {}, responseJSON => {
 		const respObject = JSON.parse(responseJSON);
 		console.log(respObject);
-		if (respObject.signedIn === false){
+		if (respObject.id === -1){
+			console.log("invalid");
+			document.getElementById("login").style.display = "block";
+		}
+			console.log(respObject.id);
+			return respObject.id;
+	});
+}
+
+function displayProfileScreen(id){
+	console.log("post");
+
+}
+
+function signIn(username, password){
+	$.post('/signIn', {"username": username, "password": password}, responseJSON => {
+	
+		const respObject = JSON.parse(responseJSON);
+		if (respObject === undefined){
 			alert("invalid username or password");
 		}
 		else{
 			//user successfully signed in
 			console.log(respObject);
+			$('#signin').toggle();
+			 $('#profile').toggle();
 		}
+	});
+}
+
+function logout(){
+	$.post('/logout', {}, responseJSON => {
+		
 	});
 }
 
