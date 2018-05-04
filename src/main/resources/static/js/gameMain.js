@@ -306,8 +306,8 @@ function createDumbTank(row, col) {
     let tank = canvasbg.Sprite("/sprites/dumbTank.png");
     let can = canvasbg.Sprite("/sprites/dumbTank_Can.png");
     //space.move(col*TILE_SIZE, row*TILE_SIZE);
-    tank.move(col*TILE_SIZE, row*TILE_SIZE);
-    can.move(col*TILE_SIZE, row*TILE_SIZE);
+    tank.move(col*TILE_SIZE + 11, row*TILE_SIZE + 11);
+    can.move(col*TILE_SIZE + 11, row*TILE_SIZE + 11);
     //space.update();
     tank.update();
     can.update();
