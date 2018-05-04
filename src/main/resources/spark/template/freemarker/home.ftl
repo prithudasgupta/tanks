@@ -6,7 +6,7 @@
      onmouseout="this.src='/images/friendsIcon.png';">
 
 <center>    
-<img id="logo" src="images/logo.png" >
+<img id="logo" src="images/logo1.png" >
 </center>
 
 <br />

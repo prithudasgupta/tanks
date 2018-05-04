@@ -777,10 +777,10 @@ function movingEnemyLogic(movingEnemy) {
             // const nMove = homingHelper(movingEnemy);
             // console.log(nMove);
 
-            // movingEnemy.nextRow = nextMove[0];
-            // movingEnemy.nextCol = nextMove[1];
-            movingEnemy.nextRow = 15;
-            movingEnemy.nextCol = 20;
+            movingEnemy.nextRow = nextMove[0];
+            movingEnemy.nextCol = nextMove[1];
+            // movingEnemy.nextRow = 15;
+            // movingEnemy.nextCol = 20;
             let curRow = Math.floor(movingEnemy.y / 45);
             let curCol = Math.floor(movingEnemy.x / 45);
 
