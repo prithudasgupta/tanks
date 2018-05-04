@@ -152,7 +152,7 @@ function userMove() {
 
 $(document).ready(() => {
 
-
+	document.getElementById("login").style.display = "none";
 	
     document.addEventListener('keydown', function (e) {
         switch (e.key) {
@@ -220,11 +220,20 @@ $(document).ready(() => {
     });
 
     $('#mapBuild').on('click', function () {
-        let url = window.location.href;
-        let next = url.lastIndexOf("/");
-        let newUrl = url.substr(0, next) + "/mapbuilder";
-        window.location.replace(newUrl);
-    });
+    		$.post('/authenticate', {}, responseJSON => {
+		const respObject = JSON.parse(responseJSON);
+		if (respObject.id === -1){
+			console.log("invalid");
+			document.getElementById("login").style.display = "block";
+		}
+		else{
+			let url = window.location.href;
+	        let next = url.lastIndexOf("/");
+	        let newUrl = url.substr(0, next) + "/mapbuilder";
+	        window.location.replace(newUrl);
+		}
+	});
+ });
 
 
     for(let i = 0; i < 20; i++){

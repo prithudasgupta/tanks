@@ -313,12 +313,13 @@ public final class Querier {
 		int nextId = getNumProfiles();
 		try {
 			PreparedStatement prep = instance.conn
-			        .prepareStatement("INSERT INTO profiles VALUES (?, ?, ?, ?);");
+			        .prepareStatement("INSERT INTO profiles VALUES (?, ?, ?, ?, ?);");
 			
 				prep.setString(1, Integer.toString(nextId));
 				prep.setString(2, username);
 				prep.setString(3, password);
-				prep.setString(4, "1");
+				prep.setString(4, "5");
+				prep.setString(5, "1");
 				
 				prep.addBatch();
 				prep.executeBatch();
@@ -389,10 +390,11 @@ public final class Querier {
 	        if (rs.next()) {
 	        		int id = Integer.parseInt(rs.getString(1));
 	        		String actualPassword = rs.getString(3);
-	        		int bestSurvival = Integer.parseInt(rs.getString(4));
+	        		int bestCampaign = Integer.parseInt(rs.getString(4));
+	        		int bestSurvival = Integer.parseInt(rs.getString(5));
 	        		
 	        		if (password.equals(actualPassword)) {
-	        			return new Profile(id, username, password, bestSurvival);
+	        			return new Profile(id, username, password, bestSurvival, bestCampaign);
 	        		}
 	        }
 	        

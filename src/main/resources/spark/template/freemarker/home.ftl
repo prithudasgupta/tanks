@@ -54,6 +54,13 @@
     <button id="createAccount"> Create Account </button>
 </div>
 
+<div id="login" style="display: none;">
+    <center>
+        <h2> You must login first </h2>
+        <a href="http://localhost:4567/home">Go home to login</a>
+    </center>
+</div>
+
 
 <style>
 body {
