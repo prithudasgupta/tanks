@@ -229,7 +229,7 @@ function loadMap() {
     scene.loadImages(["/sprites/one.png", "/sprites/two.png", "/sprites/three.png", "/sprites/tank.png",
         "/sprites/tank_cannon.png", "/sprites/bullet.png", "/sprites/tTreads.png",
         "/sprites/explo2.png", "/sprites/explo1.png", "/sprites/explo3.png", "/sprites/pause.png",
-        "/sprites/pause_blank.png", "/sprites/dumbTank.png"], function() {
+        "/sprites/pause_blank.png", "/sprites/dumbTank.png", "/sprites/dumbTank_Can.png"], function() {
         let userTank = canvasbg.Sprite("/sprites/tank.png");
         let cannon = canvasbg.Sprite("/sprites/tank_cannon.png")
         // put in location
@@ -288,8 +288,10 @@ function loadMap() {
 function createStationaryTank(row, col) {
     //let space = canvasbg.Sprite("/sprites/tank_space.png");
     let tank = canvasbg.Sprite("/sprites/imm_tank.png");
+
     //space.move(col*TILE_SIZE, row*TILE_SIZE);
     tank.move(col*TILE_SIZE, row*TILE_SIZE);
+
     //space.update();
     tank.update();
     tank.lastFire = Date.now();
@@ -302,13 +304,17 @@ function createStationaryTank(row, col) {
 function createDumbTank(row, col) {
     //let space = canvasbg.Sprite("/sprites/tank_space.png");
     let tank = canvasbg.Sprite("/sprites/dumbTank.png");
+    let can = canvasbg.Sprite("/sprites/dumbTank_Can.png");
     //space.move(col*TILE_SIZE, row*TILE_SIZE);
     tank.move(col*TILE_SIZE, row*TILE_SIZE);
+    can.move(col*TILE_SIZE, row*TILE_SIZE);
     //space.update();
     tank.update();
+    can.update();
     tank.startX = tank.x;
     tank.startY = tank.y;
     tank.lastFire = Date.now();
+    tank.cannon = can;
     collideable.push(tank);
     nonTrav.push(tank);
     dumbEnemies.push(tank);
@@ -378,6 +384,12 @@ function fire(sprite) {
         if (sprite === user) {
             direction = forwardByAngle(uCannon.angle, 25);
             b.move(sprite.x + direction[0], sprite.y + direction[1]);
+        } else if (sprite.cannon !== undefined) {
+            console.log("siring");
+            console.log(sprite.cannon.angle);
+            console.log(sprite.angle);
+            direction = forwardByAngle(sprite.cannon.angle, 25);
+            b.move(sprite.x + (direction[0] * 1.1), sprite.y + (direction[1] * 1.1));
         } else {
             direction = forwardByAngle(sprite.angle, 25);
             b.move((sprite.x + 22) + (direction[0] * 1.1), (sprite.y + 22) + (direction[1] * 1.1));
@@ -386,6 +398,8 @@ function fire(sprite) {
 
         if (user === sprite) {
             b.rotate(uCannon.angle);
+        } else if (sprite.cannon !== undefined) {
+            b.rotate(sprite.cannon.angle);
         } else {
             b.rotate(sprite.angle);
         }
@@ -397,6 +411,8 @@ function fire(sprite) {
         if (user === sprite) {
             bullet.movDir = forwardByAngle(uCannon.angle, BULLET_SPEED);
             bullet.type = 1;
+        } else if (sprite.cannon !== undefined) {
+            bullet.movDir = forwardByAngle(sprite.cannon.angle, BULLET_SPEED);
         } else {
             bullet.movDir = forwardByAngle(sprite.angle, BULLET_SPEED);
         }
@@ -435,12 +451,12 @@ function findCollisionDirection(x1, y1, x2, y2){
     let min = Math.min(left, bottom, right, top);
 
     if(min == bottom || min == top){
-         console.log("vert");
+         // console.log("vert");
 
         return 0;
 
     }else{
-        console.log("hori");
+        // console.log("hori");
 
         return 1;
     }
@@ -473,12 +489,9 @@ function updateBullet() {
                     if(bulletAng < 0){
                         bulletAng += 2*Math.PI;
                     }
-                    
-                    console.log("start");
-                    console.log("bull ang " + (180*bulletAng/Math.PI));
-                    console.log("actual " + bullet.sprite.x + ", " + bullet.sprite.y)
+
                     const diff = forwardByAngle(bulletAng, 2);
-                    console.log("diff is " + diff);
+                    // console.log("diff is " + diff);
                     const newVector = shortenVector(bullet.movDir, 4);
                     let direction = findCollisionDirection(bullet.sprite.x - diff[0], bullet.sprite.y + diff[1], wall.x, wall.y);
                     //let direction = findCollisionDirection(newVector[0], newVector[1], wall.x, wall.y);
@@ -498,7 +511,7 @@ function updateBullet() {
                     bullet.sprite.rotate(angleBetweenVectors(old,bullet.movDir));
                     
                 } else {
-                    console.log("removed");
+
                     bullet.sprite.remove();
                     bullets.splice(b, 1);
                 }
@@ -551,6 +564,7 @@ function updateBullet() {
                                 explosion.sprite.update();
                                 explosions.push(explosion);
                                 //collideable[i].remove();
+                                collideable[i].cannon.remove();
                                 collideable.splice(i, 1);
                                 // ABOVE
 
@@ -733,54 +747,54 @@ function movingEnemyLogic(movingEnemy) {
 
     if (ready) {
         if (user !== undefined && withinSight(movingEnemy.x, movingEnemy.y)) {
-            let dx = movingEnemy.x - user.x;
-            let dy = movingEnemy.y - user.y;
+            let dx = movingEnemy.cannon.x - user.x;
+            let dy = movingEnemy.cannon.y - user.y;
             rot = Math.atan2(-dy, -dx);
-            movingEnemy.setAngle(0);
-            movingEnemy.rotate(rot);
-            movingEnemy.update();
+            movingEnemy.cannon.setAngle(0);
+            movingEnemy.cannon.rotate(rot);
+            movingEnemy.cannon.correctAngle = movingEnemy.cannon.angle + rot;
             fire(movingEnemy);
         }
-        else {
-            let movedSoFar = euclidDist(movingEnemy.startX, movingEnemy.startY, movingEnemy.x, movingEnemy.y);
 
-            if (movingEnemy.nextRow === undefined || movedSoFar >= 45) {
+        let movedSoFar = euclidDist(movingEnemy.startX, movingEnemy.startY, movingEnemy.x, movingEnemy.y);
 
-                // here is where the next location is needed
+        if (movingEnemy.nextRow === undefined || movedSoFar >= 22) {
 
-                let landSpots = getBorderingLandTiles(movingEnemy.x, movingEnemy.y);
-                const rand = Math.floor(Math.random() * landSpots.length);
-                const nextMove = landSpots[rand];
+            // here is where the next location is needed
 
-                // const nMove = homingHelper(movingEnemy);
-                // console.log(nMove);
+            let landSpots = getBorderingLandTiles(movingEnemy.x, movingEnemy.y);
+            const rand = Math.floor(Math.random() * landSpots.length);
+            const nextMove = landSpots[rand];
 
-                movingEnemy.nextRow = nextMove.y;
-                movingEnemy.nextCol = nextMove.x;
-                let curRow = Math.floor(movingEnemy.y / 45);
-                let curCol = Math.floor(movingEnemy.x / 45);
+            // const nMove = homingHelper(movingEnemy);
+            // console.log(nMove);
 
-                if (movingEnemy.nextRow - curRow === 0){
-                    if (movingEnemy.nextCol - curCol === 1){
-                        movingEnemy.nextAngle = 0;
-                    }
-                    else{
-                        movingEnemy.nextAngle = 3.1415;
-                    }
-                }
-                else if(movingEnemy.nextRow - curRow === 1){
-                    movingEnemy.nextAngle = 1.5707;
+            movingEnemy.nextRow = nextMove.y;
+            movingEnemy.nextCol = nextMove.x;
+            let curRow = Math.floor(movingEnemy.y / 45);
+            let curCol = Math.floor(movingEnemy.x / 45);
+
+            if (movingEnemy.nextRow - curRow === 0){
+                if (movingEnemy.nextCol - curCol === 1){
+                    movingEnemy.nextAngle = 0;
                 }
                 else{
-                    movingEnemy.nextAngle = 4.712;
+                    movingEnemy.nextAngle = 3.1415;
                 }
-
-                movingEnemy.startX = movingEnemy.x;
-                movingEnemy.startY = movingEnemy.y;
-            } else {
-                moveBetween(movingEnemy);
             }
+            else if(movingEnemy.nextRow - curRow === 1){
+                movingEnemy.nextAngle = 1.5707;
+            }
+            else{
+                movingEnemy.nextAngle = 4.712;
+            }
+
+            movingEnemy.startX = movingEnemy.x;
+            movingEnemy.startY = movingEnemy.y;
         }
+
+        moveBetween(movingEnemy);
+
     }
 }
 
