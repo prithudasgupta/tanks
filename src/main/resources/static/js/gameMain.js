@@ -787,6 +787,7 @@ function getShortestPathFromTo(fromRow, fromCol, toRow, toCol){
                  console.log("returned route is " + route);
 
     return route;
+
 }
 
 function getCenter(spriteTank){
@@ -844,6 +845,7 @@ function movingEnemyLogic(movingEnemy) {
             }else{
                 movingEnemy.routeIndex += 1;
                 console.log("incr");
+
             }
         }
 

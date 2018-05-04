@@ -86,6 +86,34 @@ function loadMap() {
     });
 }
 
+function visitPage(whereTo){
+    const urlArr = document.URL.split("/");
+    let newUrl = "";
+    switch(whereTo){
+        case "Main":
+            newUrl = "/home";
+            break;
+        case "Next":
+            if(survival){
+                $.post('/nextRound', {}, responseJSON => {
+                    location.reload();
+                });
+            }
+            const nextLevel = parseInt(urlArr[urlArr.length -1])+1;
+            if(nextLevel > 20 && survival !== true){
+                alert("Congratulations! you finished all campaign levels");
+                return;
+            }
+            newUrl = nextLevel;
+
+            break;
+        case "survival":
+            newUrl = "/tank/game/survival";
+    }
+    window.location.href = newUrl;
+}
+
+
 function forwardByAngle(angRads, speed) {
     let x = speed * Math.cos(angRads);
     let y = speed * Math.sin(angRads);
@@ -150,10 +178,42 @@ function userMove() {
     }
 }
 
+function generateFriendsList(friendsList) {
+
+    let parent = document.getElementById("friends");
+
+    let table = document.createElement("table");
+    let tableBody = document.createElement("tbody");
+
+    for(let curRow = 0; curRow < friendsList.length; curRow++) {
+        let row = document.createElement("tr");
+        for (let c = 0; c < 2; c++) {
+            let cell, text;
+            if (c === 0) {
+                cell = document.createElement("td");
+                text = document.createTextNode("bob");
+            } else {
+                cell = document.createElement("td");
+                text = document.createTextNode("Friend");
+            }
+            cell.appendChild(text);
+            row.appendChild(cell);
+        }
+        tableBody.appendChild(row);
+    }
+
+    table.appendChild(tableBody);
+    parent.appendChild(table);
+}
+
+
+
 $(document).ready(() => {
 
 	document.getElementById("login").style.display = "none";
-	
+    //generate_table();
+    generateFriendsList([1,2]);
+
     document.addEventListener('keydown', function (e) {
         switch (e.key) {
             case "a":
@@ -234,9 +294,23 @@ $(document).ready(() => {
 		}
 		else{
 			$('#profile, #main').fadeIn(250);
+            document.getElementById("profile").style.display = "flex";
 			displayProfileScreen(respObject.id);
 		}
 	});
+    });
+
+    $('#survivalBut').on('click', function () {
+        $.post('/authenticate', {}, responseJSON => {
+            const respObject = JSON.parse(responseJSON);
+            if (respObject.id === -1){
+                console.log("invalid");
+                document.getElementById("login").style.display = "block";
+            }
+            else{
+                visitPage("survival");
+            }
+        });
     });
 
     $('#exitProf').on('click', function () {
@@ -246,6 +320,12 @@ $(document).ready(() => {
     $('#exitProfile').on('click', function () {
         $('#profile').toggle();
     });
+
+    $('#exitLogin').on('click', function () {
+        $('#login').toggle();
+    });
+
+
 
     $('#mapBuild').on('click', function () {
     		$.post('/authenticate', {}, responseJSON => {
