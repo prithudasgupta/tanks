@@ -4,6 +4,8 @@
 
 <button id="submitLevelFinal"> Submit </button>
 
+<button id="home" onclick="visitPage('Main')"> Home </button>
+
 
 <style>
 
@@ -16,13 +18,25 @@
         position: absolute;
         z-index: 101;
         left: 1160px;
-        top: 630px;
+        top: 600px;
         /*display: block;*/
         /*width: 45px;*/
         /*height: 45px;*/
         width: 90px;
         min-height: 45px;
       }
+
+    #home {
+        position: absolute;
+        z-index: 101;
+        left: 1160px;
+        top: 630px;
+        /*display: block;*/
+        /*width: 45px;*/
+        /*height: 45px;*/
+        width: 90px;
+        min-height: 45px;
+    }
 
     #idEntry {
         position: absolute;
@@ -40,7 +54,7 @@
         position: absolute;
         z-index: 101;
         left: 1160px;
-        top: 635px;
+        top: 600px;
         /*display: block;*/
         /*width: 45px;*/
         /*height: 45px;*/

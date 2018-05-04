@@ -28,6 +28,33 @@ const submit = $("#submitLevel");
 const finalSubmit = $("#submitLevelFinal");
 
 
+function visitPage(whereTo){
+    const urlArr = document.URL.split("/");
+    let newUrl = "";
+    switch(whereTo){
+        case "Main":
+            newUrl = "/home";
+            break;
+        case "Next":
+            if(survival){
+                $.post('/nextRound', {}, responseJSON => {
+                    location.reload();
+                });
+            }
+            const nextLevel = parseInt(urlArr[urlArr.length -1])+1;
+            if(nextLevel > 20 && survival !== true){
+                alert("Congratulations! you finished all campaign levels");
+                return;
+            }
+            newUrl = nextLevel;
+
+            break;
+        case "survival":
+            newUrl = "/tank/game/survival";
+    }
+    window.location.href = newUrl;
+}
+
 
 // create the Scene object and create the map
 let scene = sjs.Scene({w:1305, h:720});
