@@ -277,7 +277,7 @@ public final class Querier {
 		return null;
 	}
 	  
-	  private static GameMap convertFromDatabase(String representations) {
+	  public static GameMap convertFromDatabase(String representations) {
 		  
 		  //assert representations.length() == 384;
 		  List<List<Location>> locs = new ArrayList<List<Location>>();

@@ -130,7 +130,7 @@ public final class Main {
     Spark.post("/map", mapHandler);
     Spark.get("/tank/game/:id", new GamePageHandler(), freeMarker);
     Spark.get("/gameHandler", new GameHandler(), freeMarker);
-    Spark.post("/homing", new HomingTankHandler(mapHandler.getMap()));
+    Spark.post("/homing", new HomingTankHandler());
     Spark.post("/mapBuilderSubmit", new MapBuilderHandler());
     Spark.get("/mapbuilder", new MapBuilderHomeHandler(), freeMarker);
 
