@@ -28,20 +28,31 @@ public class HomingTankHandler implements Route {
 	    int enemyRow = Integer.parseInt(qm.value("enemyRow"));
 	    int enemyCol = Integer.parseInt(qm.value("enemyCol"));
 	    String representation = qm.value("representation");
-
+		GameMap map = Querier.convertFromDatabase(representation);
 	    Pair<Integer, Integer> start = new Pair<Integer, Integer>(enemyRow, enemyCol);
-	    Pair<Integer, Integer> end = new Pair<Integer, Integer>(userTankRow, userTankCol);
-			GameMap map = Querier.convertFromDatabase(representation);
+	    Pair<Integer, Integer> end;
+	    if(userTankRow == -1 || userTankCol == -1) {
+	    	List<Pair<Integer, Integer>> options = map.indicesByType("l");
+	    	int rand = (int)(Math.random()*(options.size()-1));
+	    	end = (options.get(rand));
+	    	while(end == start) {
+	    		rand = (int)(Math.random()*(options.size()-1));
+		    	end = (options.get(rand));
+	    	}
+	    }else {
+		    end = new Pair<Integer, Integer>(userTankRow, userTankCol);
+
+	    }
 	    List<Pair<Integer, Integer>> route = map.getRoute(start, end);
 
-	    Pair<Integer, Integer> next = start;
+	    /*Pair<Integer, Integer> next = start;
 
 
 		if (route.size() > 0) {
 			next = route.get(0);
-		}
+		}*/
 
-		Map<String, Object> variables = ImmutableMap.of("nextMove", next);
+		Map<String, Object> variables = ImmutableMap.of("route", route);
 		Gson GSON = new Gson();
 	    return GSON.toJson(variables);
 	    

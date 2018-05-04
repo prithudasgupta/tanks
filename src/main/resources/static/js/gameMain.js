@@ -774,16 +774,42 @@ function sameRowCol(pixel_x1, pixel_y1, pixel_x2, pixel_y2){
 }
 
 
-function getShortestPathFromTo(fromrow, fromcol, torow, tocol){
-    $.post('/homing', {"userRow": userRow, "representation": represent,
-            "userCol": userCol, "enemyRow": enemyRow, "enemyCol": enemyCol}, responseJSON => {
+function getShortestPathFromTo(fromRow, fromCol, toRow, toCol){
+    let route;
+    $.post('/homing', {"userRow": toRow, "representation": represent,
+            "userCol": toCol, "enemyRow": fromRow, "enemyCol": fromCol}, responseJSON => {
             const respObject = JSON.parse(responseJSON);
-            
-            }
+            route = respObject.route;
+            console.log("returned route is " + route);
+
+
+            });
+                 console.log("returned route is " + route);
+
+    return route;
 }
 
+function getCenter(spriteTank){
+    const coord = [];
+    coord[0] = spriteTank.x + (8*Math.cos(spriteTank.angle% 6.28));
+    coord[1] = spriteTank.y + (7.5*Math.sin(spriteTank.angle% 6.28));
+    return coord;
 
+}
+
+document.addEventListener("click", function(e){
+    console.log(e);
+})
 function movingEnemyLogic(movingEnemy) {
+
+    /*console.log("x range " + (Math.floor(movingEnemy.x/45)*45) + ", " + ((Math.floor(movingEnemy.x/45)*45) +45));
+        console.log("y range " + (Math.floor(movingEnemy.y/45)*45) + ", " + ((Math.floor(movingEnemy.y/45)*45) +45));
+        console.log("actual " + movingEnemy.x + ", " + movingEnemy.y);
+        console.log("center " + getCenter(movingEnemy));*/
+        console.log(movingEnemy.angle * 180 / Math.PI);
+         console.log("fixed " + (movingEnemy.angle% 6.28* 180 / Math.PI));
+
+
 
     if (ready) {
         if (user !== undefined && withinSight(movingEnemy.x, movingEnemy.y)) {
@@ -798,54 +824,49 @@ function movingEnemyLogic(movingEnemy) {
 
         let movedSoFar = euclidDist(movingEnemy.startX, movingEnemy.startY, movingEnemy.x, movingEnemy.y);
 
-        // movingEnemy.collidesWith(mapLand[movingEnemy.nextRow][movingEnemy.nextCol])
-        // movedSoFar >= 22
-        console.log("next is " + movingEnemy.nextRow + ", " + movingEnemy.nextCol);
-    //(movingEnemy.nextRow == Math.floor(movingEnemy.y/45) && movingEnemy.nextCol == Math.floor(movingEnemy.x/45))
-        if (movingEnemy.nextRow === undefined ||(movingEnemy.nextRow == Math.floor(movingEnemy.y/45) && movingEnemy.nextCol == Math.floor(movingEnemy.x/45))) {
-            console.log("new loc");
-            // here is where the next location is needed
 
-            let landSpots = getBorderingLandTiles(movingEnemy.x, movingEnemy.y);
-            const rand = Math.floor(Math.random() * (landSpots.length));
-            console.log(rand);
-            const nextMove = landSpots[rand];
-            console.log(nextMove);
+        if (movingEnemy.routeIndex === undefined) {
+            console.log("ne");
+             $.post('/homing', {"userRow": Math.floor(user.y/45), "representation": represent,
+                        "userCol": Math.floor(user.x/45), "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
+                        const respObject = JSON.parse(responseJSON);
+                        const currRoute = respObject.route;
+                        movingEnemy.routeIndex = 1;
+                        movingEnemy.route = currRoute;
 
-            // const nMove = homingHelper(movingEnemy);
-            // console.log(nMove);
 
-             movingEnemy.nextRow = nextMove[0];
-             movingEnemy.nextCol = nextMove[1];
-           // movingEnemy.nextRow = 15;
-            //movingEnemy.nextCol = 20;
-            let curRow = Math.floor(movingEnemy.y / 45);
-            let curCol = Math.floor(movingEnemy.x / 45);
 
-            if (movingEnemy.nextRow - curRow === 0){
-                if (movingEnemy.nextCol - curCol === 1){
-                    movingEnemy.nextAngle = 0;
-                }
-                else{
-                    movingEnemy.nextAngle = 3.1415;
-                }
+                        });
+
+        }else if(reachedBlock(movingEnemy)){
+            if(movingEnemy.route.length == movingEnemy.routeIndex + 1){
+                movingEnemy.routeIndex = undefined;
+            }else{
+                movingEnemy.routeIndex += 1;
+                console.log("incr");
             }
-            else if(movingEnemy.nextRow - curRow === 1){
-                movingEnemy.nextAngle = 1.5707;
-            }
-            else{
-                movingEnemy.nextAngle = 4.712;
-            }
-
-            //movingEnemy.startX = movingEnemy.x;
-            //movingEnemy.startY = movingEnemy.y;
         }
 
-        moveBetween(movingEnemy);
+        }
+        if(movingEnemy.routeIndex != undefined){
+           moveBetween(movingEnemy);
+        }
+
+
 
     }
-}
 
+function reachedBlock(movingEnemy){
+
+    const pix_x_diff = (movingEnemy.x -2) - (movingEnemy.route[movingEnemy.routeIndex].second *45 + 22.5); //7.5
+    const pix_y_diff = (movingEnemy.y -2) - (movingEnemy.route[movingEnemy.routeIndex].first *45 + 22.5); //8
+    if(Math.abs(pix_x_diff) <= 22.6 && Math.abs(pix_y_diff) <= 22.6){
+    return true;
+    }
+
+    return false;
+
+}
 
 function placeTread(x , y, ang) {
     // first create tread and place it

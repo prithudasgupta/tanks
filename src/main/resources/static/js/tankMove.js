@@ -8,20 +8,45 @@
  * 			information that explains that destination of the tank.
  */
 function moveBetween(enemyObj){
+    const route = enemyObj.route;
+    const index = enemyObj.routeIndex;
+    const curRow = Math.floor(enemyObj.y / 45);
+    const curCol = Math.floor(enemyObj.x / 45);
+    //console.log("going to " + route[index].first + ", " +  route[index].second);
+    if (route[index].first - curRow === 0){
+     if (route[index].second - curCol === 1){
+         enemyObj.nextAngle = 0;
+       }
+      else{
+              enemyObj.nextAngle = 3.1415;
+                          }
+      }
+              else if(route[index].first - curRow === 1){
+            enemyObj.nextAngle = 1.5707;
+         }
+   else{
+          enemyObj.nextAngle = 4.712;
+             }
+
     let currAngle = enemyObj.angle % 6.28;
 	let angleDiff = currAngle - enemyObj.nextAngle;
 
     let mov;
 	//if (Math.abs(currAngle - enemyObj.nextAngle) > 0.019) {
         if (currAngle > enemyObj.nextAngle){
+
             enemyObj.rotate(-0.02);
+             enemyObj.cannon.rotate(-0.02);
 
         }
         else{
+
             enemyObj.rotate(0.02);
+             enemyObj.cannon.rotate(0.02);
+
         }
     //}
-    if(Math.abs(angleDiff) <= 0.261799){
+    if(Math.abs(angleDiff) <= 0.5){
         mov = forwardByAngle(enemyObj.angle, 2);
         enemyObj.move(mov[0], mov[1]);
         enemyObj.cannon.move(mov[0], mov[1]);
@@ -33,13 +58,13 @@ function moveBetween(enemyObj){
        // enemyObj.move(mov[0], mov[1]);
        // enemyObj.cannon.move(mov[0], mov[1]);
 
-       /* if (enemyObj.collidesWithArray(nonTrav)) {
+       //if (enemyObj.collidesWithArray(nonTrav)) {
             //console.log("collided");
             // if there is a collision revert back to old location
-            enemyObj.move(-mov[0], -mov[1]);
-            enemyObj.cannon.move(-mov[0], -mov[1]);
-
-            let landSpots = getBorderingLandTiles(enemyObj.x, enemyObj.y);
+            //enemyObj.move(-mov[0], -mov[1]);
+            //enemyObj.cannon.move(-mov[0], -mov[1]);
+//}
+            /*let landSpots = getBorderingLandTiles(enemyObj.x, enemyObj.y);
             const rand = Math.floor(Math.random() * landSpots.length);
             const nextMove = landSpots[rand];
             enemyObj.nextRow = nextMove.y;
