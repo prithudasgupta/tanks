@@ -26,6 +26,8 @@ let represent = "";
 
 let isGameOver;
 let winner = false;
+let survival = false;
+let survivalLevel = -1;
 
 
 let explosions = [];
@@ -108,30 +110,39 @@ for (let row = 0; row < 16; row++) {
 }
 
 function visitPage(whereTo){
-	const urlArr = document.URL.split("/");
-	let newUrl = "";
-	switch(whereTo){
-		case "Main":
-			newUrl = "/home";
-		break;
-		case "Next":
-			const nextLevel = parseInt(urlArr[urlArr.length -1])+1;
-			if(nextLevel > 20){
-				alert("Congratulations! you finished all campaign levels");
-				return;
-			}
-			newUrl = nextLevel;
-		
-		break;
-		
-	}
-	window.location.href = newUrl;
-	
+		const urlArr = document.URL.split("/");
+		let newUrl = "";
+		switch(whereTo){
+			case "Main":
+				newUrl = "/home";
+			break;
+			case "Next":
+				if(survival){
+					$.post('/nextRound', {}, responseJSON => {
+						location.reload();
+					});
+				}
+				const nextLevel = parseInt(urlArr[urlArr.length -1])+1;
+				if(nextLevel > 20 && survival !== true){
+					alert("Congratulations! you finished all campaign levels");
+					return;
+				}
+				newUrl = nextLevel;
+			
+			break;
+			
+		}
+		window.location.href = newUrl;
 }
 
 function getMap () {
     $.post('/map', {"url": window.location.href}, responseJSON => {
         const respObject = JSON.parse(responseJSON);
+        console.log(respObject);
+        survival = respObject.survival;
+        if (survival){
+        		survivalLevel = respObject.round;
+        }
         for (let i in respObject.enemies) {
             if (respObject.enemies[i].type === "s") {
                 enemyLoc.push(respObject.enemies[i].location.coordinates);
@@ -151,6 +162,16 @@ function getMap () {
         startX = (respObject.game.user.location.coordinates[0] * 45) + 5;
         startY = (respObject.game.user.location.coordinates[1] * 45) + 5;
         loadMap();
+        
+        let urlArr = document.URL.split("/");
+	    let level;
+	    if (survival === true){
+	    		level = survivalLevel;
+	    }
+	    else{
+	    		level = parseInt(urlArr[urlArr.length -1]) + 1;
+	    	}
+	    document.getElementById("levNumber").innerHTML = "Game Level : " + level.toString();
     });
 }
 
@@ -747,6 +768,21 @@ function homingHelper(movingEnemy) {
     });
 }
 
+function sameRowCol(pixel_x1, pixel_y1, pixel_x2, pixel_y2){
+
+    return (pixel_x1 == pixel_x2 && pixel_y1 == pixel_y2);
+}
+
+
+function getShortestPathFromTo(fromrow, fromcol, torow, tocol){
+    $.post('/homing', {"userRow": userRow, "representation": represent,
+            "userCol": userCol, "enemyRow": enemyRow, "enemyCol": enemyCol}, responseJSON => {
+            const respObject = JSON.parse(responseJSON);
+            
+            });
+}
+
+
 function movingEnemyLogic(movingEnemy) {
 
     if (ready) {
@@ -764,8 +800,10 @@ function movingEnemyLogic(movingEnemy) {
 
         // movingEnemy.collidesWith(mapLand[movingEnemy.nextRow][movingEnemy.nextCol])
         // movedSoFar >= 22
-        if (movingEnemy.nextRow === undefined || movingEnemy.collidesWith(mapLand[movingEnemy.nextRow][movingEnemy.nextCol])) {
-
+        console.log("next is " + movingEnemy.nextRow + ", " + movingEnemy.nextCol);
+    //(movingEnemy.nextRow == Math.floor(movingEnemy.y/45) && movingEnemy.nextCol == Math.floor(movingEnemy.x/45))
+        if (movingEnemy.nextRow === undefined ||(movingEnemy.nextRow == Math.floor(movingEnemy.y/45) && movingEnemy.nextCol == Math.floor(movingEnemy.x/45))) {
+            console.log("new loc");
             // here is where the next location is needed
 
             let landSpots = getBorderingLandTiles(movingEnemy.x, movingEnemy.y);
@@ -777,10 +815,11 @@ function movingEnemyLogic(movingEnemy) {
             // const nMove = homingHelper(movingEnemy);
             // console.log(nMove);
 
-            movingEnemy.nextRow = nextMove[0];
-            movingEnemy.nextCol = nextMove[1];
-            // movingEnemy.nextRow = 15;
-            // movingEnemy.nextCol = 20;
+
+             movingEnemy.nextRow = nextMove[0];
+             movingEnemy.nextCol = nextMove[1];
+
+
             let curRow = Math.floor(movingEnemy.y / 45);
             let curCol = Math.floor(movingEnemy.x / 45);
 
@@ -799,8 +838,8 @@ function movingEnemyLogic(movingEnemy) {
                 movingEnemy.nextAngle = 4.712;
             }
 
-            movingEnemy.startX = movingEnemy.x;
-            movingEnemy.startY = movingEnemy.y;
+            //movingEnemy.startX = movingEnemy.x;
+            //movingEnemy.startY = movingEnemy.y;
         }
 
         moveBetween(movingEnemy);
@@ -919,6 +958,12 @@ function displayEndGame() {
     $('#next').toggle();
     document.getElementById("result").innerHTML = "GAME OVER!";
     $('#endGame').toggle();
+    
+    if (survival){
+    		$.post('/deadSurvival', {}, responseJSON => {
+			
+		});
+    }
 }
 
 
@@ -986,9 +1031,6 @@ function main() {
 
 $(document).ready(() => {
 
-    let urlArr = document.URL.split("/");
-    let level = parseInt(urlArr[urlArr.length -1]) + 1;
-    document.getElementById("levNumber").innerHTML = "Game Level : " + level.toString();
     // add event listeners for movement of the user tank
 
     document.addEventListener('keydown', function (e) {

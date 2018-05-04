@@ -18,6 +18,7 @@ import spark.Route;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MapHandler implements Route {
 	
@@ -37,8 +38,27 @@ public class MapHandler implements Route {
 
 			Game aGame = GameInitializer.initializeGame(map, 5);
 			representations = map.getRepresentations();
-			variables = ImmutableMap.of("map", representations, "game", aGame, "enemies", aGame.getEnemies());
-		} else {
+			variables = ImmutableMap.of("map", representations, "game", aGame, "enemies", aGame.getEnemies(), "survival", false);
+		} 
+    else if (id.equals("survival")) {
+    		
+    		int difficulty = 1;
+    	
+    		Set<String> attributes = request.session().attributes();
+		if (!attributes.contains("survival")) {
+			request.session(true);
+			request.session().attribute("survival", "1"); 
+		}
+		else {
+			difficulty = Integer.parseInt(request.session().attribute("survival").toString());
+		}
+		map = new MapBuilder().createMap(0.1, 0);
+		theMap = map;
+		Game aGame = GameInitializer.initializeGame(map, difficulty);
+		representations = map.getRepresentations();
+		variables = ImmutableMap.of("map", representations, "game", aGame, "enemies", aGame.getEnemies(), "survival", true, "round", difficulty);
+    }
+    else {
 			Game data = Querier.getGameById(Integer.parseInt(id));
 			if (data == null) {
 				map = new MapBuilder().createMap(0.1, 0);
@@ -49,7 +69,7 @@ public class MapHandler implements Route {
 				variables = ImmutableMap.of("map", representations, "game", aGame, "enemies", aGame.getEnemies());
 			}
 			else {
-				variables = ImmutableMap.of("map", data.getRepresentations(), "game", data, "enemies", data.getEnemies());
+				variables = ImmutableMap.of("map", data.getRepresentations(), "game", data, "enemies", data.getEnemies(), "survival", false);
 			}
 		}
     

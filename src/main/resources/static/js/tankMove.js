@@ -9,7 +9,7 @@
  */
 function moveBetween(enemyObj){
     let currAngle = enemyObj.angle % 6.28;
-	let angleDiff;
+	let angleDiff = currAngle - enemyObj.nextAngle;
 
     let mov;
 	//if (Math.abs(currAngle - enemyObj.nextAngle) > 0.019) {
@@ -21,14 +21,19 @@ function moveBetween(enemyObj){
             enemyObj.rotate(0.02);
         }
     //}
-
-    mov = forwardByAngle(enemyObj.angle, 2);
-    //if (compareEuclid(mov, enemyObj)) {
-
+    if(Math.abs(angleDiff) <= 0.261799){
+        mov = forwardByAngle(enemyObj.angle, 2);
         enemyObj.move(mov[0], mov[1]);
         enemyObj.cannon.move(mov[0], mov[1]);
 
-        if (enemyObj.collidesWithArray(nonTrav)) {
+    }
+    //mov = forwardByAngle(enemyObj.angle, 2);
+    //if (compareEuclid(mov, enemyObj)) {
+
+       // enemyObj.move(mov[0], mov[1]);
+       // enemyObj.cannon.move(mov[0], mov[1]);
+
+       /* if (enemyObj.collidesWithArray(nonTrav)) {
             //console.log("collided");
             // if there is a collision revert back to old location
             enemyObj.move(-mov[0], -mov[1]);
@@ -60,7 +65,7 @@ function moveBetween(enemyObj){
             enemyObj.startX = enemyObj.x;
             enemyObj.startY = enemyObj.y;
 
-        }
+        }*/
     //}
     enemyObj.update();
     enemyObj.cannon.update();
