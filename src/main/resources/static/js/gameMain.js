@@ -747,6 +747,21 @@ function homingHelper(movingEnemy) {
     });
 }
 
+function sameRowCol(pixel_x1, pixel_y1, pixel_x2, pixel_y2){
+
+    return (pixel_x1 == pixel_x2 && pixel_y1 == pixel_y2);
+}
+
+
+function getShortestPathFromTo(fromrow, fromcol, torow, tocol){
+    $.post('/homing', {"userRow": userRow, "representation": represent,
+            "userCol": userCol, "enemyRow": enemyRow, "enemyCol": enemyCol}, responseJSON => {
+            const respObject = JSON.parse(responseJSON);
+            
+            }
+}
+
+
 function movingEnemyLogic(movingEnemy) {
 
     if (ready) {
@@ -764,8 +779,10 @@ function movingEnemyLogic(movingEnemy) {
 
         // movingEnemy.collidesWith(mapLand[movingEnemy.nextRow][movingEnemy.nextCol])
         // movedSoFar >= 22
-        if (movingEnemy.nextRow === undefined || movingEnemy.collidesWith(mapLand[movingEnemy.nextRow][movingEnemy.nextCol])) {
-
+        console.log("next is " + movingEnemy.nextRow + ", " + movingEnemy.nextCol);
+    //(movingEnemy.nextRow == Math.floor(movingEnemy.y/45) && movingEnemy.nextCol == Math.floor(movingEnemy.x/45))
+        if (movingEnemy.nextRow === undefined ||(movingEnemy.nextRow == Math.floor(movingEnemy.y/45) && movingEnemy.nextCol == Math.floor(movingEnemy.x/45))) {
+            console.log("new loc");
             // here is where the next location is needed
 
             let landSpots = getBorderingLandTiles(movingEnemy.x, movingEnemy.y);
@@ -777,10 +794,10 @@ function movingEnemyLogic(movingEnemy) {
             // const nMove = homingHelper(movingEnemy);
             // console.log(nMove);
 
-            // movingEnemy.nextRow = nextMove[0];
-            // movingEnemy.nextCol = nextMove[1];
-            movingEnemy.nextRow = 15;
-            movingEnemy.nextCol = 20;
+             movingEnemy.nextRow = nextMove[0];
+             movingEnemy.nextCol = nextMove[1];
+           // movingEnemy.nextRow = 15;
+            //movingEnemy.nextCol = 20;
             let curRow = Math.floor(movingEnemy.y / 45);
             let curCol = Math.floor(movingEnemy.x / 45);
 
@@ -799,8 +816,8 @@ function movingEnemyLogic(movingEnemy) {
                 movingEnemy.nextAngle = 4.712;
             }
 
-            movingEnemy.startX = movingEnemy.x;
-            movingEnemy.startY = movingEnemy.y;
+            //movingEnemy.startX = movingEnemy.x;
+            //movingEnemy.startY = movingEnemy.y;
         }
 
         moveBetween(movingEnemy);
