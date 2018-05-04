@@ -204,18 +204,46 @@ $(document).ready(() => {
     document.getElementById("sjs0").style.left = "5%";
 
     $('#campBut').on('click', function () {
-        $('#campaign, #main').fadeIn(250);
+    $.post('/authenticate', {}, responseJSON => {
+		const respObject = JSON.parse(responseJSON);
+		if (respObject.id === -1){
+			console.log("invalid");
+			document.getElementById("login").style.display = "block";
+		}
+		else{
+			$('#campaign, #main').fadeIn(250);
+		}
+	});
     });
 
     $('#exitCamp').on('click', function () {
         $('#campaign').toggle();
     });
+    
+    $('#logout').on('click', function () {
+        logout();
+        location.reload();
+    });
 
     $('#profileBut').on('click', function () {
-        $('#profile, #main').fadeIn(250);
+    		$.post('/authenticate', {}, responseJSON => {
+		const respObject = JSON.parse(responseJSON);
+		if (respObject.id === -1){
+			console.log("here");
+			$('#signin, #main').fadeIn(250);
+		}
+		else{
+			$('#profile, #main').fadeIn(250);
+			displayProfileScreen(respObject.id);
+		}
+	});
     });
 
     $('#exitProf').on('click', function () {
+        $('#signin').toggle();
+    });
+    
+    $('#exitProfile').on('click', function () {
         $('#profile').toggle();
     });
 

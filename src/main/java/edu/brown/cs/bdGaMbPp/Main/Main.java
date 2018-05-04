@@ -7,6 +7,7 @@ import edu.brown.cs.bdGaMbPp.Handlers.CreateProfileHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.GameHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.HomeHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.HomingTankHandler;
+import edu.brown.cs.bdGaMbPp.Handlers.LogoutHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.MapBuilderHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.MapHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.SignInHandler;
@@ -125,6 +126,7 @@ public final class Main {
     Spark.get("/home", new HomeHandler(), freeMarker);
     Spark.post("/createAccount", new CreateProfileHandler());
     Spark.post("/signIn", new SignInHandler());
+    Spark.post("/logout", new LogoutHandler());
     Spark.post("/authenticate", new AuthenticateHandler());
     
     Spark.get("/test", new TestHandler(), freeMarker);
