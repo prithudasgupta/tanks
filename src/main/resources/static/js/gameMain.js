@@ -22,6 +22,7 @@ let USER_ROT = 0.04;
 let lastFire = Date.now();
 let gameTime = false;
 
+let represent = "";
 
 let isGameOver;
 let winner = false;
@@ -39,6 +40,7 @@ let statEnemies = [];
 let dumbEnemies = [];
 // dumb enemies start location
 let dumbStart = [];
+
 
 
 let kills = 0;
@@ -142,6 +144,7 @@ function getMap () {
                 populateMap(row, col, mapLoc[row][col]);
             }
         }
+        setRepresentation();
         setStatTankMap(enemyLoc);
         startX = (respObject.game.user.location.coordinates[0] * 45) + 5;
         startY = (respObject.game.user.location.coordinates[1] * 45) + 5;
@@ -152,6 +155,14 @@ function getMap () {
 
 function populateMap(row, col, type) {
     map[row][col] = type;
+}
+
+function setRepresentation() {
+    for (let row = 0; row < 16; row++) {
+        for (let col = 0; col < 24; col++) {
+            represent += map[row][col];
+        }
+    }
 }
 
 function setStatTankMap(list) {
@@ -678,6 +689,46 @@ function checkEndGame() {
     return (statEnemies.length === 0 && dumbEnemies.length === 0);
 }
 
+function homingHelper(movingEnemy) {
+    let userRow = Math.floor(user.y/45);
+    let userCol = Math.floor(user.x/45);
+    let enemyCol = Math.floor(movingEnemy.x/45);
+    let enemyRow = Math.floor(movingEnemy.y/45);
+
+    $.post('/homing', {"userRow": userRow, "representation": represent,
+        "userCol": userCol, "enemyRow": enemyRow, "enemyCol": enemyCol}, responseJSON => {
+        const respObject = JSON.parse(responseJSON);
+        //return [respObject.nextMove.first, respObject.nextMove.second];
+        console.log((respObject.nextMove.first).toString() + ", " +  (respObject.nextMove.second).toString());
+
+        movingEnemy.nextRow = respObject.nextMove.first;
+        movingEnemy.nextCol = respObject.nextMove.second;
+        console.log(movingEnemy.nextRow);
+        console.log(movingEnemy.nextCol);
+        let curRow = Math.floor(movingEnemy.y / 45);
+        let curCol = Math.floor(movingEnemy.x / 45);
+
+        if (movingEnemy.nextRow - curRow === 0){
+            if (movingEnemy.nextCol - curCol === 1){
+                movingEnemy.nextAngle = 0;
+            }
+            else{
+                movingEnemy.nextAngle = 3.1415;
+            }
+        }
+        else if(movingEnemy.nextRow - curRow === 1){
+            movingEnemy.nextAngle = 1.5707;
+        }
+        else{
+            movingEnemy.nextAngle = 4.712;
+        }
+
+        movingEnemy.startX = movingEnemy.x;
+        movingEnemy.startY = movingEnemy.y;
+        moveBetweenHoming(movingEnemy);
+    });
+}
+
 function movingEnemyLogic(movingEnemy) {
 
     if (ready) {
@@ -694,23 +745,30 @@ function movingEnemyLogic(movingEnemy) {
             let movedSoFar = euclidDist(movingEnemy.startX, movingEnemy.startY, movingEnemy.x, movingEnemy.y);
 
             if (movingEnemy.nextRow === undefined || movedSoFar >= 45) {
+
+                // here is where the next location is needed
+
                 let landSpots = getBorderingLandTiles(movingEnemy.x, movingEnemy.y);
                 const rand = Math.floor(Math.random() * landSpots.length);
                 const nextMove = landSpots[rand];
+
+                // const nMove = homingHelper(movingEnemy);
+                // console.log(nMove);
+
                 movingEnemy.nextRow = nextMove.y;
                 movingEnemy.nextCol = nextMove.x;
                 let curRow = Math.floor(movingEnemy.y / 45);
                 let curCol = Math.floor(movingEnemy.x / 45);
 
-                if (movingEnemy.nextRow - curRow == 0){
-                    if (movingEnemy.nextCol - curCol == 1){
+                if (movingEnemy.nextRow - curRow === 0){
+                    if (movingEnemy.nextCol - curCol === 1){
                         movingEnemy.nextAngle = 0;
                     }
                     else{
                         movingEnemy.nextAngle = 3.1415;
                     }
                 }
-                else if(movingEnemy.nextRow - curRow == 1){
+                else if(movingEnemy.nextRow - curRow === 1){
                     movingEnemy.nextAngle = 1.5707;
                 }
                 else{
@@ -719,9 +777,9 @@ function movingEnemyLogic(movingEnemy) {
 
                 movingEnemy.startX = movingEnemy.x;
                 movingEnemy.startY = movingEnemy.y;
+            } else {
+                moveBetween(movingEnemy);
             }
-
-            moveBetween(movingEnemy);
         }
     }
 }
