@@ -26,6 +26,8 @@ let represent = "";
 
 let isGameOver;
 let winner = false;
+let survival = false;
+let survivalLevel = -1;
 
 
 let explosions = [];
@@ -108,30 +110,39 @@ for (let row = 0; row < 16; row++) {
 }
 
 function visitPage(whereTo){
-	const urlArr = document.URL.split("/");
-	let newUrl = "";
-	switch(whereTo){
-		case "Main":
-			newUrl = "/home";
-		break;
-		case "Next":
-			const nextLevel = parseInt(urlArr[urlArr.length -1])+1;
-			if(nextLevel > 20){
-				alert("Congratulations! you finished all campaign levels");
-				return;
-			}
-			newUrl = nextLevel;
-		
-		break;
-		
-	}
-	window.location.href = newUrl;
-	
+		const urlArr = document.URL.split("/");
+		let newUrl = "";
+		switch(whereTo){
+			case "Main":
+				newUrl = "/home";
+			break;
+			case "Next":
+				if(survival){
+					$.post('/nextRound', {}, responseJSON => {
+						location.reload();
+					});
+				}
+				const nextLevel = parseInt(urlArr[urlArr.length -1])+1;
+				if(nextLevel > 20 && survival !== true){
+					alert("Congratulations! you finished all campaign levels");
+					return;
+				}
+				newUrl = nextLevel;
+			
+			break;
+			
+		}
+		window.location.href = newUrl;
 }
 
 function getMap () {
     $.post('/map', {"url": window.location.href}, responseJSON => {
         const respObject = JSON.parse(responseJSON);
+        console.log(respObject);
+        survival = respObject.survival;
+        if (survival){
+        		survivalLevel = respObject.round;
+        }
         for (let i in respObject.enemies) {
             if (respObject.enemies[i].type === "s") {
                 enemyLoc.push(respObject.enemies[i].location.coordinates);
@@ -151,6 +162,16 @@ function getMap () {
         startX = (respObject.game.user.location.coordinates[0] * 45) + 5;
         startY = (respObject.game.user.location.coordinates[1] * 45) + 5;
         loadMap();
+        
+        let urlArr = document.URL.split("/");
+	    let level;
+	    if (survival === true){
+	    		level = survivalLevel;
+	    }
+	    else{
+	    		level = parseInt(urlArr[urlArr.length -1]) + 1;
+	    	}
+	    document.getElementById("levNumber").innerHTML = "Game Level : " + level.toString();
     });
 }
 
@@ -936,6 +957,12 @@ function displayEndGame() {
     $('#next').toggle();
     document.getElementById("result").innerHTML = "GAME OVER!";
     $('#endGame').toggle();
+    
+    if (survival){
+    		$.post('/deadSurvival', {}, responseJSON => {
+			
+		});
+    }
 }
 
 
@@ -1003,9 +1030,6 @@ function main() {
 
 $(document).ready(() => {
 
-    let urlArr = document.URL.split("/");
-    let level = parseInt(urlArr[urlArr.length -1]) + 1;
-    document.getElementById("levNumber").innerHTML = "Game Level : " + level.toString();
     // add event listeners for movement of the user tank
 
     document.addEventListener('keydown', function (e) {

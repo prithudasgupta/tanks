@@ -10,7 +10,9 @@ import edu.brown.cs.bdGaMbPp.Handlers.HomingTankHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.LogoutHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.MapBuilderHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.MapHandler;
+import edu.brown.cs.bdGaMbPp.Handlers.NextRoundHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.SignInHandler;
+import edu.brown.cs.bdGaMbPp.Handlers.SurvivalEndHandler;
 import edu.brown.cs.bdGaMbPp.Map.MapBuilder;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
@@ -133,6 +135,10 @@ public final class Main {
     MapHandler mapHandler = new MapHandler();
     Spark.post("/map", mapHandler);
     Spark.get("/tank/game/:id", new GamePageHandler(), freeMarker);
+    
+    Spark.post("/nextRound", new NextRoundHandler());
+    Spark.post("/deadSurvival", new SurvivalEndHandler());
+  
     Spark.get("/gameHandler", new GameHandler(), freeMarker);
     Spark.post("/homing", new HomingTankHandler());
     Spark.post("/mapBuilderSubmit", new MapBuilderHandler());
