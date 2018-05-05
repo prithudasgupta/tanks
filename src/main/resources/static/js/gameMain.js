@@ -845,12 +845,6 @@ function movingEnemyLogic(movingEnemy) {
                         const currRoute = respObject.route;
                         movingEnemy.routeIndex = 1;
                         movingEnemy.route = currRoute;
-                        console.log(currRoute);
-                        console.log("Map");
-                        for(let i = 0; i <currRoute.length ; i++ ){
-                            console.log(currRoute[i]);
-                        }
-
 
 
                         });
@@ -858,6 +852,7 @@ function movingEnemyLogic(movingEnemy) {
         }else if(reachedBlock(movingEnemy)){
             if(movingEnemy.route.length == movingEnemy.routeIndex + 1){
                 movingEnemy.routeIndex = undefined;
+                movingEnemy.route = undefined;
             }else{
                 movingEnemy.routeIndex += 1;
                 console.log("incr");
@@ -876,13 +871,14 @@ function movingEnemyLogic(movingEnemy) {
 
 function reachedBlock(movingEnemy){
     const center = getCenter(movingEnemy);
-    const pix_x_diff = center.px - (movingEnemy.route[movingEnemy.routeIndex].second *45 + 22.5); //7.5
-    const pix_y_diff = center.py - (movingEnemy.route[movingEnemy.routeIndex].first *45 +22.5); //8
-   if(Math.abs(pix_x_diff) <= 35 && Math.abs(pix_y_diff) <= 35){
+    const pix_x_diff = movingEnemy.x - (movingEnemy.route[movingEnemy.routeIndex].second *45); //7.5
+    const pix_y_diff = movingEnemy.y - (movingEnemy.route[movingEnemy.routeIndex].first *45); //8
+   if(Math.abs(pix_x_diff) <= 45 && Math.abs(pix_y_diff) <= 45){
     return true;
     }
 
     return false;
+    //return (Math.floor(movingEnemy.x/45) == Math.floor(/45));
 
 }
 
