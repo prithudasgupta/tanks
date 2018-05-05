@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
+import edu.brown.cs.bdGaMbPp.Collect.Pair;
 import edu.brown.cs.bdGaMbPp.GameLogic.Game;
 import edu.brown.cs.bdGaMbPp.Map.GameMap;
 import edu.brown.cs.bdGaMbPp.Map.Location;
@@ -242,7 +243,35 @@ public final class Querier {
 		}
 		return null;
 	}
-	
+
+	public static List<Pair<String, Integer>> getGameLeaderboard(int id) {
+		String map = "";
+		List<Pair<String, Integer>> result = new ArrayList<>();
+		try {
+			PreparedStatement prep = instance.conn
+							.prepareStatement("SELECT * FROM leaderboard WHERE game" +
+											" = ? ORDER BY time DESC;");
+			prep.setString(1, Integer.toString(id));
+			ResultSet rs = prep.executeQuery();
+			int mapId = -1;
+			int counter = 0;
+			while (rs.next() && counter < 5) {
+				mapId = Integer.parseInt(rs.getString(1));
+				String username  = getProfile(Integer.parseInt(rs.getString(2))).getUsername();
+				Integer time = Integer.parseInt(rs.getString(3));
+				result.add(new Pair<>(username, time));
+				counter++;
+			}
+			prep.close();
+			rs.close();
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+
+		}
+		return result;
+	}
+
 	public static Game getGameById(int id) {
 		String map = "";
 		try {
@@ -311,73 +340,56 @@ public final class Querier {
 	
 	public static void setSurvival(int id, int newSurvival) {
 		Profile curr = getProfile(id);
-		try {
-			PreparedStatement prep = instance.conn
-			        .prepareStatement("INSERT INTO profiles VALUES (?, ?, ?, ?, ?, ?, ?);");
-			
-				prep.setString(1, Integer.toString(id));
-				prep.setString(2, curr.getUsername());
-				prep.setString(3, curr.getPassword());
-				prep.setString(4, Integer.toString(curr.getCampaign()));
-				prep.setString(5, Integer.toString(newSurvival));
-				prep.setString(6, Integer.toString(curr.getKills()));
-				prep.setString(7, Integer.toString(curr.getTime()));
-				
-				prep.addBatch();
-				prep.executeBatch();
+		if (curr.getSurvival() < newSurvival) {
+			try {
+				PreparedStatement prep = instance.conn
+								.prepareStatement("UPDATE profiles SET survival = ? WHERE id = ?;");
+
+				prep.setString(2, Integer.toString(id));
+				prep.setString(1, Integer.toString(newSurvival));
+				prep.executeUpdate();
 				prep.close();
-				
-		}
-		catch (Exception e){
-			
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	public static void setCampaign(int id, int newCampaign) {
 		Profile curr = getProfile(id);
-		try {
-			PreparedStatement prep = instance.conn
-			        .prepareStatement("INSERT INTO profiles VALUES (?, ?, ?, ?, ?, ?, ?);");
-			
-				prep.setString(1, Integer.toString(id));
-				prep.setString(2, curr.getUsername());
-				prep.setString(3, curr.getPassword());
-				prep.setString(4, Integer.toString(newCampaign));
-				prep.setString(5, Integer.toString(curr.getSurvival()));
-				prep.setString(6, Integer.toString(curr.getKills()));
-				prep.setString(7, Integer.toString(curr.getTime()));
-				
-				prep.addBatch();
-				prep.executeBatch();
+		if (curr.getCampaign() < newCampaign+1) {
+			try {
+				PreparedStatement prep = instance.conn
+								.prepareStatement("UPDATE profiles SET campaign = ? WHERE id = ?;");
+
+				prep.setString(2, Integer.toString(id));
+				prep.setString(1, Integer.toString(newCampaign+1));
+
+				prep.executeUpdate();
 				prep.close();
-				
-		}
-		catch (Exception e){
-			
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
-	public static void setTime(int id, int time) {
+	public static void setTime(int id, int t) {
 		Profile curr = getProfile(id);
 		try {
 			PreparedStatement prep = instance.conn
-			        .prepareStatement("INSERT INTO profiles VALUES (?, ?, ?, ?, ?, ?, ?);");
-			
-				prep.setString(1, Integer.toString(id));
-				prep.setString(2, curr.getUsername());
-				prep.setString(3, curr.getPassword());
-				prep.setString(4, Integer.toString(curr.getCampaign()));
-				prep.setString(5, Integer.toString(curr.getSurvival()));
-				prep.setString(6, Integer.toString(curr.getKills()));
-				prep.setString(7, Integer.toString(curr.getTime() + time));
-				
-				prep.addBatch();
-				prep.executeBatch();
+			        .prepareStatement("UPDATE profiles SET time = ? WHERE id = ?;");
+
+			prep.setString(2, Integer.toString(id));
+			prep.setString(1, Integer.toString(curr.getTime() + t));
+
+				prep.executeUpdate();
 				prep.close();
 				
 		}
 		catch (Exception e){
-			
+			e.printStackTrace();
 		}
 	}
 	
@@ -385,23 +397,17 @@ public final class Querier {
 		Profile curr = getProfile(id);
 		try {
 			PreparedStatement prep = instance.conn
-			        .prepareStatement("INSERT INTO profiles VALUES (?, ?, ?, ?, ?, ?, ?);");
+							.prepareStatement("UPDATE profiles SET kills = ? WHERE id = ?;");
 			
-				prep.setString(1, Integer.toString(id));
-				prep.setString(2, curr.getUsername());
-				prep.setString(3, curr.getPassword());
-				prep.setString(4, Integer.toString(curr.getCampaign()));
-				prep.setString(5, Integer.toString(curr.getSurvival()));
-				prep.setString(6, Integer.toString(curr.getKills() + kills));
-				prep.setString(7, Integer.toString(curr.getTime()));
-				
-				prep.addBatch();
-				prep.executeBatch();
+				prep.setString(2, Integer.toString(id));
+				prep.setString(1, Integer.toString(curr.getKills() + kills));
+
+				prep.executeUpdate();
 				prep.close();
 				
 		}
 		catch (Exception e){
-			
+			e.printStackTrace();
 		}
 	}
 
@@ -472,17 +478,33 @@ public final class Querier {
 	
 	public static void updateLeaderboard(int gameId, int userId, int time) {
 		int currentTime = getTime(gameId, userId);
-		if (currentTime == -1 || time < currentTime) {
+		if (currentTime == -1) {
 			try {
 				PreparedStatement prep = instance.conn
-				        .prepareStatement("INSERT INTO leaderboard VALUES (?, ?, ?);");
+								.prepareStatement("INSERT INTO leaderboard VALUES (?, ?, ?);");
+
+				prep.setString(3, Integer.toString(time));
+				prep.setString(2, Integer.toString(userId));
+				prep.setString(1, Integer.toString(gameId));
+
+				prep.addBatch();
+				prep.executeBatch();
+				prep.close();
+
+			}
+			catch (Exception e){
+
+			}
+		} else if (time < currentTime) {
+			try {
+				PreparedStatement prep = instance.conn
+				        .prepareStatement("UPDATE leaderboard set time = ? where user = ? AND game = ?;");
 				
-					prep.setString(1, Integer.toString(gameId));
+					prep.setString(1, Integer.toString(time));
 					prep.setString(2, Integer.toString(userId));
-					prep.setString(3, Integer.toString(time));
-					
-					prep.addBatch();
-					prep.executeBatch();
+					prep.setString(3, Integer.toString(gameId));
+
+					prep.executeUpdate();
 					prep.close();
 					
 			}
@@ -550,7 +572,7 @@ public final class Querier {
 		        rs.close();
 			}
 			catch(Exception e) {
-				
+				e.printStackTrace();
 			}
 			return maps;
 	}
@@ -559,7 +581,7 @@ public final class Querier {
 		List<Integer> games = new ArrayList<Integer>();
 		try {
 			PreparedStatement prep = instance.conn
-			        .prepareStatement("SELECT id FROM games WHERE map = ?");
+			        .prepareStatement("SELECT id FROM game WHERE map = ?");
 			
 				prep.setString(1, Integer.toString(mapId));
 				ResultSet rs = prep.executeQuery();
@@ -571,7 +593,7 @@ public final class Querier {
 		        rs.close();
 			}
 			catch(Exception e) {
-				
+				e.printStackTrace();
 			}
 			return games;
 	}
@@ -582,6 +604,47 @@ public final class Querier {
 			games.addAll(getGamesByMapId(mapIds.get(i)));
 		}
 		return games;
+	}
+
+	public static List<Profile> getAllProfiles(){
+		List<Profile> profs = new ArrayList<Profile>();
+		try {
+			PreparedStatement prep = instance.conn
+							.prepareStatement("SELECT * FROM profiles");
+
+			ResultSet rs = prep.executeQuery();
+			while (rs.next()) {
+				int id = Integer.parseInt(rs.getString(1));
+				String username = rs.getString(2);
+				String password = rs.getString(3);
+				int bestCampaign = Integer.parseInt(rs.getString(4));
+				int bestSurvival = Integer.parseInt(rs.getString(5));
+				int numKills = Integer.parseInt(rs.getString(6));
+				int time = Integer.parseInt(rs.getString(7));
+
+
+				profs.add(new Profile(id, username, password, bestSurvival, bestCampaign, time, numKills));
+
+			}
+
+			prep.close();
+			rs.close();
+		}
+		catch(Exception e) {
+
+		}
+		return profs;
+	}
+
+	public static List<Profile> getLocalPlayers(int id){
+		List<Profile> profs = new ArrayList<Profile>();
+		profs.add(getProfile(id));
+		List<Friend> friends = getFriendIds(id);
+		for (int i = 0; i < friends.size(); i++){
+			profs.add(getProfile(friends.get(i).getFriend()));
+		}
+		return profs;
+
 	}
 	
 	public static Profile getProfile(int currId) {
@@ -601,7 +664,7 @@ public final class Querier {
 		        		int time = Integer.parseInt(rs.getString(7));
 		        		
 		        		
-		        		return new Profile(id, username, password, bestSurvival, bestCampaign, numKills, time);
+		        		return new Profile(id, username, password, bestSurvival, bestCampaign, time, numKills);
 		        		
 		        }
 		        
@@ -630,7 +693,7 @@ public final class Querier {
 	        		int time = Integer.parseInt(rs.getString(7));
 	        		
 	        		if (password.equals(actualPassword)) {
-	        			return new Profile(id, username, password, bestSurvival, bestCampaign, numKills, time);
+	        			return new Profile(id, username, password, bestSurvival, bestCampaign, time, numKills);
 	        		}
 	        }
 	        

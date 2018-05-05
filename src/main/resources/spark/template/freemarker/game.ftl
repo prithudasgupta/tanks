@@ -15,26 +15,6 @@
                     <th>User</th>
                     <th>Time</th>
                 </tr>
-                <tr>
-                    <td>Ben</td>
-                    <td>00:01</td>
-                </tr>
-                <tr>
-                    <td>Bob</td>
-                    <td>00:02</td>
-                </tr>
-                <tr>
-                    <td>Mike</td>
-                    <td>00:30</td>
-                </tr>
-                <tr>
-                    <td>Prithu</td>
-                    <td>01:11</td>
-                </tr>
-                <tr>
-                    <td>Gokul</td>
-                    <td>05:32</td>
-                </tr>
             </table>
 
         </center>

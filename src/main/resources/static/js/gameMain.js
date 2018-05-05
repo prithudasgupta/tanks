@@ -139,6 +139,73 @@ function visitPage(whereTo){
 		window.location.href = newUrl;
 }
 
+function parseTime(time) {
+    const totalSeconds = parseInt(time / 1000);
+    const seconds = totalSeconds % 60;
+    const minutes = parseInt(totalSeconds / 60);
+    let timeString = "";
+    if (minutes < 10){
+        timeString += "0";
+    }
+    timeString += minutes.toString();
+    timeString += ":";
+    if (seconds < 10){
+        timeString += "0";
+    }
+    timeString += seconds.toString();
+    return timeString;
+}
+
+function setUpLeaderboard() {
+    let urlArr = document.URL.split("/");
+    let level;
+    if (survival === true){
+        level = survivalLevel;
+    }
+    else{
+        level = parseInt(urlArr[urlArr.length -1]) + 1;
+    }
+    $.post('/gameLeaderboard', {"survival": survival, "gameId":level}, responseJSON => {
+        const respObject = JSON.parse(responseJSON);
+        let table = document.getElementById("leaders");
+        let tableBody = document.createElement("tbody");
+        for(let curRow = 0; curRow < 5; curRow++) {
+            let row = document.createElement("tr");
+            for (let c = 0; c < 2; c++) {
+                let text;
+                let cell = document.createElement("td");
+                if (curRow <= (respObject.length-1)) {
+                    if (c === 0) {
+                        text = document.createTextNode(respObject[curRow].first);
+                        cell.appendChild(text);
+                    } else {
+                        if (survival) {
+                            text = document.createTextNode(respObject[curRow].second);
+                        } else {
+                            let time = parseTime(respObject[curRow].second);
+                            text = document.createTextNode(time);
+                        }
+                        cell.appendChild(text);
+                    }
+                } else {
+                    if (c === 0) {
+                        text = document.createTextNode("-----");
+                        cell.appendChild(text);
+                    } else {
+                        text = document.createTextNode("--:--");
+                        cell.appendChild(text);
+                    }
+                }
+
+                row.appendChild(cell);
+            }
+            tableBody.appendChild(row);
+        }
+
+        table.appendChild(tableBody);
+    });
+}
+
 function getMap () {
     $.post('/map', {"url": window.location.href}, responseJSON => {
         const respObject = JSON.parse(responseJSON);
@@ -211,6 +278,7 @@ let collideable = [];
 
 // // load in the map
 function loadMap() {
+    setUpLeaderboard();
     scene.loadImages(["/sprites/wall.png", "/sprites/freeSpace.png", "/sprites/pothole.png", "/sprites/breakable.png",
         "/sprites/imm_tank.png", "/sprites/tank_space.png"], function()  {
 
@@ -882,48 +950,96 @@ function movingEnemyLogic(movingEnemy) {
                         
                         console.log(respObject);
                         const currRoute = respObject.route;
-                        movingEnemy.routeIndex = 1;
+                        movingEnemy.routeIndex = 0;
                         movingEnemy.route = currRoute;
+                        const curRow = Math.floor(movingEnemy.y/45);
+                        const curCol = Math.floor(movingEnemy.x/45);
+                        const route = movingEnemy.route;
+                        const index = movingEnemy.routeIndex;
+                        if (route[index].first - curRow === 0){
+                            if (route[index].second - curCol === 1){
+                               movingEnemy.nextAngle = 0;
+                               console.log("right");
+                               }
+                                              else{
+                                                      movingEnemy.nextAngle = 3.1415;
+                                                      console.log("left");
 
+                                                                  }
+                                              }
+                                                      else if(route[index].first - curRow === -1){
+                                                    movingEnemy.nextAngle = 1.5707;
+                                                         console.log("up");
 
+                                                 }
+                                           else{
+                                                  movingEnemy.nextAngle = -1.5707;
+                                                  console.log("down");
+
+                                                     }
                         });
 
+
+
         }else if(reachedBlock(movingEnemy)){
+
             if(movingEnemy.route.length == movingEnemy.routeIndex + 1){
                 movingEnemy.routeIndex = undefined;
                 movingEnemy.route = undefined;
+
+            }else if(movingEnemy.route.length == movingEnemy.routeIndex + 3){
+
             }else{
-            	
-            	for(let i =0; i <  8; i++){
-            	 mov = forwardByAngle(movingEnemy.angle, 1.5);
-            	 movingEnemy.move(mov[0], mov[1]);
-            	 movingEnemy.cannon.move(mov[0], mov[1]);
-            	 
-            	 
-            	 
-            	}
-            	movingEnemy.update();
-           	movingEnemy.cannon.update();
-            	 movingEnemy.routeIndex += 1;
+
+            }
+                movingEnemy.routeIndex += 1;
+
                 console.log("incr");
+                const curRow = Math.floor(movingEnemy.y/45);
+                const curCol = Math.floor(movingEnemy.x/45);
+                const route = movingEnemy.route;
+                const index = movingEnemy.routeIndex;
+                if (route[index].first - curRow === 0){
+                     if (route[index].second - curCol === 1){
+                         movingEnemy.nextAngle = 0;
+                         console.log("right");
+                       }
+                      else{
+                              movingEnemy.nextAngle = 3.1415;
+                              console.log("left");
+
+                                          }
+                      }
+                              else if(route[index].first - curRow === -1){
+                            movingEnemy.nextAngle = 1.5707;
+                                 console.log("up");
+
+                         }
+                   else{
+                          movingEnemy.nextAngle = 4.712;
+                          console.log("down");
+
+                             }
+
+
 
             }
         }
 
-        }
+
         if(movingEnemy.routeIndex != undefined){
            moveBetween(movingEnemy);
         }
-
-
-
     }
 
+
+
+
 function reachedBlock(movingEnemy){
-    const center = getCenter(movingEnemy);
+    //const center = getCenter(movingEnemy);
     const pix_x_diff = movingEnemy.x - (movingEnemy.route[movingEnemy.routeIndex].second *45); //7.5
     const pix_y_diff = movingEnemy.y - (movingEnemy.route[movingEnemy.routeIndex].first *45); //8
-   if(Math.abs(pix_x_diff) <= 45 && Math.abs(pix_y_diff) <= 45){
+   if(Math.abs(pix_x_diff) <= 22.5 && Math.abs(pix_y_diff) <= 22.5){
     return true;
     }
 
@@ -1038,25 +1154,27 @@ function updateExplosions() {
 let firstIteration = true;
 
 function displayEndGame() {
-    let won = false;
+    won = false;
     $('#next').toggle();
     document.getElementById("result").innerHTML = "GAME OVER!";
     $('#endGame').toggle();
-    console.log("posting");
+    let urlArr = document.URL.split("/");
+    let level = parseInt(urlArr[urlArr.length -1]);
     $.post('/endGame', {"kills": kills, "currentTime":globalTime,
-        "gameId":window.location.href, "survival": survival, "result":won}, responseJSON => {
+        "gameId": level, "survival": survival, "result": won}, responseJSON => {
     });
 
 
 }
 
 function displayWinGame() {
-    let won = true;
+    won = true;
     document.getElementById("result").innerHTML = "GAME WON!";
     $('#endGame').toggle();
-    console.log("posting");
+    let urlArr = document.URL.split("/");
+    let level = parseInt(urlArr[urlArr.length -1]);
     $.post('/endGame', {"kills": kills, "currentTime":globalTime,
-        "gameId":window.location.href, "survival":survival, "result":won}, responseJSON => {
+        "gameId": level, "survival":survival, "result": won}, responseJSON => {
     });
 }
 

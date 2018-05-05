@@ -2,32 +2,58 @@ package edu.brown.cs.bdGaMbPp.Handlers;
 
 import com.google.gson.Gson;
 
+import edu.brown.cs.bdGaMbPp.Database.Querier;
+import org.omg.CORBA.INTERNAL;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import java.util.Set;
+
 public class GameDataHandler implements Route{
 
 	@Override
-	public Object handle(Request request, Response arg1) throws Exception {
+	public Object handle(Request request, Response arg1) {
 		// TODO Auto-generated method stub
-//		if (request.session().attributes().contains("survival")) {
-//			int currentRound = Integer.parseInt(request.session().attribute("survival").toString());
-//			request.session().removeAttribute("survival");
-//			//update database
-//		}
+
 
 		QueryParamsMap qm = request.queryMap();
 
 		int kills = Integer.parseInt(qm.value("kills"));
-		int currentTime = Integer.parseInt(qm.value("tanks"));
-		String id = qm.value("gameId");
-		System.out.println("id = " + id);
+
+		String gameId = qm.value("gameId");
+
 		String survival = qm.value("survival");
-		System.out.println("survival = " + survival);
+
 		String result = qm.value("won");
-		System.out.println("result = " + result);
+
+		int time = Integer.parseInt(qm.value("currentTime"));
+
+		int id = -1;
+		Set<String> attributes = request.session().attributes();
+		if (attributes.contains("user")) {
+
+			id = Integer.parseInt(request.session().attribute("user").toString());
+		}
+
+		Querier.setKills(id, kills);
+		Querier.setTime(id, time);
+
+		if (survival.equals("true") && result.equals("false")) {
+			int currentRound = Integer.parseInt(request.session().attribute("survival").toString());
+			request.session().removeAttribute("survival");
+			Querier.setSurvival(id, currentRound);
+			//update database
+		}
+
+		if (!gameId.equals("survival")) {
+			int gameIdNumber = Integer.parseInt(gameId);
+			if (gameIdNumber >= 0 && gameIdNumber < 20) {
+				Querier.setCampaign(id, gameIdNumber);
+			}
+			Querier.updateLeaderboard(gameIdNumber, id, time);
+		}
 		
 		return new Gson();
 	}
