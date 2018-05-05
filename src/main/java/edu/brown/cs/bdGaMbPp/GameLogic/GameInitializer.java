@@ -291,7 +291,7 @@ public final class GameInitializer {
         break;
       case 2:
         Pair<Integer, Integer> endPoint = map.getStraightLineEnd(newStart);
-        newTank = new PathTank(convertToCoordinate(newStart));
+        newTank = new PathTank(convertToCoordinate(newStart), convertToCoordinate(endPoint));
         break;
       case 3:
         newTank = new HomingTank(convertToCoordinate(newStart));
