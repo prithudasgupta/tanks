@@ -165,13 +165,22 @@ public final class Querier {
 		
 		try {
 			PreparedStatement prep = instance.conn
-			        .prepareStatement("INSERT INTO tanks VALUES (?, ?, ?, ?, ?);");
+			        .prepareStatement("INSERT INTO tanks VALUES (?, ?, ?, ?, ?, ?, ?);");
 			
 				prep.setString(1, id);
 				prep.setString(2, tank.getType());
 				prep.setString(3, Integer.toString((int)tank.getCoord().getCoordinate(0)));
 				prep.setString(4, Integer.toString((int)tank.getCoord().getCoordinate(1)));
 				prep.setString(5, Integer.toString(gameId));
+				if (tank.getType().equals("p")) {
+					//fix
+					prep.setString(6, Integer.toString((int)tank.getEndCoord().getCoordinate(0)));
+					prep.setString(7, Integer.toString((int)tank.getEndCoord().getCoordinate(1)));
+				}
+				else {
+					prep.setString(6, "");
+					prep.setString(7, "");
+				}
 				
 				prep.addBatch();
 				prep.executeBatch();
@@ -224,10 +233,13 @@ public final class Querier {
 	          else if (type.equals("d")) {
 	        	  	tankList.add(new DrunkWalkTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow))));
 	          }else if (type.equals("p")) {
-              tankList.add(new PathTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow))));
-          }else if (type.equals("h")) {
-            tankList.add(new HomingTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow))));
-        }
+		        	  String endRow = rs.getString(6);
+		        	  String endCol = rs.getString(7);
+	        	  		tankList.add(new PathTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow)),  
+	        	  			new Coordinate(Integer.parseInt(endCol), Integer.parseInt(endRow))));
+	          }	else if (type.equals("h")) {
+	        	  	tankList.add(new HomingTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow))));
+          	}
 	        }
 	        prep.close();
 	        rs.close();

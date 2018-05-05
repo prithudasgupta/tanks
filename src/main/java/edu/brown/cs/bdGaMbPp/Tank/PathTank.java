@@ -6,14 +6,17 @@ import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
 public class PathTank implements Tank {
   
   private Coordinate location;
+  private Coordinate endLocation;
   private String type = "p";
   private boolean isAlive;
-  public PathTank(Coordinate startCoord) {
-    location = startCoord;
-    isAlive = true;
-  }
+ 
+  public PathTank(Coordinate coordinate, Coordinate coordinate2) {
+	// TODO Auto-generated constructor stub
+	  location = coordinate;
+	  endLocation = coordinate2;
+}
 
-  @Override
+@Override
   public void move() {
     // TODO Auto-generated method stub
 
@@ -54,5 +57,11 @@ public class PathTank implements Tank {
     // TODO Auto-generated method stub
     return type;
   }
+
+@Override
+public Coordinate getEndCoord() {
+	// TODO Auto-generated method stub
+	return endLocation;
+}
 
 }

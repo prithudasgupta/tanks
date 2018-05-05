@@ -4,6 +4,10 @@ let BOARD_HEIGHT = 16;
 let sel;
 let stage = 0;
 
+let pathStage = 0;
+let pathOptions = [];
+let curPath;
+
 let userLoc;
 
 let cur;
@@ -122,7 +126,8 @@ function loadMap() {
     scene.loadImages(["/sprites/userTankSelect.png","/sprites/statTankSelect.png","/sprites/dumbTankSelect.png","/sprites/wall.png",
         "/sprites/freeSpace.png", "/sprites/pothole.png", "/sprites/breakable.png",
         "/sprites/imm_tank.png", "/sprites/tank_space.png", "/sprites/selected.png",
-        "/sprites/menu.png", "/sprites/select.png", "/sprites/pathTankSelect.png", "/sprites/homingTankSelect.png"], function () {
+        "/sprites/menu.png", "/sprites/select.png", "/sprites/pathTankSelect.png",
+        "/sprites/freeSpacePath.png","/sprites/homingTankSelect.png"], function () {
         // loading map into view
         for (let row = 0; row < 16; row++) {
             for (let col = 0; col < 24; col++) {
@@ -186,6 +191,65 @@ function loadMap() {
         }
     });
 
+}
+
+function setPossiblePath(start) {
+    let row = start[0];
+    let col = start[1];
+
+    let aboveClear = true;
+    let belowClear = true;
+    let rightClear = true;
+    let leftClear = true;
+
+    for (let i = 1; i < 5; i++) {
+        console.log("setting up paths");
+        if (aboveClear && row-i >= 0) {
+            if (map[row-i][col].type === "l") {
+                map[row-i][col].sprite.loadImg("/sprites/freeSpacePath.png");
+                map[row-i][col].sprite.update();
+                pathOptions.push(map[row-i][col]);
+            } else {
+                aboveClear = false;
+            }
+        }
+        if (belowClear && row+i <= 15) {
+            if (map[row+i][col].type === "l") {
+                map[row+i][col].sprite.loadImg("/sprites/freeSpacePath.png");
+                map[row-i][col].sprite.update();
+                pathOptions.push(map[row+i][col]);
+            } else {
+                belowClear = false;
+            }
+        }
+        if (rightClear && col+i <= 23) {
+            if (map[row][col+i].type === "l") {
+                map[row][col+i].sprite.loadImg("/sprites/freeSpacePath.png");
+                map[row-i][col].sprite.update();
+                pathOptions.push(map[row][col+i]);
+
+            } else {
+                rightClear = false;
+            }
+        }
+        if (leftClear && col-i >= 0) {
+            if (map[row][col-i].type === "l") {
+                map[row][col-i].sprite.loadImg("/sprites/freeSpacePath.png");
+                map[row-i][col].sprite.update();
+                pathOptions.push(map[row][col-i]);
+            } else {
+                leftClear = false;
+            }
+        }
+    }
+
+}
+
+function removePossiblePaths() {
+    for (let i in pathOptions) {
+        pathOptions[i].sprite.loadImg("/sprites/freeSpace.png");
+        pathOptions[i].sprite.update();
+    }
 }
 
     $(document).ready(() => {
@@ -297,9 +361,24 @@ function loadMap() {
                                 userLoc = undefined;
                             }
 
-                            map[curRow][curCol].type = cur.sel.type;
-                            map[curRow][curCol].sprite.loadImg(cur.sel.string);
-                            map[curRow][curCol].sprite.update();
+                            if (cur.sel.type === "path") {
+                                if (pathStage === 0) {
+                                    setPossiblePath([curRow,curCol]);
+                                    pathStage = 1;
+                                    curPath = map[curRow][curCol];
+                                    map[curRow][curCol].type = cur.sel.type;
+                                    map[curRow][curCol].sprite.loadImg(cur.sel.string);
+                                    map[curRow][curCol].sprite.update();
+                                } else if (pathOptions.contains(map[curCol][curCol])) {
+
+                                }
+
+                            } else {
+                                map[curRow][curCol].type = cur.sel.type;
+                                map[curRow][curCol].sprite.loadImg(cur.sel.string);
+                                map[curRow][curCol].sprite.update();
+                            }
+
                         }
                     }
                 }
@@ -363,6 +442,7 @@ function loadMap() {
                     cur.sel = new Selected("l");
                 }
             }
+            // path
             if (opt5.isPointIn(e.clientX, e.clientY) && stage === 1){
                 if (opt5 !== opt1) {
                     sel.loadImg("/sprites/menu.png");
