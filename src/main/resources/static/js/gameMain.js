@@ -782,21 +782,33 @@ function getShortestPathFromTo(fromRow, fromCol, toRow, toCol){
             "userCol": toCol, "enemyRow": fromRow, "enemyCol": fromCol}, responseJSON => {
             const respObject = JSON.parse(responseJSON);
             route = respObject.route;
-            console.log("returned route is " + route);
 
 
             });
-                 console.log("returned route is " + route);
 
     return route;
 
 }
 
+//function getCenter(spriteTank) {
+//    const width = 15.5;
+//    const height = 16;
+//    const angle_rad = (spriteTank.angle) % (2*Math.PI);
+//    const x = spriteTank.x;
+//    const y = spriteTank.y;
+//    var cosa = Math.cos(angle_rad);
+//    var sina = Math.sin(angle_rad);
+//    var wp = width/2;
+//    var hp = height/2;
+//    return { px: ( x + wp * cosa - hp * sina ),
+//             py: ( y + wp * sina + hp * cosa ) };
+//}
+
 function getCenter(spriteTank){
     const coord = [];
-    coord[0] = spriteTank.x + (8*Math.cos(spriteTank.angle% 6.28));
-    coord[1] = spriteTank.y + (7.5*Math.sin(spriteTank.angle% 6.28));
-    return coord;
+    let x = spriteTank.x + (8);
+    let y = spriteTank.y + (7.5);
+    return {px: x , py: y};
 
 }
 
@@ -805,12 +817,11 @@ document.addEventListener("click", function(e){
 })
 function movingEnemyLogic(movingEnemy) {
 
-    /*console.log("x range " + (Math.floor(movingEnemy.x/45)*45) + ", " + ((Math.floor(movingEnemy.x/45)*45) +45));
-        console.log("y range " + (Math.floor(movingEnemy.y/45)*45) + ", " + ((Math.floor(movingEnemy.y/45)*45) +45));
-        console.log("actual " + movingEnemy.x + ", " + movingEnemy.y);
-        console.log("center " + getCenter(movingEnemy));*/
-        console.log(movingEnemy.angle * 180 / Math.PI);
-         console.log("fixed " + (movingEnemy.angle% 6.28* 180 / Math.PI));
+    //console.log("x range " + (Math.floor(movingEnemy.x/45)*45) + ", " + ((Math.floor(movingEnemy.x/45)*45) +45));
+      //  console.log("y range " + (Math.floor(movingEnemy.y/45)*45) + ", " + ((Math.floor(movingEnemy.y/45)*45) +45));
+      const center =  getCenter(movingEnemy);
+      console.log(movingEnemy.x + " " + movingEnemy.y);
+        //console.log("center " + center.px + ", " + center.py);
 
 
 
@@ -836,6 +847,11 @@ function movingEnemyLogic(movingEnemy) {
                         const currRoute = respObject.route;
                         movingEnemy.routeIndex = 1;
                         movingEnemy.route = currRoute;
+                        console.log(currRoute);
+                        console.log("Map");
+                        for(let i = 0; i <currRoute.length ; i++ ){
+                            console.log(currRoute[i]);
+                        }
 
 
 
@@ -861,10 +877,10 @@ function movingEnemyLogic(movingEnemy) {
     }
 
 function reachedBlock(movingEnemy){
-
-    const pix_x_diff = (movingEnemy.x -2) - (movingEnemy.route[movingEnemy.routeIndex].second *45 + 22.5); //7.5
-    const pix_y_diff = (movingEnemy.y -2) - (movingEnemy.route[movingEnemy.routeIndex].first *45 + 22.5); //8
-    if(Math.abs(pix_x_diff) <= 22.6 && Math.abs(pix_y_diff) <= 22.6){
+    const center = getCenter(movingEnemy);
+    const pix_x_diff = center.px - (movingEnemy.route[movingEnemy.routeIndex].second *45 + 22.5); //7.5
+    const pix_y_diff = center.py - (movingEnemy.route[movingEnemy.routeIndex].first *45 +22.5); //8
+   if(Math.abs(pix_x_diff) <= 35 && Math.abs(pix_y_diff) <= 35){
     return true;
     }
 
