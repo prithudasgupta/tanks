@@ -983,18 +983,14 @@ function movingEnemyLogic(movingEnemy) {
 
 
         }else if(reachedBlock(movingEnemy)){
-
             if(movingEnemy.route.length == movingEnemy.routeIndex + 1){
                 movingEnemy.routeIndex = undefined;
                 movingEnemy.route = undefined;
-
             }else if(movingEnemy.route.length == movingEnemy.routeIndex + 3){
 
             }else{
-
             }
                 movingEnemy.routeIndex += 1;
-
                 // console.log("incr");
                 const curRow = Math.floor(movingEnemy.y/45);
                 const curCol = Math.floor(movingEnemy.x/45);
@@ -1017,13 +1013,8 @@ function movingEnemyLogic(movingEnemy) {
                           movingEnemy.nextAngle = 4.712;
 
                              }
-
-
-
             }
         }
-
-
         if(movingEnemy.routeIndex != undefined){
            moveBetween(movingEnemy);
         }

@@ -127,7 +127,7 @@ function loadMap() {
         "/sprites/freeSpace.png", "/sprites/pothole.png", "/sprites/breakable.png",
         "/sprites/imm_tank.png", "/sprites/tank_space.png", "/sprites/selected.png",
         "/sprites/menu.png", "/sprites/select.png", "/sprites/pathTankSelect.png",
-        "/sprites/freeSpacePath.png","/sprites/homingTankSelect.png"], function () {
+        "/sprites/freeSpacePath.png","/sprites/homingTankSelect.png", "/sprites/EndPath.png"], function () {
         // loading map into view
         for (let row = 0; row < 16; row++) {
             for (let col = 0; col < 24; col++) {
@@ -370,7 +370,11 @@ function removePossiblePaths() {
                                     map[curRow][curCol].sprite.loadImg(cur.sel.string);
                                     map[curRow][curCol].sprite.update();
                                 } else if (pathOptions.contains(map[curCol][curCol])) {
-
+                                    removePossiblePaths();
+                                    map[curRow][curCol].sprite.loadImg("/sprites/EndPath.png");
+                                    map[curRow][curCol].sprite.update();
+                                    map[curRow][curCol].type = "pathEnd";
+                                    pathStage = 0;
                                 }
 
                             } else {
@@ -385,6 +389,13 @@ function removePossiblePaths() {
             }
             if (opt1.isPointIn(e.clientX, e.clientY)) {
                 if (cur !== opt1) {
+                    if (pathStage === 1) {
+                        pathStage = 0;
+                        curPath.sprite.loadImg("/sprites/freeSpace.png");
+                        removePossiblePaths();
+                        curPath.type = "l";
+                    }
+
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[2][25].sprite.loadImg("/sprites/select.png");
@@ -401,6 +412,12 @@ function removePossiblePaths() {
             }
             if (opt2.isPointIn(e.clientX, e.clientY)) {
                 if (opt2 !== opt1) {
+                    if (pathStage === 1) {
+                        pathStage = 0;
+                        curPath.sprite.loadImg("/sprites/freeSpace.png");
+                        removePossiblePaths();
+                        curPath.type = "l";
+                    }
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[4][25].sprite.loadImg("/sprites/select.png");
@@ -417,6 +434,12 @@ function removePossiblePaths() {
             }
             if (opt3.isPointIn(e.clientX, e.clientY)) {
                 if (opt3 !== opt1) {
+                    if (pathStage === 1) {
+                        pathStage = 0;
+                        curPath.sprite.loadImg("/sprites/freeSpace.png");
+                        removePossiblePaths();
+                        curPath.type = "l";
+                    }
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[6][25].sprite.loadImg("/sprites/select.png");
@@ -433,6 +456,12 @@ function removePossiblePaths() {
             }
             if (opt4.isPointIn(e.clientX, e.clientY)){
                 if (opt4 !== opt1) {
+                    if (pathStage === 1) {
+                        pathStage = 0;
+                        curPath.sprite.loadImg("/sprites/freeSpace.png");
+                        removePossiblePaths();
+                        curPath.type = "l";
+                    }
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[8][25].sprite.loadImg("/sprites/select.png");
@@ -456,6 +485,12 @@ function removePossiblePaths() {
             }
             if (opt6.isPointIn(e.clientX, e.clientY) && stage === 1){
                 if (opt6 !== opt1) {
+                    if (pathStage === 1) {
+                        pathStage = 0;
+                        curPath.sprite.loadImg("/sprites/freeSpace.png");
+                        removePossiblePaths();
+                        curPath.type = "l";
+                    }
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[12][25].sprite.loadImg("/sprites/select.png");
