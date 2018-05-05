@@ -8,14 +8,13 @@
  * 			information that explains that destination of the tank.
  */
 function moveBetween(enemyObj){
-   // console.log(enemyObj.route[enemyObj.routeIndex]);
+    console.log(enemyObj.route[enemyObj.routeIndex]);
     const route = enemyObj.route;
     const index = enemyObj.routeIndex;
     const curRow = Math.floor(enemyObj.y / 45);
     const curCol = Math.floor(enemyObj.x / 45);
     //console.log("going to " + route[index].first + ", " +  route[index].second);
-    let surroundingBlock;
-    if (route[index].first - curRow === 0){
+    /*if (route[index].first - curRow === 0){
      if (route[index].second - curCol === 1){
          enemyObj.nextAngle = 0;
          console.log("right");
@@ -35,25 +34,27 @@ function moveBetween(enemyObj){
           enemyObj.nextAngle = 4.712;
           console.log("down");
 
-             }
+             }*/
 
     const currAngle =  -1* (enemyObj.angle % 6.28);
-    	const angleDiff = enemyObj.nextAngle - currAngle ;
-    console.log("start " + currAngle*180/Math.PI)
+    const angleDiff = enemyObj.nextAngle - currAngle ;
+        console.log("next " + enemyObj.nextAngle);
+        console.log("curr " + currAngle)
+        console.log("diff " + angleDiff);
 
-    console.log("diff " + angleDiff*180/Math.PI)
-    console.log("end " + enemyObj.nextAngle*180/Math.PI)
+    //console.log("start " + currAngle*180/Math.PI)
+    //console.log("diff " + angleDiff)
+
+    //console.log("diff " + angleDiff*180/Math.PI)
+    //console.log("end " + enemyObj.nextAngle*180/Math.PI)
 
     let mov;
 	//if (Math.abs(currAngle - enemyObj.nextAngle) <= .2) {
         if (angleDiff > 0){
-    console.log("here1");
             enemyObj.rotate(-0.02);
              enemyObj.cannon.rotate(-0.02);
-
         }
         else if(angleDiff < 0){
-    console.log("here2");
 
             enemyObj.rotate(0.02);
              enemyObj.cannon.rotate(0.02);
@@ -67,7 +68,7 @@ function moveBetween(enemyObj){
                         enemyObj.move(mov[0], mov[1]);
                         enemyObj.cannon.move(mov[0], mov[1]);
 
-                    }
+                }
     //}
 
 
@@ -152,20 +153,6 @@ function moveBetweenHoming(enemyObj){
             let curRow = Math.floor(enemyObj.y / 45);
             let curCol = Math.floor(enemyObj.x / 45);
 
-            if (enemyObj.nextRow - curRow == 0){
-                if (enemyObj.nextCol - curCol == 1){
-                    enemyObj.nextAngle = 0;
-                }
-                else{
-                    enemyObj.nextAngle = 3.1415;
-                }
-            }
-            else if(enemyObj.nextRow - curRow == 1){
-                enemyObj.nextAngle = 1.5707;
-            }
-            else{
-                enemyObj.nextAngle = 4.712;
-            }
 
             enemyObj.startX = enemyObj.x;
             enemyObj.startY = enemyObj.y;
