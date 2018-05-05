@@ -913,46 +913,95 @@ function movingEnemyLogic(movingEnemy) {
                         "userCol": Math.floor(user.x/45), "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
                         const respObject = JSON.parse(responseJSON);
                         const currRoute = respObject.route;
-                        movingEnemy.routeIndex = 1;
+                        movingEnemy.routeIndex = 0;
                         movingEnemy.route = currRoute;
-                        console.log(currRoute);
-                        console.log("Map");
-                        for(let i = 0; i <currRoute.length ; i++ ){
-                            console.log(currRoute[i]);
-                        }
+                        const curRow = Math.floor(movingEnemy.y/45);
+                        const curCol = Math.floor(movingEnemy.x/45);
+                        const route = movingEnemy.route;
+                        const index = movingEnemy.routeIndex;
+                        if (route[index].first - curRow === 0){
+                            if (route[index].second - curCol === 1){
+                               movingEnemy.nextAngle = 0;
+                               console.log("right");
+                               }
+                                              else{
+                                                      movingEnemy.nextAngle = 3.1415;
+                                                      console.log("left");
 
+                                                                  }
+                                              }
+                                                      else if(route[index].first - curRow === -1){
+                                                    movingEnemy.nextAngle = 1.5707;
+                                                         console.log("up");
 
+                                                 }
+                                           else{
+                                                  movingEnemy.nextAngle = 4.712;
+                                                  console.log("down");
 
+                                                     }
                         });
+
+
 
         }else if(reachedBlock(movingEnemy)){
             if(movingEnemy.route.length == movingEnemy.routeIndex + 1){
                 movingEnemy.routeIndex = undefined;
+                movingEnemy.route = undefined;
             }else{
                 movingEnemy.routeIndex += 1;
                 console.log("incr");
+                const curRow = Math.floor(movingEnemy.y/45);
+                const curCol = Math.floor(movingEnemy.x/45);
+                const route = movingEnemy.route;
+                const index = movingEnemy.routeIndex;
+                if (route[index].first - curRow === 0){
+                     if (route[index].second - curCol === 1){
+                         movingEnemy.nextAngle = 0;
+                         console.log("right");
+                       }
+                      else{
+                              movingEnemy.nextAngle = 3.1415;
+                              console.log("left");
+
+                                          }
+                      }
+                              else if(route[index].first - curRow === -1){
+                            movingEnemy.nextAngle = 1.5707;
+                                 console.log("up");
+
+                         }
+                   else{
+                          movingEnemy.nextAngle = 4.712;
+                          console.log("down");
+
+                             }
+
+
 
             }
         }
 
-        }
+
         if(movingEnemy.routeIndex != undefined){
            moveBetween(movingEnemy);
         }
-
+    }
 
 
     }
 
 function reachedBlock(movingEnemy){
-    const center = getCenter(movingEnemy);
-    const pix_x_diff = center.px - (movingEnemy.route[movingEnemy.routeIndex].second *45 + 22.5); //7.5
-    const pix_y_diff = center.py - (movingEnemy.route[movingEnemy.routeIndex].first *45 +22.5); //8
-   if(Math.abs(pix_x_diff) <= 35 && Math.abs(pix_y_diff) <= 35){
+    //const center = getCenter(movingEnemy);
+    const pix_x_diff = movingEnemy.x - (movingEnemy.route[movingEnemy.routeIndex].second *45); //7.5
+    const pix_y_diff = movingEnemy.y - (movingEnemy.route[movingEnemy.routeIndex].first *45); //8
+    console.log("y diff= " + pix_y_diff);
+   if(Math.abs(pix_x_diff) <= 18 && Math.abs(pix_y_diff) <= 18){
     return true;
     }
 
     return false;
+    //return (Math.floor(movingEnemy.x/45) == Math.floor(/45));
 
 }
 
