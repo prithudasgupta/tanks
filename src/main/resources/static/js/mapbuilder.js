@@ -16,6 +16,9 @@ let opt3;
 // free, smart tank
 let opt4;
 
+let opt5;
+
+let opt6;
 // copy of map
 let representation;
 
@@ -90,6 +93,10 @@ class Selected {
             this.string = "/sprites/statTankSelect.png";
         } else if (type === "dumb") {
             this.string = "/sprites/dumbTankSelect.png";
+        } else if (type === "path") {
+            this.string = "/sprites/pathTankSelect.png";
+        } else if (type === "homing") {
+            this.string = "/sprites/homingTankSelect.png";
         }
     }
 }
@@ -114,7 +121,8 @@ let walls = [];
 function loadMap() {
     scene.loadImages(["/sprites/userTankSelect.png","/sprites/statTankSelect.png","/sprites/dumbTankSelect.png","/sprites/wall.png",
         "/sprites/freeSpace.png", "/sprites/pothole.png", "/sprites/breakable.png",
-        "/sprites/imm_tank.png", "/sprites/tank_space.png", "/sprites/selected.png", "/sprites/menu.png", "/sprites/select.png"], function () {
+        "/sprites/imm_tank.png", "/sprites/tank_space.png", "/sprites/selected.png",
+        "/sprites/menu.png", "/sprites/select.png", "/sprites/pathTankSelect.png", "/sprites/homingTankSelect.png"], function () {
         // loading map into view
         for (let row = 0; row < 16; row++) {
             for (let col = 0; col < 24; col++) {
@@ -160,8 +168,15 @@ function loadMap() {
                     next = game.Sprite("/sprites/freeSpace.png");
                     opt4 = next;
                     map[row][col] = new Tile(next, "l");
-                }
-                else {
+                } else if (row === 10 && col === 26) {
+                    next = game.Sprite("/sprites/menu.png");
+                    opt5 = next;
+                    map[row][col] = new Tile(next, "path");
+                } else if (row === 12 && col === 26) {
+                    next = game.Sprite("/sprites/menu.png");
+                    opt6 = next;
+                    map[row][col] = new Tile(next, "homing");
+                } else {
                     next = game.Sprite("/sprites/menu.png");
                     map[row][col] = new Tile(next, "l");
                 }
@@ -172,17 +187,6 @@ function loadMap() {
     });
 
 }
-
-// function updateZval() {
-//     var nodes = document.getElementById("sjs0-background").childNodes;
-//     for(var i=0; i<nodes.length; i++) {
-//         if (nodes[i].nodeName.toLowerCase() == 'div') {
-//             if (nodes[i].style.backgroundImage === 'url("/sprites/wall.png")') {
-//                 nodes[i].style.zIndex = "100";
-//             }
-//         }
-//     }
-// }
 
     $(document).ready(() => {
 
@@ -206,6 +210,10 @@ function loadMap() {
             opt2.update();
             opt3.loadImg("/sprites/dumbTankSelect.png");
             opt3.update();
+            opt5.loadImg("/sprites/pathTankSelect.png");
+            opt5.update();
+            opt6.loadImg("/sprites/homingTankSelect.png");
+            opt6.update();
             submit.toggle();
             finalSubmit.toggle();
             stage = 1;
@@ -345,7 +353,7 @@ function loadMap() {
                 }
             }
             if (opt4.isPointIn(e.clientX, e.clientY)){
-            		if (opt4 !== opt1) {
+                if (opt4 !== opt1) {
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[8][25].sprite.loadImg("/sprites/select.png");
@@ -355,6 +363,29 @@ function loadMap() {
                     cur.sel = new Selected("l");
                 }
             }
+            if (opt5.isPointIn(e.clientX, e.clientY) && stage === 1){
+                if (opt5 !== opt1) {
+                    sel.loadImg("/sprites/menu.png");
+                    sel.update();
+                    map[10][25].sprite.loadImg("/sprites/select.png");
+                    map[10][25].sprite.update();
+                    sel = map[10][25].sprite;
+                    cur = opt5;
+                    cur.sel = new Selected("path");
+                }
+            }
+            if (opt6.isPointIn(e.clientX, e.clientY) && stage === 1){
+                if (opt6 !== opt1) {
+                    sel.loadImg("/sprites/menu.png");
+                    sel.update();
+                    map[12][25].sprite.loadImg("/sprites/select.png");
+                    map[12][25].sprite.update();
+                    sel = map[12][25].sprite;
+                    cur = opt5;
+                    cur.sel = new Selected("homing");
+                }
+            }
+
             
         });
         loadMap();
@@ -377,6 +408,12 @@ function getLoTanks() {
             }
             if (map[row][col].type === "dumb") {
                 loEnemies += "d," + row.toString() + "," + col.toString() + "#";
+            }
+            if (map[row][col].type === "homing") {
+                loEnemies += "h," + row.toString() + "," + col.toString() + "#";
+            }
+            if (map[row][col].type === "path") {
+                loEnemies += "p," + row.toString() + "," + col.toString() + "#";
             }
         }
     }

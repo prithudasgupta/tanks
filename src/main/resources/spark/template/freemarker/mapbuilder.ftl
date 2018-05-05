@@ -5,9 +5,9 @@
 <button id="submitLevelFinal"> Submit </button>
 
 <button id="home" onclick="visitPage('Main')"> Home </button>
-<div id="backgroundImg">
-    <img id="img" src="/images/mapBuildLogo.png">
-</div>
+<#--<div id="backgroundImg">-->
+    <#--<img id="img" src="/images/mapBuildLogo.png">-->
+<#--</div>-->
 
 
 <style>
