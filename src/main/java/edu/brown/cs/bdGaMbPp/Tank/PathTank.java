@@ -37,7 +37,7 @@ public class PathTank implements Tank {
   @Override
   public Coordinate getCoord() {
     // TODO Auto-generated method stub
-    return null;
+    return location;
   }
 
   @Override
@@ -64,4 +64,14 @@ public Coordinate getEndCoord() {
 	return endLocation;
 }
 
+
+  @Override
+  public String toString() {
+    return "PathTank{" +
+            "location=" + location +
+            ", endLocation=" + endLocation +
+            ", type='" + type + '\'' +
+            ", isAlive=" + isAlive +
+            '}';
+  }
 }

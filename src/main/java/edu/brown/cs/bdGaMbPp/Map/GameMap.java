@@ -25,6 +25,7 @@ public class GameMap {
 	private final int length;
 	private final int width;
 	private int id;
+	private int count = 0;
 	private Graph<Pair<Integer, Integer>, String> graph = null;
 
 	public GameMap(List<List<Location>> locations) {
@@ -201,7 +202,86 @@ public class GameMap {
 		return valid;
 	}
 
-	public static double getDistance(Pair<Integer, Integer> start, Pair<Integer, Integer> end) {
+	public Pair<Integer, Integer> getStraightLineEnd(Pair<Integer, Integer> curr){
+	  
+	  List<Pair<Integer, Integer>> neighbors = getValidNeighbors(curr);
+	  count = 0;
+	  
+	  if(neighbors.size() == 0) {
+	    return null;
+	  }
+	  else {
+	    
+	    List<Pair<Integer, Integer>> initial = new ArrayList<Pair<Integer, Integer>>();
+	    initial.add(curr);
+	  
+	  List<Pair<Integer, Integer>> left = this.checkDirection(1, curr, 0, new ArrayList<Pair<Integer, Integer>>(initial));
+	  List<Pair<Integer, Integer>> top = this.checkDirection(2, curr, 0, new ArrayList<Pair<Integer, Integer>>(initial));
+	  List<Pair<Integer, Integer>> right = this.checkDirection(3, curr, 0, new ArrayList<Pair<Integer, Integer>>(initial));
+	  List<Pair<Integer, Integer>> bottom = this.checkDirection(4, curr, 0, new ArrayList<Pair<Integer, Integer>>(initial));
+	  
+	  List<Pair<Integer, Integer>> horizontal;
+	  List<Pair<Integer, Integer>> vertical;
+	  
+	  
+	  if (left.size() > right.size()) {
+	    horizontal = left;
+	  }
+	  else {
+	    horizontal = right;
+	  }
+	  
+	  if (top.size() > bottom.size()) {
+	    vertical = top;
+	  }
+	  else {
+	    vertical = bottom;
+	  }
+	  
+	  int rand = (int)(Math.random() * 2);
+	  if (rand == 0) {
+	    if (vertical.size() > 0) {
+	      return vertical.get(vertical.size() - 1);
+	    }
+	  }
+	  else {
+	    if (horizontal.size() > 0) {
+        return horizontal.get(horizontal.size() - 1);
+      }
+	  }
+
+	  }
+	  return null;
+	}
+	
+	private List<Pair<Integer, Integer>> checkDirection(int direction, Pair<Integer, Integer> curr, int counter, List<Pair<Integer, Integer>> currentList) {
+    // TODO Auto-generated method stub
+	  Pair<Integer, Integer> nextPair = null;
+	  Location next = null;
+	  switch(direction) {
+	    case 1:
+	       nextPair = new Pair<Integer, Integer>(curr.getFirst() - 1, curr.getSecond());
+	       next = this.get(curr.getFirst() - 1, curr.getSecond()); 
+	    case 2:
+	      nextPair = new Pair<Integer, Integer>(curr.getFirst() + 1, curr.getSecond());
+	       next = this.get(curr.getFirst() + 1, curr.getSecond()); 
+	    case 3:
+	      nextPair = new Pair<Integer, Integer>(curr.getFirst(), curr.getSecond() - 1);
+	       next = this.get(curr.getFirst(), curr.getSecond() - 1); 
+	    case 4:
+	      nextPair = new Pair<Integer, Integer>(curr.getFirst(), curr.getSecond() + 1);
+	       next = this.get(curr.getFirst(), curr.getSecond() + 1);     
+	  }
+	  if (next != null && next.getRepresentation().equals("l") && counter < 4) {
+	    currentList.add(nextPair);
+	    return checkDirection(direction, nextPair, counter + 1, currentList);
+	  }
+	  else {
+	    return currentList;
+	  }
+  }
+
+  public static double getDistance(Pair<Integer, Integer> start, Pair<Integer, Integer> end) {
 		int row1 = start.getFirst();
 		int col1 = start.getSecond();
 		int row2 = end.getFirst();
@@ -213,6 +293,8 @@ public class GameMap {
 	/*public Map<Tank, List<Pair<Integer, Integer>>> getTankLocations(){
 		
 	}*/
+	
+	
 	
 	public boolean withinSight(Pair<Integer, Integer> cpu, Pair<Integer, Integer> user) {
 		double deltaY = (user.getSecond() - cpu.getSecond());

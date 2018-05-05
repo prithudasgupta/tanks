@@ -4,6 +4,10 @@ let BOARD_HEIGHT = 16;
 let sel;
 let stage = 0;
 
+let pathStage = 0;
+let pathOptions = [];
+let curPath;
+
 let userLoc;
 
 let cur;
@@ -122,7 +126,8 @@ function loadMap() {
     scene.loadImages(["/sprites/userTankSelect.png","/sprites/statTankSelect.png","/sprites/dumbTankSelect.png","/sprites/wall.png",
         "/sprites/freeSpace.png", "/sprites/pothole.png", "/sprites/breakable.png",
         "/sprites/imm_tank.png", "/sprites/tank_space.png", "/sprites/selected.png",
-        "/sprites/menu.png", "/sprites/select.png", "/sprites/pathTankSelect.png", "/sprites/homingTankSelect.png"], function () {
+        "/sprites/menu.png", "/sprites/select.png", "/sprites/pathTankSelect.png",
+        "/sprites/freeSpacePath.png","/sprites/homingTankSelect.png", "/sprites/EndPath.png"], function () {
         // loading map into view
         for (let row = 0; row < 16; row++) {
             for (let col = 0; col < 24; col++) {
@@ -186,6 +191,66 @@ function loadMap() {
         }
     });
 
+}
+
+function setPossiblePath(start) {
+    let row = start[0];
+    let col = start[1];
+
+    let aboveClear = true;
+    let belowClear = true;
+    let rightClear = true;
+    let leftClear = true;
+
+    for (let i = 1; i < 5; i++) {
+        console.log("setting up paths");
+        if (aboveClear && row-i >= 0) {
+            if (map[row-i][col].type === "l") {
+                map[row-i][col].sprite.loadImg("/sprites/freeSpacePath.png");
+                map[row-i][col].sprite.update();
+                pathOptions.push(map[row-i][col]);
+            } else {
+                aboveClear = false;
+            }
+        }
+        if (belowClear && row+i <= 15) {
+            if (map[row+i][col].type === "l") {
+                map[row+i][col].sprite.loadImg("/sprites/freeSpacePath.png");
+                map[row+i][col].sprite.update();
+                pathOptions.push(map[row+i][col]);
+            } else {
+                belowClear = false;
+            }
+        }
+        if (rightClear && col+i <= 23) {
+            if (map[row][col+i].type === "l") {
+                map[row][col+i].sprite.loadImg("/sprites/freeSpacePath.png");
+                map[row][col+i].sprite.update();
+                pathOptions.push(map[row][col+i]);
+
+            } else {
+                rightClear = false;
+            }
+        }
+        if (leftClear && col-i >= 0) {
+            if (map[row][col-i].type === "l") {
+                map[row][col-i].sprite.loadImg("/sprites/freeSpacePath.png");
+                map[row][col-i].sprite.update();
+                pathOptions.push(map[row][col-i]);
+            } else {
+                leftClear = false;
+            }
+        }
+    }
+
+}
+
+function removePossiblePaths() {
+    for (let i in pathOptions) {
+        pathOptions[i].sprite.loadImg("/sprites/freeSpace.png");
+        pathOptions[i].sprite.update();
+    }
+    pathOptions = [];
 }
 
     $(document).ready(() => {
@@ -280,6 +345,7 @@ function loadMap() {
                         curRow = Math.floor(e.clientY/45);
                         curCol = Math.floor(e.clientX/45);
                         console.log(map[curRow][curCol].type);
+                        // if the map location is not a pothole, breakable, or a wall
                         if (map[curRow][curCol].type !== "p" && map[curRow][curCol].type !== "u"
                             && map[curRow][curCol].type !== "b") {
                             // only allow user to be placed once
@@ -296,16 +362,50 @@ function loadMap() {
                             if (map[curRow][curCol].type === "user") {
                                 userLoc = undefined;
                             }
+                            console.log(cur.sel.type);
+                            if (cur.sel.type === "path") {
+                                console.log(map[curRow][curCol]);
+                                if (pathStage === 0) {
+                                    setPossiblePath([curRow,curCol]);
+                                    pathStage = 1;
+                                    curPath = map[curRow][curCol];
+                                    map[curRow][curCol].type = cur.sel.type;
+                                    map[curRow][curCol].sprite.loadImg(cur.sel.string);
+                                    map[curRow][curCol].sprite.update();
+                                } else if (pathOptions.includes(map[curRow][curCol])) {
+                                    removePossiblePaths();
+                                    curPath.endToPath = map[curRow][curCol];
+                                    map[curRow][curCol].sprite.loadImg("/sprites/EndPath.png");
+                                    map[curRow][curCol].sprite.update();
+                                    map[curRow][curCol].type = "pathEnd";
+                                    map[curRow][curCol].endToPath = curPath;
+                                    pathStage = 0;
+                                }
 
-                            map[curRow][curCol].type = cur.sel.type;
-                            map[curRow][curCol].sprite.loadImg(cur.sel.string);
-                            map[curRow][curCol].sprite.update();
+                            } else {
+                                if (map[curRow][curCol].type === "path" || map[curRow][curCol].type === "pathEnd") {
+                                    map[curRow][curCol].endToPath.type = "l";
+                                    map[curRow][curCol].endToPath.sprite.loadImg("/sprites/freeSpace.png");
+                                    map[curRow][curCol].endToPath.sprite.update();
+                                }
+                                map[curRow][curCol].type = cur.sel.type;
+                                map[curRow][curCol].sprite.loadImg(cur.sel.string);
+                                map[curRow][curCol].sprite.update();
+                            }
+
                         }
                     }
                 }
             }
             if (opt1.isPointIn(e.clientX, e.clientY)) {
                 if (cur !== opt1) {
+                    if (pathStage === 1) {
+                        pathStage = 0;
+                        curPath.sprite.loadImg("/sprites/freeSpace.png");
+                        removePossiblePaths();
+                        curPath.type = "l";
+                    }
+
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[2][25].sprite.loadImg("/sprites/select.png");
@@ -322,6 +422,12 @@ function loadMap() {
             }
             if (opt2.isPointIn(e.clientX, e.clientY)) {
                 if (opt2 !== opt1) {
+                    if (pathStage === 1) {
+                        pathStage = 0;
+                        curPath.sprite.loadImg("/sprites/freeSpace.png");
+                        removePossiblePaths();
+                        curPath.type = "l";
+                    }
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[4][25].sprite.loadImg("/sprites/select.png");
@@ -338,6 +444,12 @@ function loadMap() {
             }
             if (opt3.isPointIn(e.clientX, e.clientY)) {
                 if (opt3 !== opt1) {
+                    if (pathStage === 1) {
+                        pathStage = 0;
+                        curPath.sprite.loadImg("/sprites/freeSpace.png");
+                        removePossiblePaths();
+                        curPath.type = "l";
+                    }
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[6][25].sprite.loadImg("/sprites/select.png");
@@ -354,6 +466,12 @@ function loadMap() {
             }
             if (opt4.isPointIn(e.clientX, e.clientY)){
                 if (opt4 !== opt1) {
+                    if (pathStage === 1) {
+                        pathStage = 0;
+                        curPath.sprite.loadImg("/sprites/freeSpace.png");
+                        removePossiblePaths();
+                        curPath.type = "l";
+                    }
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[8][25].sprite.loadImg("/sprites/select.png");
@@ -363,6 +481,7 @@ function loadMap() {
                     cur.sel = new Selected("l");
                 }
             }
+            // path
             if (opt5.isPointIn(e.clientX, e.clientY) && stage === 1){
                 if (opt5 !== opt1) {
                     sel.loadImg("/sprites/menu.png");
@@ -376,6 +495,12 @@ function loadMap() {
             }
             if (opt6.isPointIn(e.clientX, e.clientY) && stage === 1){
                 if (opt6 !== opt1) {
+                    if (pathStage === 1) {
+                        pathStage = 0;
+                        curPath.sprite.loadImg("/sprites/freeSpace.png");
+                        removePossiblePaths();
+                        curPath.type = "l";
+                    }
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[12][25].sprite.loadImg("/sprites/select.png");
@@ -413,10 +538,15 @@ function getLoTanks() {
                 loEnemies += "h," + row.toString() + "," + col.toString() + "#";
             }
             if (map[row][col].type === "path") {
-                loEnemies += "p," + row.toString() + "," + col.toString() + "#";
+                let end = map[row][col].endToPath;
+                let endRow = Math.floor(end.sprite.y / 45);
+                let endCol = Math.floor(end.sprite.x / 45);
+                loEnemies += "p," + row.toString() + "," + col.toString() +","
+                    + endRow.toString() + "," + endCol.toString() + "#";
             }
         }
     }
+    console.log(loEnemies);
     return loEnemies;
 }
 
