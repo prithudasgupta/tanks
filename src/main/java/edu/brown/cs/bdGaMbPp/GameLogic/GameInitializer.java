@@ -290,7 +290,7 @@ public final class GameInitializer {
         newTank = new DrunkWalkTank(convertToCoordinate(newStart));
         break;
       case 2:
-        newTank = new PathTank(convertToCoordinate(newStart));
+        //newTank = new PathTank(convertToCoordinate(newStart));
         break;
       case 3:
         newTank = new HomingTank(convertToCoordinate(newStart));

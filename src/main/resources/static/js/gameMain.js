@@ -993,13 +993,29 @@ function getCenter(spriteTank) {
 //
 //}
 
-function addRoute(tank){
+function addRoute(movingEnemy){
+   movingEnemy.loading = true;
+   movingEnemy.route = undefined;
+      movingEnemy.routeIndex = undefined;
+
  $.post('/homing', {"userRow": Math.floor(user.y/45), "representation": represent,"userCol": Math.floor(user.x/45),
   "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
      const respObject = JSON.parse(responseJSON);
      const route =  respObject.route;
-     tank.route = route;
-     tank.routeIndex = 0;
+     movingEnemy.route = route;
+     for(let i = 0; i < route.length; i++){
+        if(route[i].first == Math.floor(movingEnemy.y/45) && route[i].second == Math.floor(movingEnemy.x/45)){
+            movingEnemy.routeIndex = i;
+            console.log("chose index " + i);
+            break;
+        }
+     }
+
+     console.log("done with route " + route);
+      movingEnemy.loading = false;
+      //movingEnemy.nextRoute = undefined;
+
+});
 }
 
 
@@ -1017,8 +1033,8 @@ function movingEnemyLogic(movingEnemy) {
 
         let movedSoFar = euclidDist(movingEnemy.startX, movingEnemy.startY, movingEnemy.x, movingEnemy.y);
 
-        if (movingEnemy.routeIndex === undefined) {
-            // ("ne");console.log
+        /*if (movingEnemy.routeIndex === undefined) {
+             console.log("route unde");
              $.post('/homing', {"userRow": Math.floor(user.y/45), "representation": represent,
                         "userCol": Math.floor(user.x/45), "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
                         const respObject = JSON.parse(responseJSON);
@@ -1056,44 +1072,22 @@ function movingEnemyLogic(movingEnemy) {
 
 
 
-        }else if(reachedBlock(movingEnemy)){
+        }else */if(reachedBlock(movingEnemy)){
 
-            if(movingEnemy.route.length == movingEnemy.routeIndex + 1){
+            /*if(movingEnemy.route.length == movingEnemy.routeIndex + 1){
                 movingEnemy.routeIndex = undefined;
                 movingEnemy.route = undefined;
 
-            }else if(movingEnemy.route.length == movingEnemy.routeIndex + 3){
-
-            }else{
-
-            }
+            }else*/
                 movingEnemy.routeIndex += 1;
 
-                // console.log("incr");
-                const curRow = Math.floor(movingEnemy.y/45);
-                const curCol = Math.floor(movingEnemy.x/45);
-                const route = movingEnemy.route;
-                const index = movingEnemy.routeIndex;
-                if (route[index].first - curRow === 0){
-                     if (route[index].second - curCol === 1){
-                         movingEnemy.nextAngle = 0;
-                       }
-                      else{
-                              movingEnemy.nextAngle = 3.1415;
+            if(!movingEnemy.loading && movingEnemy.route.length < (movingEnemy.routeIndex + 4)){
+                console.log("asked");
 
-                                          }
-                      }
-                              else if(route[index].first - curRow === -1){
-                            movingEnemy.nextAngle = 1.5707;
+                addRoute(movingEnemy);
 
-                         }
-                   else{
-                          movingEnemy.nextAngle = 4.712;
-
-                             }
-
-
-
+                 }
+                console.log("iter " + movingEnemy.routeIndex);
             }
         }
 
@@ -1108,14 +1102,16 @@ function movingEnemyLogic(movingEnemy) {
 
 function reachedBlock(movingEnemy){
     //const center = getCenter(movingEnemy);
-    const pix_x_diff = movingEnemy.x - (movingEnemy.route[movingEnemy.routeIndex].second *45); //7.5
-    const pix_y_diff = movingEnemy.y - (movingEnemy.route[movingEnemy.routeIndex].first *45); //8
-   if(Math.abs(pix_x_diff) <= 30 && Math.abs(pix_y_diff) <= 30){
+    const pix_x_diff = (movingEnemy.x + 8) - ((movingEnemy.route[movingEnemy.routeIndex].second *45)+22.5); //7.5
+    const pix_y_diff = (movingEnemy.y + 7.5) - ((movingEnemy.route[movingEnemy.routeIndex].first *45)+22.5); //8
+    console.log("x diff " + pix_x_diff)
+        console.log("y diff " + pix_y_diff)
+
+   if(Math.abs(pix_x_diff) <= 15 && Math.abs(pix_y_diff) <= 5){
     return true;
     }
 
     return false;
-    //return (Math.floor(movingEnemy.x/45) == Math.floor(/45));
 
 }
 
