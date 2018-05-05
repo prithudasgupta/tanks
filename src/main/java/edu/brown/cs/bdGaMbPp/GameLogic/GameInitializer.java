@@ -1,7 +1,9 @@
 package edu.brown.cs.bdGaMbPp.GameLogic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.brown.cs.bdGaMbPp.Collect.Angle;
 import edu.brown.cs.bdGaMbPp.Collect.Coordinate;
@@ -91,16 +93,16 @@ public final class GameInitializer {
   private static List<Tank> sixthDifficultyLevel(int difficulty,
       List<Tank> currentList, List<Pair<Integer, Integer>> landIndices) {
     
-    List<Integer> tankNumbers = new ArrayList<Integer>();
+    Map<Integer, Integer> tankNumbers = new HashMap<Integer, Integer>();
     int randStat = 0;
     int randDumb = getRandomInt(0,2);
     int randPath = getRandomInt(2,4);
     int randHome = getRandomInt(2,4);
    
-    tankNumbers.add(randStat);
-    tankNumbers.add(randDumb);
-    tankNumbers.add(randPath);
-    tankNumbers.add(randHome);
+    tankNumbers.put(0, randStat);
+    tankNumbers.put(1, randDumb);
+    tankNumbers.put(2, randPath);
+    tankNumbers.put(3, randHome);
     List<Tank> tanks = assignLocations(tankNumbers, currentList, landIndices);
    
   return tanks;
@@ -109,16 +111,16 @@ public final class GameInitializer {
   private static List<Tank> fifthDifficultyLevel(int difficulty,
       List<Tank> currentList, List<Pair<Integer, Integer>> landIndices) {
     
-    List<Integer> tankNumbers = new ArrayList<Integer>();
+    Map<Integer, Integer> tankNumbers = new HashMap<Integer, Integer>();
     int randStat = 0;
     int randDumb = getRandomInt(0,2);
     int randPath = getRandomInt(2,4);
     int randHome = getRandomInt(1,3);
-   
-    tankNumbers.add(randStat);
-    tankNumbers.add(randDumb);
-    tankNumbers.add(randPath);
-    tankNumbers.add(randHome);
+    
+    tankNumbers.put(0, randStat);
+    tankNumbers.put(1, randDumb);
+    tankNumbers.put(2, randPath);
+    tankNumbers.put(3, randHome);
     List<Tank> tanks = assignLocations(tankNumbers, currentList, landIndices);
    
   return tanks;
@@ -127,16 +129,16 @@ public final class GameInitializer {
 	 private static List<Tank> fourthDifficultyLevel(int difficulty,
 	      List<Tank> currentList, List<Pair<Integer, Integer>> landIndices) {
 	    
-	    List<Integer> tankNumbers = new ArrayList<Integer>();
+	   Map<Integer, Integer> tankNumbers = new HashMap<Integer, Integer>();
 	    int randStat = 0;
 	    int randDumb = getRandomInt(0,3);
 	    int randPath = getRandomInt(1,3);
 	    int randHome = getRandomInt(1,2);
 	   
-	    tankNumbers.add(randStat);
-	    tankNumbers.add(randDumb);
-	    tankNumbers.add(randPath);
-	    tankNumbers.add(randHome);
+	    tankNumbers.put(0, randStat);
+      tankNumbers.put(1, randDumb);
+      tankNumbers.put(2, randPath);
+      tankNumbers.put(3, randHome);
 	    List<Tank> tanks = assignLocations(tankNumbers, currentList, landIndices);
 	   
 	  return tanks;
@@ -145,16 +147,16 @@ public final class GameInitializer {
 	private static List<Tank> thirdDifficultyLevel(int difficulty,
       List<Tank> currentList, List<Pair<Integer, Integer>> landIndices) {
     
-    List<Integer> tankNumbers = new ArrayList<Integer>();
+	  Map<Integer, Integer> tankNumbers = new HashMap<Integer, Integer>();
     int randStat = getRandomInt(0, 1);
     int randDumb = getRandomInt(2,3);
     int randPath = getRandomInt(1,2);
     int randHome = getRandomInt(0,1);
    
-    tankNumbers.add(randStat);
-    tankNumbers.add(randDumb);
-    tankNumbers.add(randPath);
-    tankNumbers.add(randHome);
+    tankNumbers.put(0, randStat);
+    tankNumbers.put(1, randDumb);
+    tankNumbers.put(2, randPath);
+    tankNumbers.put(3, randHome);
     List<Tank> tanks = assignLocations(tankNumbers, currentList, landIndices);
    
   return tanks;
@@ -163,16 +165,16 @@ public final class GameInitializer {
 	private static List<Tank> secondDifficultyLevel(int difficulty,
 	    List<Tank> currentList, List<Pair<Integer, Integer>> landIndices) {
     
-	  List<Integer> tankNumbers = new ArrayList<Integer>();
+	  Map<Integer, Integer> tankNumbers = new HashMap<Integer, Integer>();
     int randStat = getRandomInt(0, 2);
     int randDumb = getRandomInt(1,2);
     int randPath = getRandomInt(0,1);
     int randHome = 0;
    
-    tankNumbers.add(randStat);
-    tankNumbers.add(randDumb);
-    tankNumbers.add(randPath);
-    tankNumbers.add(randHome);
+    tankNumbers.put(0, randStat);
+    tankNumbers.put(1, randDumb);
+    tankNumbers.put(2, randPath);
+    tankNumbers.put(3, randHome);
     List<Tank> tanks = assignLocations(tankNumbers, currentList, landIndices);
    
   return tanks;
@@ -182,22 +184,25 @@ public final class GameInitializer {
       List<Pair<Integer, Integer>> landIndices) {
     // TODO Auto-generated method stub
 
-      List<Integer> tankNumbers = new ArrayList<Integer>();
+      //List<Integer> tankNumbers = new ArrayList<Integer>();
+    
+    Map<Integer, Integer> tankNumbers = new HashMap<Integer, Integer>();
 	    int randStat = getRandomInt(1, 3);
-	    int randDumb = getRandomInt(0,1);
+	    int randDumb = getRandomInt(1,2);
 	    int randPath = getRandomInt(0,1);
 	    int randHome = 0;
 	   
-	    tankNumbers.add(randStat);
-	    tankNumbers.add(randDumb);
-	    tankNumbers.add(randPath);
-      tankNumbers.add(randHome);
+      tankNumbers.put(0, randStat);
+      tankNumbers.put(1, randDumb);
+      tankNumbers.put(2, randPath);
+      tankNumbers.put(3, randHome);
+      
 	    List<Tank> tanks = assignLocations(tankNumbers, currentList, landIndices);
 	   
     return tanks;
   }
-
-  private static List<Tank> assignLocations(List<Integer> tankNumbers,
+  
+  private static List<Tank> assignLocations(Map<Integer, Integer> tankNumbers,
       List<Tank> currentList, List<Pair<Integer, Integer>> landIndices) {
     // TODO Auto-generated method stub
     
@@ -206,15 +211,12 @@ public final class GameInitializer {
     int randPath = tankNumbers.get(2);
     int randHome = tankNumbers.get(3);
     
-    int currType = 0;
+    System.out.println(randStat + " " + randDumb + " " + randPath + " " + randHome);
     
-    if(randStat == 0) {
-      currType = 1;
-    }else if(randDumb == 0) {
-      currType = 2;
-    }else if(randPath == 0) {
-      currType = 3;
-    }
+    int currType = -1;
+    
+    currType = incrementType(currType, tankNumbers);
+
     
     int total = randStat + randDumb + randPath + randHome;
 
@@ -234,14 +236,18 @@ public final class GameInitializer {
           currentList.add(newTank);
           
           total--;
-          tankNumbers.add(tankNumbers.get(currType)-1);
+          tankNumbers.put(currType, tankNumbers.get(currType)-1);
           
           if(tankNumbers.get(currType) == 0) {
+            
+            System.out.println(currType + "," + tankNumbers.get(currType));
             
             int end = incrementType(currType, tankNumbers);
             
             if(end == -1) {
               total = 0;
+            }else {
+              currType = end;
             }
            
           }
@@ -258,7 +264,7 @@ public final class GameInitializer {
     
   }
   
-  private static int incrementType(int currType, List<Integer> tankNumbers) {
+  private static int incrementType(int currType, Map<Integer, Integer> tankNumbers) {
     // TODO Auto-generated method stub
     currType++;
     
@@ -270,6 +276,7 @@ public final class GameInitializer {
     
     return currType;
   }
+
 
   private static Tank addTank(Pair<Integer, Integer> newStart, int currType) {
     
@@ -286,7 +293,7 @@ public final class GameInitializer {
         newTank = new PathTank(convertToCoordinate(newStart));
         break;
       case 3:
-        newTank = new HomingTank(convertToCoordinate(newStart), map);
+        newTank = new HomingTank(convertToCoordinate(newStart));
         break;
       default:
         break;
