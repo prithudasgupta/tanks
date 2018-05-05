@@ -16,6 +16,8 @@ import edu.brown.cs.bdGaMbPp.GameLogic.Game;
 import edu.brown.cs.bdGaMbPp.Map.GameMap;
 import edu.brown.cs.bdGaMbPp.Map.Location;
 import edu.brown.cs.bdGaMbPp.Tank.DrunkWalkTank;
+import edu.brown.cs.bdGaMbPp.Tank.HomingTank;
+import edu.brown.cs.bdGaMbPp.Tank.PathTank;
 import edu.brown.cs.bdGaMbPp.Tank.StationaryEnemyTank;
 import edu.brown.cs.bdGaMbPp.Tank.Tank;
 import edu.brown.cs.bdGaMbPp.Tank.UserTank;
@@ -221,7 +223,11 @@ public final class Querier {
 	          }
 	          else if (type.equals("d")) {
 	        	  	tankList.add(new DrunkWalkTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow))));
-	          }
+	          }else if (type.equals("p")) {
+              tankList.add(new PathTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow))));
+          }else if (type.equals("h")) {
+            tankList.add(new HomingTank(new Coordinate(Integer.parseInt(startCol), Integer.parseInt(startRow))));
+        }
 	        }
 	        prep.close();
 	        rs.close();

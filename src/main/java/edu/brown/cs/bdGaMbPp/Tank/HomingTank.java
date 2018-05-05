@@ -14,9 +14,8 @@ public class HomingTank implements Tank {
 	private boolean isAlive;
 	private String type = "h";
 	
-	public HomingTank(Coordinate startCoord, GameMap aMap) {
+	public HomingTank(Coordinate startCoord) {
 		location = startCoord;
-		map = aMap;
 		isAlive = true;
 	}
 	
