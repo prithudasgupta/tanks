@@ -868,7 +868,7 @@ function movingEnemyLogic(movingEnemy) {
 
                                                  }
                                            else{
-                                                  movingEnemy.nextAngle = 4.712;
+                                                  movingEnemy.nextAngle = -1.5707;
                                                   console.log("down");
 
                                                      }
@@ -877,10 +877,15 @@ function movingEnemyLogic(movingEnemy) {
 
 
         }else if(reachedBlock(movingEnemy)){
+
             if(movingEnemy.route.length == movingEnemy.routeIndex + 1){
                 movingEnemy.routeIndex = undefined;
                 movingEnemy.route = undefined;
+
+            }else if(movingEnemy.route.length == movingEnemy.routeIndex + 3){
+
             }else{
+            }
                 movingEnemy.routeIndex += 1;
                 console.log("incr");
                 const curRow = Math.floor(movingEnemy.y/45);
@@ -921,14 +926,13 @@ function movingEnemyLogic(movingEnemy) {
     }
 
 
-    }
+
 
 function reachedBlock(movingEnemy){
     //const center = getCenter(movingEnemy);
     const pix_x_diff = movingEnemy.x - (movingEnemy.route[movingEnemy.routeIndex].second *45); //7.5
     const pix_y_diff = movingEnemy.y - (movingEnemy.route[movingEnemy.routeIndex].first *45); //8
-    console.log("y diff= " + pix_y_diff);
-   if(Math.abs(pix_x_diff) <= 18 && Math.abs(pix_y_diff) <= 18){
+   if(Math.abs(pix_x_diff) <= 22.5 && Math.abs(pix_y_diff) <= 22.5){
     return true;
     }
 

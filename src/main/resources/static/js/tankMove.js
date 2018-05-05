@@ -2,13 +2,27 @@
 // let nextRow = 0;
 // let nextCol = 0;
 
+
+
+function getFixedAngle(angle){
+
+    return (angle + Math.PI) % (Math.PI*2) - (Math.PI)
+
+}
+
+
+
+
+
 /**
  * A function that moves an enemy tank to a predetermined position
  * @param enemyObj The object of the enemy tank which contains the sprite, along with
  * 			information that explains that destination of the tank.
  */
+
+
 function moveBetween(enemyObj){
-    console.log(enemyObj.route[enemyObj.routeIndex]);
+
     const route = enemyObj.route;
     const index = enemyObj.routeIndex;
     const curRow = Math.floor(enemyObj.y / 45);
@@ -35,40 +49,64 @@ function moveBetween(enemyObj){
           console.log("down");
 
              }*/
+    if(route[index +1] != undefined){
+        //const listOf
+        const nextTile = route[index];
+        const futureTile = route[index +1];
+        //switch
+
+        //if(futureT)
+
+        //change angle
+    }
 
     const currAngle =  -1* (enemyObj.angle % 6.28);
-    const angleDiff = enemyObj.nextAngle - currAngle ;
-        console.log("next " + enemyObj.nextAngle);
-        console.log("curr " + currAngle)
-        console.log("diff " + angleDiff);
+    const fixedCurr = getFixedAngle(currAngle);
+    let angleDiff;
+    if(fixedCurr > 0){
+        angleDiff = fixedCurr - enemyObj.nextAngle;
 
-    //console.log("start " + currAngle*180/Math.PI)
-    //console.log("diff " + angleDiff)
+    }else if(fixedCurr < 0){
+        angleDiff = fixedCurr + enemyObj.nextAngle;
 
-    //console.log("diff " + angleDiff*180/Math.PI)
-    //console.log("end " + enemyObj.nextAngle*180/Math.PI)
+    }else{
+
+    }
+    //const angleDiff = (fixedCurr) - (enemyObj.nextAngle) ;
+        /*console.log("next " + enemyObj.nextAngle);
+        console.log("curr " + getFixedAngle(currAngle))
+        console.log("diff " + (angleDiff));*/
+
 
     let mov;
 	//if (Math.abs(currAngle - enemyObj.nextAngle) <= .2) {
-        if (angleDiff > 0){
+
+       /* if (angleDiff > 0){*/
             enemyObj.rotate(-0.02);
              enemyObj.cannon.rotate(-0.02);
+         /*    mov = forwardByAngle(enemyObj.angle, Math.pow(Math.abs(angleDiff),.001));
+             enemyObj.move(mov[0], mov[1]);
+             enemyObj.cannon.move(mov[0], mov[1]);
+
         }
         else if(angleDiff < 0){
 
             enemyObj.rotate(0.02);
              enemyObj.cannon.rotate(0.02);
+             mov = forwardByAngle(enemyObj.angle, .1);
+             enemyObj.move(mov[0], mov[1]);
+             enemyObj.cannon.move(mov[0], mov[1]);
 
-        }else{
+        }*/
 
-        }
 
-        if(Math.abs(angleDiff) <= .2){
+
+       /* if(Math.abs(angleDiff) <= .4){
                         mov = forwardByAngle(enemyObj.angle, 2);
                         enemyObj.move(mov[0], mov[1]);
                         enemyObj.cannon.move(mov[0], mov[1]);
 
-                }
+                }*/
     //}
 
 
