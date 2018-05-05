@@ -12,7 +12,6 @@ import edu.brown.cs.bdGaMbPp.Tank.PathTank;
 import edu.brown.cs.bdGaMbPp.Tank.StationaryEnemyTank;
 import edu.brown.cs.bdGaMbPp.Tank.Tank;
 import edu.brown.cs.bdGaMbPp.Tank.UserTank;
-import netscape.javascript.JSObject;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
