@@ -15,6 +15,8 @@ public interface Tank {
 
 	Coordinate getCoord();
 	
+	Coordinate getEndCoord();
+	
 	Angle getAngleForward();
 	
 	Angle getLauncherAngle();

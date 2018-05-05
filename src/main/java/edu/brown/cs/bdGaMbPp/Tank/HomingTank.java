@@ -70,6 +70,12 @@ public class HomingTank implements Tank {
 		// TODO Auto-generated method stub
 		return type;
 	}
+
+	@Override
+	public Coordinate getEndCoord() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	

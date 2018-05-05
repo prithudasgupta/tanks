@@ -134,5 +134,15 @@ public class UserTank implements Tank{
 public String getType() {
 	return type;
 }
+
+
+
+
+
+@Override
+public Coordinate getEndCoord() {
+	// TODO Auto-generated method stub
+	return null;
+}
 	
 }
