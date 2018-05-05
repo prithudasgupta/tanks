@@ -888,7 +888,7 @@ function movingEnemyLogic(movingEnemy) {
     //console.log("x range " + (Math.floor(movingEnemy.x/45)*45) + ", " + ((Math.floor(movingEnemy.x/45)*45) +45));
       //  console.log("y range " + (Math.floor(movingEnemy.y/45)*45) + ", " + ((Math.floor(movingEnemy.y/45)*45) +45));
       const center =  getCenter(movingEnemy);
-      console.log(movingEnemy.x + " " + movingEnemy.y);
+      //console.log(movingEnemy.x + " " + movingEnemy.y);
         //console.log("center " + center.px + ", " + center.py);
 
 
@@ -973,6 +973,8 @@ function movingEnemyLogic(movingEnemy) {
                       }
                               else if(route[index].first - curRow === -1){
                             movingEnemy.nextAngle = 1.5707;
+                            // movingEnemy.nextAngle = 3.1415;
+
                                  console.log("up");
 
                          }
@@ -1000,7 +1002,7 @@ function reachedBlock(movingEnemy){
     //const center = getCenter(movingEnemy);
     const pix_x_diff = movingEnemy.x - (movingEnemy.route[movingEnemy.routeIndex].second *45); //7.5
     const pix_y_diff = movingEnemy.y - (movingEnemy.route[movingEnemy.routeIndex].first *45); //8
-   if(Math.abs(pix_x_diff) <= 22.5 && Math.abs(pix_y_diff) <= 22.5){
+   if(Math.abs(pix_x_diff) <= 30 && Math.abs(pix_y_diff) <= 30){
     return true;
     }
 
