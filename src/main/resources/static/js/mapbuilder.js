@@ -173,6 +173,17 @@ function loadMap() {
 
 }
 
+// function updateZval() {
+//     var nodes = document.getElementById("sjs0-background").childNodes;
+//     for(var i=0; i<nodes.length; i++) {
+//         if (nodes[i].nodeName.toLowerCase() == 'div') {
+//             if (nodes[i].style.backgroundImage === 'url("/sprites/wall.png")') {
+//                 nodes[i].style.zIndex = "100";
+//             }
+//         }
+//     }
+// }
+
     $(document).ready(() => {
 
 		let down = false;
@@ -238,6 +249,7 @@ function loadMap() {
 
                                 map[curRow][curCol].sprite.loadImg(cur.sel.string);
                                 map[curRow][curCol].sprite.update();
+                                // updateZval();
                             }
                         }
                     }
@@ -351,6 +363,11 @@ function loadMap() {
 
     });
 
+$(document).ready(() => {
+    document.getElementById("sjs0").style.position = "absolute";
+    document.getElementById("sjs0").style.zIndex = "90";
+});
+
 function getLoTanks() {
     let loEnemies = "";
     for (let row = 0; row < 16; row++) {
@@ -372,3 +389,5 @@ function main() {
     window.requestAnimationFrame(main);
 
 }
+
+

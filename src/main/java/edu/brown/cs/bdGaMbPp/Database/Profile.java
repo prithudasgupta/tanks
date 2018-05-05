@@ -59,4 +59,17 @@ public class Profile {
 		return kills;
 	}
 
+  @Override
+  public String toString() {
+    return "Profile{" +
+            "id=" + id +
+            ", username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            ", numWins=" + numWins +
+            ", bestSurvival=" + bestSurvival +
+            ", campaign=" + campaign +
+            ", time=" + time +
+            ", kills=" + kills +
+            '}';
+  }
 }

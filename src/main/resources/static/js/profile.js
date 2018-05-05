@@ -23,11 +23,6 @@ function getUser(){
 	});
 }
 
-function displayProfileScreen(id){
-	console.log("post");
-
-}
-
 function signIn(username, password){
 	$.post('/signIn', {"username": username, "password": password}, responseJSON => {
 	

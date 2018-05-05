@@ -28,7 +28,7 @@ public class MapBuilderHandler implements Route {
 	  public String handle(Request request, Response response) {
 		  
 		  QueryParamsMap qm = request.queryMap();
-		  
+
 		  String representation = qm.value("representation");
 		  String tanks = qm.value("tanks");
 		  String user = qm.value("user");
