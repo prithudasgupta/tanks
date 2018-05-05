@@ -29,13 +29,11 @@ function moveBetween(enemyObj){
     const index = enemyObj.routeIndex;
     const curRow = Math.floor(enemyObj.y / 45);
     const curCol = Math.floor(enemyObj.x / 45);
-   /* if(route[index +1] != undefined){
-        const nextTile = route[index];
-        const futureTile = route[index +1];
-    }*/
+    const nextTile = route[index];
+    const futureTile = route[index +1];
+
 
     const currAngle =  -1* (enemyObj.angle % 6.28);
-    const fixedCurr = getFixedAngle(enemyObj.angle);
     let angleDiff;
       if(getFixedAngle(currAngle) < Math.PI*-1){
             const mycurr = (2*Math.PI + getFixedAngle(currAngle));
@@ -62,6 +60,7 @@ function moveBetween(enemyObj){
             mov = forwardByAngle(enemyObj.angle, getSpeed(angleDiff));
             enemyObj.move(mov[0], mov[1]);
             enemyObj.cannon.move(mov[0], mov[1]);
+
 
        //if (enemyObj.collidesWithArray(nonTrav)) {
             //console.log("collided");

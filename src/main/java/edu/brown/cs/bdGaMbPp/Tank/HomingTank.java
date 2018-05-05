@@ -14,9 +14,8 @@ public class HomingTank implements Tank {
 	private boolean isAlive;
 	private String type = "h";
 	
-	public HomingTank(Coordinate startCoord, GameMap aMap) {
+	public HomingTank(Coordinate startCoord) {
 		location = startCoord;
-		map = aMap;
 		isAlive = true;
 	}
 	
@@ -70,6 +69,12 @@ public class HomingTank implements Tank {
 	public String getType() {
 		// TODO Auto-generated method stub
 		return type;
+	}
+
+	@Override
+	public Coordinate getEndCoord() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	
