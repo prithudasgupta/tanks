@@ -180,21 +180,25 @@ function userMove() {
 
 function generateFriendsList(friendsList) {
 
-    let parent = document.getElementById("friends");
-
-    let table = document.createElement("table");
+    let table = document.getElementById("friendsTable");
     let tableBody = document.createElement("tbody");
-
+    console.log(friendsList.length);
     for(let curRow = 0; curRow < friendsList.length; curRow++) {
         let row = document.createElement("tr");
         for (let c = 0; c < 2; c++) {
-            let cell, text;
+            let text;
+            let cell = document.createElement("td");
             if (c === 0) {
-                cell = document.createElement("td");
-                text = document.createTextNode("bob");
+                text = document.createTextNode(friendsList[curRow].friendName);
             } else {
-                cell = document.createElement("td");
-                text = document.createTextNode("Friend");
+                let status = friendsList[curRow].status;
+                if (status === 0) {
+                    text = document.createTextNode("friend");
+                } else if (status === 1) {
+                    text = document.createTextNode("pending");
+                } else {
+                    text = document.createTextNode("request");
+                }
             }
             cell.appendChild(text);
             row.appendChild(cell);
@@ -203,16 +207,29 @@ function generateFriendsList(friendsList) {
     }
 
     table.appendChild(tableBody);
-    parent.appendChild(table);
+
+}
+
+function userData() {
+    $.post('/profileData', {}, responseJSON => {
+        const respObject = JSON.parse(responseJSON);
+        if(respObject !== "none") {
+            console.log(respObject);
+            let friendsList = respObject.friends;
+            generateFriendsList(friendsList);
+        }
+    });
 }
 
 
 
 $(document).ready(() => {
 
+    userData();
+
+
 	document.getElementById("login").style.display = "none";
     //generate_table();
-    generateFriendsList([1,2]);
 
     document.addEventListener('keydown', function (e) {
         switch (e.key) {

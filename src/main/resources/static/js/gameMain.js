@@ -21,8 +21,10 @@ let BULLET_SPEED = 5;
 let USER_ROT = 0.04;
 let lastFire = Date.now();
 let gameTime = false;
+let globalTime = 0;
 
 let represent = "";
+let won;
 
 let isGameOver;
 let winner = false;
@@ -988,23 +990,26 @@ function updateExplosions() {
 let firstIteration = true;
 
 function displayEndGame() {
-
+    let won = false;
     $('#next').toggle();
     document.getElementById("result").innerHTML = "GAME OVER!";
     $('#endGame').toggle();
-    
-    if (survival){
-    		$.post('/deadSurvival', {}, responseJSON => {
-			
-		});
-    }
+    console.log("posting");
+    $.post('/endGame', {"kills": kills, "currentTime":globalTime,
+        "gameId":window.location.href, "survival": survival, "result":won}, responseJSON => {
+    });
+
+
 }
 
-
 function displayWinGame() {
-
+    let won = true;
     document.getElementById("result").innerHTML = "GAME WON!";
     $('#endGame').toggle();
+    console.log("posting");
+    $.post('/endGame', {"kills": kills, "currentTime":globalTime,
+        "gameId":window.location.href, "survival":survival, "result":won}, responseJSON => {
+    });
 }
 
 function main() {
@@ -1136,6 +1141,7 @@ $(document).ready(() => {
 
 
 function updateTime(time){
+    globalTime = time;
     const totalSeconds = parseInt(time / 1000);
     const seconds = totalSeconds % 60;
     const minutes = parseInt(totalSeconds / 60);

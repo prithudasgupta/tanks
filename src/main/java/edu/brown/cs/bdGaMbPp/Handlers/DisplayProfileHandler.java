@@ -42,7 +42,7 @@ public class DisplayProfileHandler implements Route {
 		}
 		
 		
-		return new Gson();
+		return new Gson().toJson("none");
 
 		
 	}

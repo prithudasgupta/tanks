@@ -20,6 +20,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class MapBuilderHandler implements Route {
 	
@@ -35,7 +36,14 @@ public class MapBuilderHandler implements Route {
 			String concat = tanks + "u," + user;
 			
 			List<Tank> tankList = parseTanks(concat);
-			int id = Querier.addMap(representation, 0);
+
+			int userId = 0;
+			Set<String> attributes = request.session().attributes();
+			if (attributes.contains("user")) {
+				userId = Integer.parseInt(request.session().attribute("user").toString());
+			}
+
+			int id = Querier.addMap(representation, userId);
 			
 			int gameId = Querier.addGameToDatabase(id, tankList);
 
