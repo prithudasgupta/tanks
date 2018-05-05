@@ -101,6 +101,7 @@
     <h2 id="user-heading" style="position: absolute; left: 12.5%; top: 5%;"> Friends: </h2>
     <div id="friends">
         <center>
+        		<input type = "text" placeholder="Search for friend"></input>
             <table id="friendsTable"></table>
         </center>
     </div>
