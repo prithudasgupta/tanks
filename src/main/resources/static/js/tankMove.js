@@ -13,6 +13,7 @@ function moveBetween(enemyObj){
     const curRow = Math.floor(enemyObj.y / 45);
     const curCol = Math.floor(enemyObj.x / 45);
     //console.log("going to " + route[index].first + ", " +  route[index].second);
+    let surroundingBlock;
     if (route[index].first - curRow === 0){
      if (route[index].second - curCol === 1){
          enemyObj.nextAngle = 0;
@@ -46,12 +47,13 @@ function moveBetween(enemyObj){
 
         }
     //}
-    if(Math.abs(angleDiff) <= 0.5){
+    if(Math.abs(angleDiff) <= .2){
         mov = forwardByAngle(enemyObj.angle, 2);
         enemyObj.move(mov[0], mov[1]);
         enemyObj.cannon.move(mov[0], mov[1]);
 
     }
+
     //mov = forwardByAngle(enemyObj.angle, 2);
     //if (compareEuclid(mov, enemyObj)) {
 
