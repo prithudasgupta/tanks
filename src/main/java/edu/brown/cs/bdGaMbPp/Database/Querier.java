@@ -502,8 +502,9 @@ public final class Querier {
 				ResultSet rs = prep.executeQuery();
 		        while (rs.next()) {
 		        		int second = Integer.parseInt(rs.getString(2));
+		        		Profile prof = getProfile(second);
 		        		int status = Integer.parseInt(rs.getString(3));
-		          friends.add(new Friend(id, second, status));
+		          friends.add(new Friend(id, second, status, prof.getUsername()));
 		        }
 		        prep.close();
 		        rs.close();
@@ -515,8 +516,9 @@ public final class Querier {
 					ResultSet rs2 = prep.executeQuery();
 					while (rs2.next()) {
 		        		int first = Integer.parseInt(rs.getString(2));
+								Profile prof = getProfile(first);
 		        		int status = Integer.parseInt(rs.getString(3));
-		        		friends.add(new Friend(id, first, status * -1));
+		        		friends.add(new Friend(id, first, status * -1, prof.getUsername()));
 		        }
 			        prep2.close();
 			        rs2.close();			

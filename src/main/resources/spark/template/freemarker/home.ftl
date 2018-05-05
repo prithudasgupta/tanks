@@ -64,6 +64,9 @@
 
     <h2 id="user-heading" style="position: absolute; left: 12.5%; top: 5%;"> Friends: </h2>
     <div id="friends">
+        <center>
+            <table id="friendsTable"></table>
+        </center>
     </div>
     <h2 id="user-heading" style="position: absolute; left: 45%; top: 5%;"> Stats: </h2>
     <div id="stats">

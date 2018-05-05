@@ -37,9 +37,9 @@ function signIn(username, password){
 		}
 		else{
 			//user successfully signed in
-			console.log(respObject);
 			$('#signin').toggle();
 			 $('#profile').toggle();
+			 userData();
 		}
 	});
 }
