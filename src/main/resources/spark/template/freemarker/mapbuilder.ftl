@@ -5,6 +5,9 @@
 <button id="submitLevelFinal"> Submit </button>
 
 <button id="home" onclick="visitPage('Main')"> Home </button>
+<div id="backgroundImg">
+    <img id="img" src="/images/mapBuildLogo.png">
+</div>
 
 
 <style>
@@ -61,6 +64,22 @@
         min-width: 90px;
         min-height: 45px;
         display: none;
+    }
+
+    #backgroundImg {
+        z-index: 99;
+        position: absolute;
+        top: 25%;
+        left: 15%;
+    }
+
+    #img {
+        user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
     }
 
 </style>

@@ -6,8 +6,10 @@ import edu.brown.cs.bdGaMbPp.Handlers.AuthenticateHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.CreateProfileHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.DisplayProfileHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.GameHandler;
+import edu.brown.cs.bdGaMbPp.Handlers.GameLeaderboardHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.HomeHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.HomingTankHandler;
+import edu.brown.cs.bdGaMbPp.Handlers.LeaderboardHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.LogoutHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.MapBuilderHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.MapHandler;
@@ -132,7 +134,9 @@ public final class Main {
     Spark.post("/logout", new LogoutHandler());
     Spark.post("/authenticate", new AuthenticateHandler());
     Spark.post("/profileData", new DisplayProfileHandler());
-    
+    Spark.post("/leaderboard", new LeaderboardHandler());
+    Spark.post("/gameLeaderboard", new GameLeaderboardHandler());
+
     Spark.get("/test", new TestHandler(), freeMarker);
     MapHandler mapHandler = new MapHandler();
     Spark.post("/map", mapHandler);

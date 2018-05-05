@@ -210,17 +210,159 @@ function generateFriendsList(friendsList) {
 
 }
 
+function generateMapsList(gameList) {
+
+    let table = document.getElementById("mapsTable");
+
+    let tableBody = document.createElement("tbody");
+
+    for(let curRow = 0; curRow < gameList.length; curRow++) {
+        let row = document.createElement("tr");
+        for (let c = 0; c < 2; c++) {
+            let text;
+            let cell = document.createElement("td");
+            if (c === 0) {
+                text = document.createTextNode(gameList[curRow]);
+                cell.appendChild(text);
+            } else {
+                let play = document.createElement("button");
+                play.appendChild(document.createTextNode("play"));
+                let edit = document.createElement("button");
+                edit.appendChild(document.createTextNode("edit"));
+                cell.appendChild(play);
+                cell.appendChild(edit);
+            }
+
+            row.appendChild(cell);
+        }
+        tableBody.appendChild(row);
+    }
+
+    table.appendChild(tableBody);
+
+}
+
+function parseTime(time) {
+    const totalSeconds = parseInt(time / 1000);
+    const seconds = totalSeconds % 60;
+    const minutes = parseInt(totalSeconds / 60);
+    let timeString = "";
+    if (minutes < 10){
+        timeString += "0";
+    }
+    timeString += minutes.toString();
+    timeString += ":";
+    if (seconds < 10){
+        timeString += "0";
+    }
+    timeString += seconds.toString();
+    return timeString;
+}
+
+function updateProfilePage(profile) {
+    document.getElementById("user-heading1").innerHTML = "Profile : " + profile.username;
+    document.getElementById("killstat").innerHTML = "Total Kills : " + profile.kills;
+    let time = profile.time;
+    let timeString = parseTime(time);
+    timeString = "Total Time Played : " + timeString;
+    document.getElementById("timestat").innerHTML = timeString
+    document.getElementById("campstat").innerHTML = "Campaign : " + profile.campaign;
+    document.getElementById("survivalstat").innerHTML = "Survival : " + profile.bestSurvival;
+
+
+}
+
 function userData() {
     $.post('/profileData', {}, responseJSON => {
         const respObject = JSON.parse(responseJSON);
         if(respObject !== "none") {
             console.log(respObject);
             let friendsList = respObject.friends;
+            let mapsList = respObject.games;
+            let profile = respObject.profile;
+            let campaign = profile.campaign;
             generateFriendsList(friendsList);
+            updateProfilePage(profile);
+            generateMapsList(mapsList);
+            getLeaderboardLists();
+            setupCampaign(campaign);
         }
     });
 }
 
+function getLeaderboardLists() {
+    $.post('/leaderboard', {}, responseJSON => {
+        const respObject = JSON.parse(responseJSON);
+        let killsGlobal = respObject.kills.first;
+        let killsFriends = respObject.kills.second;
+        let survivalGlobal = respObject.survival.first;
+        let survivalFriends = respObject.survival.second;
+        let timeGlobal = respObject.time.first;
+        let timeFriends = respObject.time.second;
+        generateLeaderboard("timeGlobal", timeGlobal, true);
+        generateLeaderboard("timeFriends", timeFriends, true);
+        generateLeaderboard("survivalGlobal", survivalGlobal, false);
+        generateLeaderboard("survivalFriends", survivalFriends, false);
+        generateLeaderboard("killsGlobal", killsGlobal, false);
+        generateLeaderboard("killsFriends", killsFriends, false);
+
+    });
+}
+
+function setupCampaign(level) {
+    for(let i = 0; i < 20; i++){
+        if (i < level) {
+            $('div#levels').append("<img id='level' onclick='loadCampLevel(" + i + ")' src='images/mapIcons/mapIcon" + i + ".png'/> </img>");
+        } else {
+            $('div#levels').append("<img id='level' src='images/mapIcon_lock.png'/> </img>");
+        }
+    }
+}
+
+function generateLeaderboard(id, list, time) {
+
+    let table = document.getElementById(id);
+
+    let tableBody = document.createElement("tbody");
+
+    for(let curRow = 0; curRow < list.length; curRow++) {
+        let row = document.createElement("tr");
+        for (let c = 0; c < 3; c++) {
+            let text;
+            let cell = document.createElement("td");
+            if (c === 0) {
+                text = document.createTextNode(curRow+1);
+                cell.appendChild(text);
+            }else if (c === 1) {
+                text = document.createTextNode(list[curRow].first);
+                cell.appendChild(text);
+            }  else {
+                if (time) {
+                    text = document.createTextNode(parseTime(list[curRow].second));
+                } else {
+                    text = document.createTextNode(list[curRow].second);
+                }
+                cell.appendChild(text);
+            }
+            row.appendChild(cell);
+        }
+        tableBody.appendChild(row);
+    }
+
+    table.appendChild(tableBody);
+
+}
+
+
+function switchFilter(current, switchTo) {
+    let cur = document.getElementById(current);
+    if (cur.style.display !== "none") {
+        cur.style.display = "none";
+        document.getElementById(switchTo).style.display = "block";
+    } else {
+
+    }
+}
 
 
 $(document).ready(() => {
@@ -312,7 +454,6 @@ $(document).ready(() => {
 		else{
 			$('#profile, #main').fadeIn(250);
             document.getElementById("profile").style.display = "flex";
-			displayProfileScreen(respObject.id);
 		}
 	});
     });
@@ -330,8 +471,25 @@ $(document).ready(() => {
         });
     });
 
+    $('#leader').on('click', function () {
+        $.post('/authenticate', {}, responseJSON => {
+            const respObject = JSON.parse(responseJSON);
+            if (respObject.id === -1){
+                console.log("invalid");
+                document.getElementById("login").style.display = "block";
+            }
+            else{
+                $('#leaderboard').toggle();
+            }
+        });
+    });
+
     $('#exitProf').on('click', function () {
         $('#signin').toggle();
+    });
+
+    $('#exitLeader').on('click', function () {
+        $('#leaderboard').toggle();
     });
     
     $('#exitProfile').on('click', function () {
@@ -361,17 +519,11 @@ $(document).ready(() => {
  });
 
 
-    for(let i = 0; i < 20; i++){
-        if (i < 10) {
-            $('div#levels').append("<img id='level' onclick='loadCampLevel(" + i + ")' src='images/mapIcons/mapIcon" + i + ".png'/> </img>");
-        } else {
-            $('div#levels').append("<img id='level' src='images/mapIcon_lock.png'/> </img>");
-        }
 
-
-    }
 
     loadMap();
+
+
 
 
 });
@@ -389,5 +541,27 @@ function main() {
 
         // lastTime = now;
         window.requestAnimationFrame(main);
+
+}
+
+function openTab(evt, tabname) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(tabname).style.display = "block";
+    evt.currentTarget.className += " active";
 
 }
