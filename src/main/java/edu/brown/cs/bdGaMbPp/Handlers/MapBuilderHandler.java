@@ -72,7 +72,9 @@ public class MapBuilderHandler implements Route {
 			else if(single[0].equals("d")) {
 				tankList.add(new DrunkWalkTank(new Coordinate(xCoord, yCoord)));
 			}else if(single[0].equals("p")) {
-        tankList.add(new PathTank(new Coordinate(xCoord, yCoord)));
+				int xCoordEnd = Integer.parseInt(single[3]);
+				int yCoordEnd = Integer.parseInt(single[4]);
+				tankList.add(new PathTank(new Coordinate(xCoord, yCoord), new Coordinate(xCoordEnd, yCoordEnd)));
       }
 			else if(single[0].equals("h")) {
 			  tankList.add(new HomingTank(new Coordinate(xCoord, yCoord)));

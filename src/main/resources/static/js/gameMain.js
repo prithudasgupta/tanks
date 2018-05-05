@@ -930,15 +930,6 @@ document.addEventListener("click", function(e){
     console.log(e);
 });
 function movingEnemyLogic(movingEnemy) {
-
-    //console.log("x range " + (Math.floor(movingEnemy.x/45)*45) + ", " + ((Math.floor(movingEnemy.x/45)*45) +45));
-      //  console.log("y range " + (Math.floor(movingEnemy.y/45)*45) + ", " + ((Math.floor(movingEnemy.y/45)*45) +45));
-      const center =  getCenter(movingEnemy);
-      // console.log(movingEnemy.x + " " + movingEnemy.y);
-        //console.log("center " + center.px + ", " + center.py);
-
-
-
     if (ready) {
         if (user !== undefined && withinSight(movingEnemy.x, movingEnemy.y)) {
             let dx = movingEnemy.cannon.x - user.x;
@@ -1012,22 +1003,18 @@ function movingEnemyLogic(movingEnemy) {
                 if (route[index].first - curRow === 0){
                      if (route[index].second - curCol === 1){
                          movingEnemy.nextAngle = 0;
-                         // console.log("right");
                        }
                       else{
                               movingEnemy.nextAngle = 3.1415;
-                              // console.log("left");
 
                                           }
                       }
                               else if(route[index].first - curRow === -1){
                             movingEnemy.nextAngle = 1.5707;
-                                 // console.log("up");
 
                          }
                    else{
                           movingEnemy.nextAngle = 4.712;
-                          // console.log("down");
 
                              }
 
@@ -1049,7 +1036,7 @@ function reachedBlock(movingEnemy){
     //const center = getCenter(movingEnemy);
     const pix_x_diff = movingEnemy.x - (movingEnemy.route[movingEnemy.routeIndex].second *45); //7.5
     const pix_y_diff = movingEnemy.y - (movingEnemy.route[movingEnemy.routeIndex].first *45); //8
-   if(Math.abs(pix_x_diff) <= 22.5 && Math.abs(pix_y_diff) <= 22.5){
+   if(Math.abs(pix_x_diff) <= 30 && Math.abs(pix_y_diff) <= 30){
     return true;
     }
 

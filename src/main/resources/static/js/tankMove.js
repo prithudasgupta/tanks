@@ -10,7 +10,9 @@ function getFixedAngle(angle){
 
 }
 
-
+function getSpeed(angle){
+    return (2* Math.pow(0.138377, Math.abs(angle)));
+}
 
 
 
@@ -27,85 +29,38 @@ function moveBetween(enemyObj){
     const index = enemyObj.routeIndex;
     const curRow = Math.floor(enemyObj.y / 45);
     const curCol = Math.floor(enemyObj.x / 45);
-    //console.log("going to " + route[index].first + ", " +  route[index].second);
-    /*if (route[index].first - curRow === 0){
-     if (route[index].second - curCol === 1){
-         enemyObj.nextAngle = 0;
-       }
-      else{
-              enemyObj.nextAngle = 3.1415;
+    const nextTile = route[index];
+    const futureTile = route[index +1];
 
-
-                          }
-      }
-              else if(route[index].first - curRow === -1){
-            enemyObj.nextAngle = 1.5707;
-
-         }
-   else{
-          enemyObj.nextAngle = 4.712;
-
-             }*/
-    if(route[index +1] != undefined){
-        //const listOf
-        const nextTile = route[index];
-        const futureTile = route[index +1];
-        //switch
-
-        //if(futureT)
-
-        //change angle
-    }
 
     const currAngle =  -1* (enemyObj.angle % 6.28);
-
-    const fixedCurr = getFixedAngle(currAngle);
     let angleDiff;
-    if(fixedCurr > 0){
-        angleDiff = fixedCurr - enemyObj.nextAngle;
+      if(getFixedAngle(currAngle) < Math.PI*-1){
+            const mycurr = (2*Math.PI + getFixedAngle(currAngle));
+            angleDiff = mycurr - enemyObj.nextAngle;
+      }else{
+            const mycurr = getFixedAngle(currAngle);
+            angleDiff = mycurr - enemyObj.nextAngle;
+            if(angleDiff < -1*Math.PI){
+               angleDiff = 2*Math.PI + angleDiff;
+            }
+      }
 
-    }else if(fixedCurr < 0){
-        angleDiff = fixedCurr + enemyObj.nextAngle;
+    let mov;
+        if (angleDiff < 0){
+            enemyObj.rotate(-0.04);
+             enemyObj.cannon.rotate(-0.04);
+        }
+        else if(angleDiff > 0){
 
-    }else{
-
-    }
-    //const angleDiff = (fixedCurr) - (enemyObj.nextAngle) ;
-        /*console.log("next " + enemyObj.nextAngle);
-        console.log("curr " + getFixedAngle(currAngle))
-        console.log("diff " + (angleDiff));*/
-
-
-	//if (Math.abs(currAngle - enemyObj.nextAngle) <= .2) {
-
-        if (angleDiff > 0){
-
-            enemyObj.rotate(-0.02);
-             enemyObj.cannon.rotate(-0.02);
-         /*    mov = forwardByAngle(enemyObj.angle, Math.pow(Math.abs(angleDiff),.001));
-             enemyObj.move(mov[0], mov[1]);
-             enemyObj.cannon.move(mov[0], mov[1]);
+            enemyObj.rotate(0.04);
+             enemyObj.cannon.rotate(0.04);
 
         }
-        else if(angleDiff < 0){
+            mov = forwardByAngle(enemyObj.angle, getSpeed(angleDiff));
+            enemyObj.move(mov[0], mov[1]);
+            enemyObj.cannon.move(mov[0], mov[1]);
 
-            enemyObj.rotate(0.02);
-             enemyObj.cannon.rotate(0.02);
-             mov = forwardByAngle(enemyObj.angle, .1);
-             enemyObj.move(mov[0], mov[1]);
-             enemyObj.cannon.move(mov[0], mov[1]);
-
-        }*/
-        }
-
-    //}
-
-
-    //mov = forwardByAngle(enemyObj.angle, 2);
-    //if (compareEuclid(mov, enemyObj)) {
-
-       // enemyObj.move(mov[0], mov[1]);
-       // enemyObj.cannon.move(mov[0], mov[1]);
 
        //if (enemyObj.collidesWithArray(nonTrav)) {
             //console.log("collided");
@@ -143,6 +98,7 @@ function moveBetween(enemyObj){
     //}
     enemyObj.update();
     enemyObj.cannon.update();
+
 }
 
 function dijkstraPost(){
