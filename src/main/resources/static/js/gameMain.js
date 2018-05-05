@@ -382,7 +382,8 @@ function loadMap() {
 
         for (let i in dumbStart) {
             let cur = dumbStart[i];
-            createDumbTank(cur[1], cur[0]);
+            const tank = createDumbTank(cur[1], cur[0]);
+            addRoute(tank);
         }
         
         for (let i in pathStart) {
@@ -411,6 +412,7 @@ function loadMap() {
 
 }
 
+
 function createStationaryTank(row, col) {
     //let space = canvasbg.Sprite("/sprites/tank_space.png");
     let tank = canvasbg.Sprite("/sprites/imm_tank.png");
@@ -428,6 +430,7 @@ function createStationaryTank(row, col) {
     statEnemies.push(tank);
     allEnemies.push(tank);
 }
+
 
 function createDumbTank(row, col) {
     //let space = canvasbg.Sprite("/sprites/tank_space.png");
@@ -449,6 +452,7 @@ function createDumbTank(row, col) {
     dumbEnemies.push(tank);
     tank.tankType = "d";
     allEnemies.push(tank);
+    return tank;
 }
 
 function createHomingTank(row, col) {
@@ -989,9 +993,16 @@ function getCenter(spriteTank) {
 //
 //}
 
-document.addEventListener("click", function(e){
-    console.log(e);
-});
+function addRoute(tank){
+ $.post('/homing', {"userRow": Math.floor(user.y/45), "representation": represent,"userCol": Math.floor(user.x/45),
+  "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
+     const respObject = JSON.parse(responseJSON);
+     const route =  respObject.route;
+     tank.route = route;
+     tank.routeIndex = 0;
+}
+
+
 function movingEnemyLogic(movingEnemy) {
     if (ready) {
         if (user !== undefined && withinSight(movingEnemy.x, movingEnemy.y)) {
