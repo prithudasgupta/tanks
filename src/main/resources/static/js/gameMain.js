@@ -214,6 +214,7 @@ function setUpLeaderboard() {
 function getMap () {
     $.post('/map', {"url": window.location.href}, responseJSON => {
         const respObject = JSON.parse(responseJSON);
+        console.log(respObject);
         survival = respObject.survival;
         if (survival){
         		survivalLevel = respObject.round;
@@ -224,17 +225,13 @@ function getMap () {
             }
             if (respObject.enemies[i].type === "d") {
                 dumbStart.push(respObject.enemies[i].location.coordinates);
-
             }
             if (respObject.enemies[i].type === "p") {
                 pathStart.push(respObject.enemies[i].location.coordinates);
-                pathOfPath.push(respObject.enemies[i].location.coordinates, [0,0]);
-
+                pathOfPath.push([respObject.enemies[i].location.coordinates, respObject.enemies[i].endLocation.coordinates]);
             }
-
             if (respObject.enemies[i].type === "h") {
                 homingStart.push(respObject.enemies[i].location.coordinates);
-
             }
             
         }
@@ -314,6 +311,7 @@ function loadMap() {
                     breakable.move(col * TILE_SIZE, row * TILE_SIZE);
                     // update it
                     breakable.update();
+                    breakable.isBreakable = true;
                     collideable.push(breakable);
                     nonTrav.push(breakable);
 
@@ -372,13 +370,12 @@ function loadMap() {
             createDumbTank(cur[1], cur[0]);
         }
         
-        for (let i in pathStart) {
-            let cur = pathStart[i];
-            createSamePathTank(cur[1], cur[0]);
+        for (let i in pathOfPath) {
+            createSamePathTank(pathOfPath[i]);
         }
 
         for (let i in homingStart) {
-            let cur = pathStart[i];
+            let cur = homingStart[i];
             createHomingTank(cur[1], cur[0]);
         }
         
@@ -460,12 +457,16 @@ function createHomingTank(row, col) {
     allEnemies.push(tank);
 }
 
-function createSamePathTank(row, col){
-	
-	 let tank = canvasbg.Sprite("/sprites/pathTank.png");
-	 let can = canvasbg.Sprite("/sprites/pathTank_Can.png");
-	 
-	 tank.move(col*TILE_SIZE + 11, row*TILE_SIZE + 11);
+function createSamePathTank(pair){
+
+	let row = pair[0][1];
+	let col = pair[0][0];
+	let goalRow = pair[1][1];
+	let goalCol = pair[1][0];
+    let tank = canvasbg.Sprite("/sprites/pathTank.png");
+    let can = canvasbg.Sprite("/sprites/pathTank_Can.png");
+
+    tank.move(col*TILE_SIZE + 11, row*TILE_SIZE + 11);
     can.move(col*TILE_SIZE + 11, row*TILE_SIZE + 11);
     //space.update();
     tank.update();
@@ -474,6 +475,13 @@ function createSamePathTank(row, col){
     tank.startY = tank.y;
     tank.lastFire = Date.now();
     tank.cannon = can;
+    // set these to move to path
+    tank.goalRow = goalRow;
+    tank.goalCol = goalCol;
+
+    tank.prevRow = row;
+    tank.prevCol = col;
+
     collideable.push(tank);
     nonTrav.push(tank);
     pathEnemies.push(tank);
@@ -839,7 +847,7 @@ function getBorderingLandTiles(xCoord, yCoord){
 }
 
 function checkEndGame() {
-    return (statEnemies.length === 0 && dumbEnemies.length === 0 && pathEnemies.length === 0);
+    return (statEnemies.length === 0 && dumbEnemies.length === 0 && pathEnemies.length === 0 && homingEnemies.length === 0);
 }
 
 function homingHelper(movingEnemy) {
@@ -1206,7 +1214,7 @@ function main() {
             }
             
             for (let i in pathEnemies) {
-                movingEnemyLogic(pathEnemies[i]);
+                movePath(pathEnemies[i]);
             }
 
             updateExplosions();
@@ -1296,6 +1304,54 @@ $(document).ready(() => {
     console.log(screen.width);
     document.getElementById('sideMenu').setAttribute("style","width:" + adWidth + "px");
 });
+
+function movePath(tank) {
+    let dx = (tank.goalCol * 45) - tank.x;
+    let dy = (tank.goalRow * 45) - tank.y;
+    rot = Math.atan2(dy, dx);
+    rot = (rot % 6.28);
+
+    if (user !== undefined && withinSight(tank.x, tank.y)) {
+        let dx = tank.cannon.x - user.x;
+        let dy = tank.cannon.y - user.y;
+        rot = Math.atan2(-dy, -dx);
+        tank.cannon.setAngle(0);
+        tank.cannon.rotate(rot);
+        tank.cannon.correctAngle = tank.cannon.angle + rot;
+        fire(tank);
+    }
+    if ((tank.angle % 6.28) < rot-0.02) {
+        tank.rotate(0.02);
+    } else if ((tank.angle % 6.28) > rot+0.02) {
+        tank.rotate(-0.02);
+    }
+    else {
+        let mov = forwardByAngle(tank.angle, 2);
+        tank.move(mov[0], mov[1]);
+        tank.cannon.move(mov[0],mov[1]);
+        if (tank.collidesWithArray(nonTrav)) {
+            tank.move(-mov[0], -mov[1]);
+            tank.cannon.move(-mov[0], -mov[1]);
+            let tempCol = tank.goalCol;
+            let tempRow = tank.goalRow;
+            tank.goalCol = tank.prevCol;
+            tank.goalRow = tank.prevRow;
+            tank.prevCol = tempCol;
+            tank.prevRow = tempRow;
+        }
+        tank.cannon.update();
+
+        if (tank.goalCol === Math.floor((tank.x+8) / 45) && tank.goalRow === Math.floor((tank.y+8) / 45)) {
+            let tempCol = tank.goalCol;
+            let tempRow = tank.goalRow;
+            tank.goalCol = tank.prevCol;
+            tank.goalRow = tank.prevRow;
+            tank.prevCol = tempCol;
+            tank.prevRow = tempRow;
+        }
+    }
+    tank.update();
+}
 
 
 function updateTime(time){
