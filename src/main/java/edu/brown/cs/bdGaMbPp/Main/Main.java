@@ -69,16 +69,21 @@ public final class Main {
     .defaultsTo(DEFAULT_PORT);
     OptionSet options = parser.parse(args);
     // This is initialized before the GUI because the GUI will use it for its
-    // information about the tree.
-
-
-    if (options.has("gui")) {
-      runSparkServer((int) options.valueOf("port"));
-      gui = true;
-    }
+    // information about the tree
+    
+    runSparkServer(getHerokuAssignedPort());
+      
 
   }
 
+  static int getHerokuAssignedPort() {
+    ProcessBuilder processBuilder = new ProcessBuilder();
+    if (processBuilder.environment().get("PORT") != null) {
+        return Integer.parseInt(processBuilder.environment().get("PORT"));
+    }
+    return 4567; //return default port if heroku-port isn't set (i.e. on localhost)
+}
+  
   /**
    * Handle requests to the front page of Bacon website.
    */
