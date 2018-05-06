@@ -298,7 +298,9 @@ function loadMap() {
 
                 if (map[row][col] === "u" || map[row][col] === "x") {
                     next = canvasbg.Sprite("/sprites/wall.png");
+                    next.isBreakable = false;
                     mapLand[row][col] = next;
+
                     walls.push(next);
                     nonTrav.push(next);
                 } else if (map[row][col] === "b") {
@@ -940,10 +942,10 @@ function getCenter(spriteTank) {
 
 function addRoute(movingEnemy){
    movingEnemy.loading = true;
-   movingEnemy.route = undefined;
-      movingEnemy.routeIndex = undefined;
+   //movingEnemy.route = undefined;
+    //  movingEnemy.routeIndex = undefined;
 
- $.post('/homing', {"userRow": Math.floor(user.y/45), "representation": represent,"userCol": Math.floor(user.x/45),
+ $.post('/homing', {"userRow": -1, "representation": represent,"userCol": -1,
   "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
      const respObject = JSON.parse(responseJSON);
      const route =  respObject.route;
@@ -955,6 +957,7 @@ function addRoute(movingEnemy){
             break;
         }
      }
+            movingEnemy.collided = false;
 
      console.log("done with route " + route);
       movingEnemy.loading = false;
@@ -976,24 +979,23 @@ function movingEnemyLogic(movingEnemy) {
             fire(movingEnemy);
         }
 
-        let movedSoFar = euclidDist(movingEnemy.startX, movingEnemy.startY, movingEnemy.x, movingEnemy.y);
-
        if(reachedBlock(movingEnemy)){
                 movingEnemy.routeIndex += 1;
 
-            if(!movingEnemy.loading && movingEnemy.route.length < (movingEnemy.routeIndex + 4)){
+            if(movingEnemy.collided || (!movingEnemy.loading && movingEnemy.route.length < (movingEnemy.routeIndex + 4))){
                 console.log("asked");
 
                 addRoute(movingEnemy);
 
                  }
-                console.log("iter " + movingEnemy.routeIndex);
+                //console.log("iter " + movingEnemy.routeIndex);
 
             }
         }
-        if(movingEnemy.routeIndex != undefined){
+        if(!movingEnemy.collided && movingEnemy.routeIndex != undefined){
            moveBetween(movingEnemy);
         }
+
     }
 
 
@@ -1003,10 +1005,10 @@ function reachedBlock(movingEnemy){
     //const center = getCenter(movingEnemy);
     const pix_x_diff = (movingEnemy.x + 8) - ((movingEnemy.route[movingEnemy.routeIndex].second *45)+22.5); //7.5
     const pix_y_diff = (movingEnemy.y + 7.5) - ((movingEnemy.route[movingEnemy.routeIndex].first *45)+22.5); //8
-    console.log("x diff " + pix_x_diff)
-        console.log("y diff " + pix_y_diff)
+    //console.log("x diff " + pix_x_diff)
+     //   console.log("y diff " + pix_y_diff)
 
-   if(Math.abs(pix_x_diff) <= 15 && Math.abs(pix_y_diff) <= 5){
+   if(Math.abs(pix_x_diff) <= 15 && Math.abs(pix_y_diff) <= 7){
     return true;
     }
 
