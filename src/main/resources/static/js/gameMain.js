@@ -1279,27 +1279,28 @@ $(document).ready(() => {
 });
 
 function movePath(tank) {
+	
+	console.log("tank is going from " + tank.prevRow + " , " + tank.prevCol + " to " + tank.goalRow + " , " + tank.goalCol);
+	
     let dx = (tank.goalCol * 45) - tank.x;
     let dy = (tank.goalRow * 45) - tank.y;
     rot = Math.atan2(dy, dx);
     rot = (rot % 6.28);
+    
+    tank.angle = rot;
+    //console.log(rot);
 
     if (user !== undefined && withinSight(tank.x, tank.y)) {
         let dx = tank.cannon.x - user.x;
         let dy = tank.cannon.y - user.y;
-        rot = Math.atan2(-dy, -dx);
+        let canrot = Math.atan2(-dy, -dx);
         tank.cannon.setAngle(0);
-        tank.cannon.rotate(rot);
-        tank.cannon.correctAngle = tank.cannon.angle + rot;
+        tank.cannon.rotate(canrot);
+        tank.cannon.correctAngle = tank.cannon.angle + canrot;
         fire(tank);
     }
-    if ((tank.angle % 6.28) < rot-0.02) {
-        tank.rotate(0.02);
-    } else if ((tank.angle % 6.28) > rot+0.02) {
-        tank.rotate(-0.02);
-    }
     else {
-        let mov = forwardByAngle(tank.angle, 2);
+        let mov = forwardByAngle(tank.angle, 1.5);
         tank.move(mov[0], mov[1]);
         tank.cannon.move(mov[0],mov[1]);
         if (tank.collidesWithArray(nonTrav)) {

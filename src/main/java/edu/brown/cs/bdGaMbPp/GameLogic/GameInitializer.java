@@ -211,8 +211,6 @@ public final class GameInitializer {
     int randPath = tankNumbers.get(2);
     int randHome = tankNumbers.get(3);
     
-    System.out.println(randStat + " " + randDumb + " " + randPath + " " + randHome);
-    
     int currType = -1;
     
     currType = incrementType(currType, tankNumbers);
@@ -239,8 +237,6 @@ public final class GameInitializer {
           tankNumbers.put(currType, tankNumbers.get(currType)-1);
           
           if(tankNumbers.get(currType) == 0) {
-            
-            System.out.println(currType + "," + tankNumbers.get(currType));
             
             int end = incrementType(currType, tankNumbers);
             
@@ -292,6 +288,7 @@ public final class GameInitializer {
       case 2:
 
         Pair<Integer, Integer> endPoint = map.getStraightLineEnd(newStart);
+        System.out.println(endPoint.getFirst() + " " + endPoint.getSecond());
         newTank = new PathTank(convertToCoordinate(newStart), convertToCoordinate(endPoint));
         break;
       case 3:
