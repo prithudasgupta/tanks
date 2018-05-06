@@ -31,6 +31,8 @@ let winner = false;
 let survival = false;
 let survivalLevel = -1;
 
+let playerTwo = 0;
+let gameId = 0;
 
 let explosions = [];
 let startTime;
@@ -214,10 +216,15 @@ function setUpLeaderboard() {
 function getMap () {
     $.post('/map', {"url": window.location.href}, responseJSON => {
         const respObject = JSON.parse(responseJSON);
-        console.log(respObject);
+
         survival = respObject.survival;
         if (survival){
         		survivalLevel = respObject.round;
+        }
+        if (!survival) {
+            if (respObject.playerTwo !== 0) {
+                playerTwo = respObject.playerTwo;
+            }
         }
         for (let i in respObject.enemies) {
             if (respObject.enemies[i].type === "s") {
@@ -938,13 +945,6 @@ function getCenter(spriteTank) {
              py: ( y + wp * sina + hp * cosa ) };
 }
 
-//function getCenter(spriteTank){
-//    const coord = [];
-//    let x = spriteTank.x + (8);
-//    let y = spriteTank.y + (7.5);
-//    return {px: x , py: y};
-//
-//}
 
 function addRoute(movingEnemy){
     let toCol;
@@ -1147,10 +1147,13 @@ function displayEndGame() {
     $('#next').toggle();
     document.getElementById("result").innerHTML = "GAME OVER!";
     $('#endGame').toggle();
+    if (playerTwo !== 0) {
+        $('#retry').toggle();
+    }
     let urlArr = document.URL.split("/");
     let level = parseInt(urlArr[urlArr.length -1]);
     $.post('/endGame', {"kills": kills, "currentTime":globalTime,
-        "gameId": level, "survival": survival, "result": won}, responseJSON => {
+        "gameId": level, "survival": survival, "result": won, "userTwo": playerTwo}, responseJSON => {
     });
 
 
@@ -1162,8 +1165,19 @@ function displayWinGame() {
     $('#endGame').toggle();
     let urlArr = document.URL.split("/");
     let level = parseInt(urlArr[urlArr.length -1]);
+    console.log(playerTwo);
+    if (playerTwo === 0) {
+        if (level >= 0 && level <= 19) {
+
+        } else {
+            $('#next').toggle();
+        }
+    } else {
+        $('#next').toggle();
+        $('#retry').toggle();
+    }
     $.post('/endGame', {"kills": kills, "currentTime":globalTime,
-        "gameId": level, "survival":survival, "result": won}, responseJSON => {
+        "gameId": level, "survival":survival, "result": won, "userTwo": playerTwo}, responseJSON => {
     });
 }
 

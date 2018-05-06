@@ -311,10 +311,7 @@ function generateMapsList(gameList) {
                 let play = document.createElement("button");
                 play.onclick = function() { loadCampLevel(gameList[curRow]); };
                 play.appendChild(document.createTextNode("play"));
-                let edit = document.createElement("button");
-                edit.appendChild(document.createTextNode("edit"));
                 cell.appendChild(play);
-                cell.appendChild(edit);
             }
 
             row.appendChild(cell);
@@ -327,7 +324,7 @@ function generateMapsList(gameList) {
 }
 
 
-function generateMapsMult(gameList) {
+function generateMapsMult(gameList, campaign) {
     let table = document.getElementById("gamesTable");
     let tableBody = document.createElement("tbody");
     let firstRow  = document.createElement("tr");
@@ -341,6 +338,29 @@ function generateMapsMult(gameList) {
     firstRow.appendChild(title2);
     tableBody.appendChild(firstRow);
 
+
+    for(let curRow = 0; curRow < campaign; curRow++) {
+        let row = document.createElement("tr");
+        for (let c = 0; c < 2; c++) {
+            let text;
+            let cell = document.createElement("td");
+            // id of the game
+            if (c === 0) {
+                text = document.createTextNode(curRow);
+                cell.appendChild(text);
+            } else {
+                // options
+                let play = document.createElement("button");
+                play.onclick = function() { loadMultiplayer(curRow, -1)};
+                play.appendChild(document.createTextNode("play"));
+                cell.appendChild(play);
+            }
+
+            row.appendChild(cell);
+        }
+        tableBody.appendChild(row);
+    }
+
     for(let curRow = 0; curRow < gameList.length; curRow++) {
         let row = document.createElement("tr");
         for (let c = 0; c < 2; c++) {
@@ -353,7 +373,7 @@ function generateMapsMult(gameList) {
             } else {
                 // options
                 let play = document.createElement("button");
-                play.onclick = function() { loadMultipler(gameList[curRow]) };
+                play.onclick = function() { loadMultiplayer(gameList[curRow], -1)};
                 play.appendChild(document.createTextNode("play"));
                 cell.appendChild(play);
             }
@@ -413,7 +433,7 @@ function userData() {
             generateMapsList(mapsList);
             getLeaderboardLists();
             setupCampaign(campaign);
-            generateMapsMult(mapsList);
+            generateMapsMult(mapsList, campaign);
             generateFriendsMult(friendsList);
             generateInbox(inbox);
         }
@@ -456,12 +476,12 @@ function generateInbox(list) {
                 switch (state) {
                     case 1:
                         let play = document.createElement("button");
+                        play.onclick = function() {loadMultiplayer(list[curRow].gameId, list[curRow].id2) };
                         play.appendChild(document.createTextNode("Play"));
                         cell.appendChild(play);
                         break;
                     case 0:
-
-                        if (list[curRow].winner === "true") {
+                        if (list[curRow].winner === true) {
                             text1 = document.createTextNode("Won!");
                         } else {
                             text1 = document.createTextNode("Lost...");
@@ -727,7 +747,7 @@ $(document).ready(() => {
 		}
 	});
  });
-    
+
     loadMap();
 
 });
@@ -739,11 +759,22 @@ function loadCampLevel(level) {
     window.location.replace(newUrl);
 }
 
-function loadMultipler(level) {
-    if (nextFriendId !== -1) {
+function loadMultiplayer(level, friendId) {
+    if (nextFriendId !== 0) {
         let url = window.location.href;
         let next = url.lastIndexOf("/");
-        let newUrl = url.substr(0, next) + "/tank/game/" + level + "#" + nextFriendId;
+        let newUrl;
+        if (friendId !== -1) {
+            newUrl = url.substr(0, next) + "/tank/game/" + level + "#" + (-friendId);
+        } else {
+            newUrl = url.substr(0, next) + "/tank/game/" + level + "#" + nextFriendId;
+        }
+
+        window.location.replace(newUrl);
+    } else if (friendId !== -1) {
+        let url = window.location.href;
+        let next = url.lastIndexOf("/");
+        let newUrl = url.substr(0, next) + "/tank/game/" + level + "#" + (-friendId);
         window.location.replace(newUrl);
     } else {
         alert("Please select a friend to challenge to a game.");
