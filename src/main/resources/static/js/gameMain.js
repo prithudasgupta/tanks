@@ -938,14 +938,6 @@ function getCenter(spriteTank) {
              py: ( y + wp * sina + hp * cosa ) };
 }
 
-//function getCenter(spriteTank){
-//    const coord = [];
-//    let x = spriteTank.x + (8);
-//    let y = spriteTank.y + (7.5);
-//    return {px: x , py: y};
-//
-//}
-
 function addRoute(movingEnemy){
     let toCol;
     let toRow;
@@ -957,32 +949,26 @@ function addRoute(movingEnemy){
         case "h":
             toCol = Math.floor(user.x/45);
             toRow = Math.floor(user.y/45);
-
-                console.log("homing");
-
         break;
     }
    movingEnemy.loading = true;
-   //movingEnemy.route = undefined;
-    //  movingEnemy.routeIndex = undefined;
 
  $.post('/homing', {"userRow": toRow, "representation": represent,"userCol": toCol,
   "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
      const respObject = JSON.parse(responseJSON);
+
      const route =  respObject.route;
+
      movingEnemy.route = route;
      for(let i = 0; i < route.length; i++){
         if(route[i].first == Math.floor(movingEnemy.y/45) && route[i].second == Math.floor(movingEnemy.x/45)){
             movingEnemy.routeIndex = i;
-           // console.log("chose index " + i);
             break;
         }
      }
             movingEnemy.collided = false;
 
-    // console.log("done with route " + route);
       movingEnemy.loading = false;
-      //movingEnemy.nextRoute = undefined;
 
 });
 }
@@ -1004,7 +990,6 @@ function movingEnemyLogic(movingEnemy) {
                 movingEnemy.routeIndex += 1;
 
             if(movingEnemy.collided || (!movingEnemy.loading && movingEnemy.route.length < (movingEnemy.routeIndex + 4))){
-                console.log("asked");
 
                 addRoute(movingEnemy);
 
@@ -1303,7 +1288,7 @@ $(document).ready(() => {
 
 function movePath(tank) {
 	
-	console.log("tank is going from " + tank.prevRow + " , " + tank.prevCol + " to " + tank.goalRow + " , " + tank.goalCol);
+	//console.log("tank is going from " + tank.prevRow + " , " + tank.prevCol + " to " + tank.goalRow + " , " + tank.goalCol);
 	let rot;
 
     let dx = (tank.goalCol * 45) - tank.x;

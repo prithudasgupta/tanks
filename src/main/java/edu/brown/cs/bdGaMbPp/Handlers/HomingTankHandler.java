@@ -60,6 +60,7 @@ public class HomingTankHandler implements Route {
 
 		Map<String, Object> variables = ImmutableMap.of("route", route);
 		Gson GSON = new Gson();
+		System.out.println("bouta return");
 	    return GSON.toJson(variables);
 	    
 	}
