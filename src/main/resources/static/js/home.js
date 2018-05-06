@@ -566,6 +566,22 @@ function setupCampaign(level) {
 function generateLeaderboard(id, list, time) {
     let table = document.getElementById(id);
     let tableBody = document.createElement("tbody");
+
+    let firstRow  = document.createElement("tr");
+    let textTitle1 = document.createTextNode("Rank");
+    let textTitle2 = document.createTextNode("User ID");
+    let textTitle3 = document.createTextNode("Kills/Time/Survival");
+    let title1 = document.createElement("th");
+    let title2 = document.createElement("th");
+    let title3 = document.createElement("th");
+    title1.appendChild(textTitle1);
+    title2.appendChild(textTitle2);
+    title3.appendChild(textTitle3);
+    firstRow.appendChild(title1);
+    firstRow.appendChild(title2);
+    firstRow.appendChild(title3);
+    tableBody.appendChild(firstRow);
+
     for(let curRow = 0; curRow < list.length; curRow++) {
         let row = document.createElement("tr");
         for (let c = 0; c < 3; c++) {
@@ -586,10 +602,12 @@ function generateLeaderboard(id, list, time) {
                 cell.appendChild(text);
             }
             row.appendChild(cell);
+            row.setAttribute("width", "100%");
         }
         tableBody.appendChild(row);
     }
-
+    tableBody.setAttribute("width", "100%");
+    tableBody.setAttribute("board-collapse", "collapse");
     table.appendChild(tableBody);
 
 }
@@ -600,6 +618,9 @@ function switchFilter(current, switchTo, type, next) {
     if (cur.style.display !== "none") {
         cur.style.display = "none";
         document.getElementById(switchTo).style.display = "block";
+        document.getElementById(switchTo).style.width = "100%";
+        document.getElementById(switchTo).style.borderCollapse = "collapse";
+        console.log(document.getElementById(switchTo).style);
     } else {
     }
     document.getElementById(next).innerHTML = type;

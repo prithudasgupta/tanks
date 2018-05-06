@@ -5,6 +5,8 @@
 <img id="profileBut" src = "images/friendsIcon.png" onmouseover="this.src='/images/friendsIcon_selected.png';"
      onmouseout="this.src='/images/friendsIcon.png';">
 
+<img id="information" src="/images/information.png" >
+
 <center>    
 <img id="logo" src="images/logo1.png" >
 </center>
@@ -203,6 +205,16 @@ h1 {
     /*display: block;*/
 }
 
+.leaderboardTab {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#killsGlobal {
+    width: 100%;
+    border-collapse: collapse;
+}
+
 #inboxTable {
     border-collapse: collapse;
     width: 100%;
@@ -223,6 +235,8 @@ th, td {
 tr:nth-child(even) {background-color: #f2f2f2;}
 
 
+
+
 #campaign {
     border-radius: 25px;
     position: absolute;
@@ -240,8 +254,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     border-radius: 25px;
     position: absolute;
     top: 12.5%;
-    left: 40%;
-    width: 20%;
+    left: 30%;
+    width: 25%;
     height: 75%;
     background-image: url("/sprites/menu.png");
     background-repeat: repeat;
@@ -288,6 +302,13 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     border-color: silver;
     display: none;
     z-index: 99;
+}
+
+#information {
+    position: absolute;
+    top: 5px;
+    right: 6%;
+    padding: none;
 }
 
 .marked{
@@ -343,7 +364,6 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     background-repeat: repeat;
     border: solid;
     border-color: silver;
-
     overflow-y: scroll;
     display:block;
 }

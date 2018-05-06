@@ -614,20 +614,7 @@ function findCollisionDirection(x1, y1, x2, y2){
     let top = y2 + TILE_SIZE;
     console.log("coord " + x1 + ", " + y1);
     console.log("X from: " + left + " to " + right + "and Y from: " + bottom + " to " + top);
-    
-    /*left = Math.abs(left - x1);
-    bottom = Math.abs(bottom - y1);
-    right = Math.abs(right - x1);
-    top = Math.abs(top - y1);*/
-    
-    /*if(x1 >= left && x1 <= right){
-        console.log("vert");
-        return 0;
-    }else{
-        console.log("hori");
 
-        return 1;
-    }*/
     left = x1 - left;
     bottom = y1 - bottom;
     right = right - x1;
@@ -842,34 +829,6 @@ function angleBetweenVectors(v1, v2){
 }
 
 
-function checkForWalls(x,y) {
-    let row = Math.floor(y/45);
-    let col = Math.floor(x/45);
-    let uRow = Math.floor(user.y/45);
-    let uCol = Math.floor(user.x/45);
-    // above the enemy
-    if (uRow < row) {
-        if (map[row-1][col] !== "w") {
-            return true;
-        }
-    }
-    if (uCol < col) {
-        if (map[row][col-1] !== "w") {
-            return true;
-        }
-    }
-    if (uRow > row) {
-        if (map[row+1][col] !== "w") {
-            return true;
-        }
-    }
-    if (uCol > col) {
-        if (map[row][col+1] !== "w") {
-            return true;
-        }
-    }
-}
-
 function enemyLogic(enemy) {
     if (ready) {
         if (user !== undefined && withinSight(enemy.x, enemy.y)) {
@@ -911,82 +870,6 @@ function getBorderingLandTiles(xCoord, yCoord){
 function checkEndGame() {
     return (statEnemies.length === 0 && dumbEnemies.length === 0 &&
         pathEnemies.length === 0 && homingEnemies.length === 0);
-}
-
-function homingHelper(movingEnemy) {
-    let userRow = Math.floor(user.y/45);
-    let userCol = Math.floor(user.x/45);
-    let enemyCol = Math.floor(movingEnemy.x/45);
-    let enemyRow = Math.floor(movingEnemy.y/45);
-
-    $.post('/homing', {"userRow": userRow, "representation": represent,
-        "userCol": userCol, "enemyRow": enemyRow, "enemyCol": enemyCol}, responseJSON => {
-        const respObject = JSON.parse(responseJSON);
-        //return [respObject.nextMove.first, respObject.nextMove.second];
-        
-
-        console.log((respObject.nextMove.first).toString() + ", " +  (respObject.nextMove.second).toString());
-
-        movingEnemy.nextRow = respObject.nextMove.first;
-        movingEnemy.nextCol = respObject.nextMove.second;
-        console.log(movingEnemy.nextRow);
-        console.log(movingEnemy.nextCol);
-        let curRow = Math.floor(movingEnemy.y / 45);
-        let curCol = Math.floor(movingEnemy.x / 45);
-
-        if (movingEnemy.nextRow - curRow === 0){
-            if (movingEnemy.nextCol - curCol === 1){
-                movingEnemy.nextAngle = 0;
-            }
-            else{
-                movingEnemy.nextAngle = 3.1415;
-            }
-        }
-        else if(movingEnemy.nextRow - curRow === 1){
-            movingEnemy.nextAngle = 1.5707;
-        }
-        else{
-            movingEnemy.nextAngle = 4.712;
-        }
-
-        movingEnemy.startX = movingEnemy.x;
-        movingEnemy.startY = movingEnemy.y;
-        moveBetweenHoming(movingEnemy);
-    });
-}
-
-function sameRowCol(pixel_x1, pixel_y1, pixel_x2, pixel_y2){
-
-    return (pixel_x1 == pixel_x2 && pixel_y1 == pixel_y2);
-}
-
-
-function getShortestPathFromTo(fromRow, fromCol, toRow, toCol){
-    let route;
-    $.post('/homing', {"userRow": toRow, "representation": represent,
-            "userCol": toCol, "enemyRow": fromRow, "enemyCol": fromCol}, responseJSON => {
-            const respObject = JSON.parse(responseJSON);
-            route = respObject.route;
-
-
-            });
-
-    return route;
-
-}
-
-function getCenter(spriteTank) {
-    const width = 15.5;
-    const height = 16;
-    const angle_rad = (spriteTank.angle) % (2*Math.PI);
-    const x = spriteTank.x;
-    const y = spriteTank.y;
-    var cosa = Math.cos(angle_rad);
-    var sina = Math.sin(angle_rad);
-    var wp = width/2;
-    var hp = height/2;
-    return { px: ( x + wp * cosa - hp * sina ),
-             py: ( y + wp * sina + hp * cosa ) };
 }
 
 function addRoute(movingEnemy){
