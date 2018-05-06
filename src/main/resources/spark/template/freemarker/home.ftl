@@ -57,44 +57,51 @@
         <button class="tablinks" onclick="switchFilter('survivalFriends','survivalGlobal', 'Survival: Global', 'survivalTitle')">Global</button>
         <button class="tablinks" onclick="switchFilter('survivalGlobal','survivalFriends', 'Survival: Friends', 'survivalTitle')">Friends</button>
         <h3 id = "survivalTitle">Survival: Global</h3>
-        <table id="survivalGlobal"></table>
-        <table id="survivalFriends" style="display: none;"></table>
+        <table class="leaderboardTab" id="survivalGlobal"></table>
+        <table class="leaderboardTab" id="survivalFriends" style="display: none;"></table>
     </div>
 
     <div id="kills"  class="tabcontent">
         <button class="tablinks" onclick="switchFilter('killsFriends','killsGlobal', 'Kills: Global', 'killsTitle')">Global</button>
         <button class="tablinks" onclick="switchFilter('killsGlobal','killsFriends', 'Kills: Friends', 'killsTitle')">Friends</button>
         <h3 id = "killsTitle">Kills: Global</h3>
-        <table id="killsGlobal"></table>
-        <table id="killsFriends" style="display: none;"></table>
+        <table class="leaderboardTab" id="killsGlobal"></table>
+        <table class="leaderboardTab" id="killsFriends" style="display: none;"></table>
     </div>
 
     <div id="time" class="tabcontent">
         <button class="tablinks" onclick="switchFilter('timeFriends','timeGlobal', 'Time: Global', 'timeTitle')">Global</button>
         <button class="tablinks" onclick="switchFilter('timeGlobal','timeFriends', 'Time: Friends', 'timeTitle')">Friends</button>
         <h3 id = "timeTitle">Time: Global</h3>
-        <table id="timeGlobal"></table>
-        <table id="timeFriends" style="display: none;"></table>
+        <table class="leaderboardTab" id="timeGlobal"></table>
+        <table class="leaderboardTab" id="timeFriends" style="display: none;"></table>
     </div>
 </div>
 
 <div id="multiplayer">
-
 <img id="exitMulti" src="/images/exit.png" onmouseover="this.src='/images/exit_hover.png';"
          onmouseout="this.src='/images/exit.png';" style="position: absolute; top: 6px; right: 9px;">
-         
          <center>
-         
          <h2 style="position: absolute; left: 45%; top: 0;"> Multiplayer: </h2>
-	
-         
          </center>
-         
          <h2 id="user-heading" style="position: absolute; left: 12.5%; top: 5%;"> Friends: </h2>
-    <div id="friends">
+     <div id="friendsMult">
+         <center>
+             <table id="friendsTable2"></table>
+         </center>
+    </div>
+
+	    <h2 id="user-heading" style="position: absolute; left: 45%; top: 5%;"> Games: </h2>
+
+    <div id="games">
         <center>
-            <table id="friendsTable"></table>
+            <table id="gamesTable"></table>
         </center>
+    </div>
+	    
+	    <h2 id="user-heading" style="position: absolute; left: 77.5%; top: 5%;"> Inbox: </h2>
+    <div id="inbox"></div>
+
     </div>
 
 </div>
@@ -180,6 +187,21 @@ h1 {
     /*display: block;*/
 }
 
+#gamesTable {
+    /*position: absolute;*/
+    border-collapse: collapse;
+    width: 100%;
+    /*margin-left: 15%;*/
+    /*overflow: none;*/
+    overflow-y: scroll;
+    /*display: block;*/
+}
+
+#friendsTable2 {
+    border-collapse: collapse;
+    width: 100%;
+}
+
 th, td {
     text-align: center;
     padding: 8px;
@@ -206,13 +228,14 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     border-radius: 25px;
     position: absolute;
     top: 12.5%;
-    left: 10%;
-    width: 75%;
+    left: 40%;
+    width: 20%;
     height: 75%;
     background-image: url("/sprites/menu.png");
     background-repeat: repeat;
     display: none;
     z-index: 99;
+    overflow-y: scroll;
 }
 
 #multiplayer {
@@ -263,6 +286,14 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     border-radius: 10px;
 }
 
+#multiplayer div {
+    position: absolute;
+    width: 30%;
+    height: 80%;
+    top: 15%;
+    border-radius: 10px;
+}
+
 #friends{
     flex: 1;
     left: 2.5%;
@@ -283,6 +314,43 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 }
 
 #stats h4 {
+    position: relative;
+    left: 5%;
+}
+
+
+/*Multiplayer page maps subcontent*/
+#games {
+    flex: 1;
+    left: 35%;
+    background-image: url("/sprites/menu.png");
+    background-repeat: repeat;
+    border: solid;
+    border-color: silver;
+
+    overflow-y: scroll;
+    display:block;
+}
+
+#friendsMult {
+    left: 2.5%;
+    flex: 1;
+    background-image: url("/sprites/menu.png");
+    background-repeat: repeat;
+    border: solid;
+    border-color: silver;
+}
+
+#inbox {
+    flex: 1;
+    left: 67.5%;
+    background-image: url("/sprites/menu.png");
+    background-repeat: repeat;
+    border: solid;
+    border-color: silver;
+}
+
+#games h4 {
     position: relative;
     left: 5%;
 }
