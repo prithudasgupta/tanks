@@ -267,6 +267,7 @@ function generateFriendsMult(friendsList) {
                     cell.appendChild(text);
                 } else {
                     let select = document.createElement("button");
+                    select.setAttribute("id", "friendSelect");
                     select.onclick = function() { selectFriend(select, friendsList[curRow].friend) };
                     select.appendChild(document.createTextNode("select"));
                     cell.appendChild(select);
@@ -280,6 +281,13 @@ function generateFriendsMult(friendsList) {
     table.appendChild(tableBody);
 
 }
+
+$("friendSelect").on("click",function(){
+	$("tr").each(function(){
+		$(this).removeClass("marked");
+	});
+	$(this).closest("tr").addClass("marked");
+});
 
 function generateMapsList(gameList) {
 

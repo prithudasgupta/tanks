@@ -763,7 +763,6 @@ function updateBullet() {
                 }
                 if (bullet.sprite.collidesWith(user)) {
                     isGameOver = true;
-                    //window.alert("Game OVER!");
                 }
                 if (!collided) {
                     bullet.sprite.update();
@@ -945,7 +944,6 @@ function getCenter(spriteTank) {
              py: ( y + wp * sina + hp * cosa ) };
 }
 
-
 function addRoute(movingEnemy){
     let toCol;
     let toRow;
@@ -957,36 +955,41 @@ function addRoute(movingEnemy){
         case "h":
             toCol = Math.floor(user.x/45);
             toRow = Math.floor(user.y/45);
-
-                console.log("homing");
-
         break;
     }
    movingEnemy.loading = true;
-   //movingEnemy.route = undefined;
-    //  movingEnemy.routeIndex = undefined;
 
  $.post('/homing', {"userRow": toRow, "representation": represent,"userCol": toCol,
   "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
      const respObject = JSON.parse(responseJSON);
+
      const route =  respObject.route;
+
      movingEnemy.route = route;
      for(let i = 0; i < route.length; i++){
         if(route[i].first == Math.floor(movingEnemy.y/45) && route[i].second == Math.floor(movingEnemy.x/45)){
             movingEnemy.routeIndex = i;
-           // console.log("chose index " + i);
+            console.log("chose " + i);
             break;
         }
      }
             movingEnemy.collided = false;
 
-    // console.log("done with route " + route);
       movingEnemy.loading = false;
-      //movingEnemy.nextRoute = undefined;
 
 });
 }
 
+
+/*$(function(){
+setInterval(oneSecondFunction, 1000);
+});
+
+function oneSecondFunction() {
+    for(let i = 0; i < dumbEnemies.length; i++){
+        console.log(i + " , index: " + dumbEnemies[i].routeIndex + " size: " + dumbEnemies[i].route.length);
+        }
+}*/
 
 function movingEnemyLogic(movingEnemy) {
     if (ready) {
@@ -1004,7 +1007,6 @@ function movingEnemyLogic(movingEnemy) {
                 movingEnemy.routeIndex += 1;
 
             if(movingEnemy.collided || (!movingEnemy.loading && movingEnemy.route.length < (movingEnemy.routeIndex + 4))){
-                console.log("asked");
 
                 addRoute(movingEnemy);
 
@@ -1013,7 +1015,7 @@ function movingEnemyLogic(movingEnemy) {
 
             }
         }
-        if(movingEnemy.routeIndex != undefined){
+        if(movingEnemy.routeIndex != undefined && !movingEnemy.loading){
            moveBetween(movingEnemy);
         }
 
@@ -1024,6 +1026,7 @@ function movingEnemyLogic(movingEnemy) {
 
 function reachedBlock(movingEnemy){
     //const center = getCenter(movingEnemy);
+
     const pix_x_diff = (movingEnemy.x + 8) - ((movingEnemy.route[movingEnemy.routeIndex].second *45)+22.5); //7.5
     const pix_y_diff = (movingEnemy.y + 7.5) - ((movingEnemy.route[movingEnemy.routeIndex].first *45)+22.5); //8
     //console.log("x diff " + pix_x_diff)
@@ -1143,7 +1146,7 @@ function updateExplosions() {
 let firstIteration = true;
 
 function displayEndGame() {
-    won = false;
+    won = "false";
     $('#next').toggle();
     document.getElementById("result").innerHTML = "GAME OVER!";
     $('#endGame').toggle();
@@ -1160,7 +1163,7 @@ function displayEndGame() {
 }
 
 function displayWinGame() {
-    won = true;
+    won = "true";
     document.getElementById("result").innerHTML = "GAME WON!";
     $('#endGame').toggle();
     let urlArr = document.URL.split("/");
@@ -1317,7 +1320,7 @@ $(document).ready(() => {
 
 function movePath(tank) {
 	
-	console.log("tank is going from " + tank.prevRow + " , " + tank.prevCol + " to " + tank.goalRow + " , " + tank.goalCol);
+	//console.log("tank is going from " + tank.prevRow + " , " + tank.prevCol + " to " + tank.goalRow + " , " + tank.goalCol);
 	let rot;
 
     let dx = (tank.goalCol * 45) - tank.x;

@@ -188,9 +188,9 @@ public final class GameInitializer {
     
     Map<Integer, Integer> tankNumbers = new HashMap<Integer, Integer>();
 	    int randStat = getRandomInt(1, 3);
-	    int randDumb = getRandomInt(1,2);
-	    int randPath = getRandomInt(0,1);
-//	    int randPath = getRandomInt(1,3);
+	    int randDumb = getRandomInt(0,0);
+	    //int randPath = getRandomInt(0,1);
+	    int randPath = getRandomInt(0,0);
 	    int randHome = 0;
 	   
       tankNumbers.put(0, randStat);

@@ -287,6 +287,10 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     z-index: 99;
 }
 
+.marked{
+	background-color:#FF4500;color:#000000;font-weight:500;
+}
+
 #profile div {
     position: absolute;
     width: 30%;

@@ -239,6 +239,9 @@ public class GameMap {
 	  }
 	  
 	  int rand = (int)(Math.random() * 2);
+	  
+	  //System.out.println(rand + " " + vertical.size() + " " + horizontal.size());
+	  
 	  if (rand == 0) {
 	    if (vertical.size() > 3) {
 	      return vertical.get(vertical.size() - 1);
@@ -269,19 +272,24 @@ public class GameMap {
     // TODO Auto-generated method stub
 	  Pair<Integer, Integer> nextPair = null;
 	  Location next = null;
-	  switch(direction) {
-	    case 1:
-	       nextPair = new Pair<Integer, Integer>(curr.getFirst() - 1, curr.getSecond());
-	       next = this.get(curr.getFirst() - 1, curr.getSecond()); 
+	  switch(direction) { 
 	    case 2:
-	      nextPair = new Pair<Integer, Integer>(curr.getFirst() + 1, curr.getSecond());
-	       next = this.get(curr.getFirst() + 1, curr.getSecond()); 
-	    case 3:
-	      nextPair = new Pair<Integer, Integer>(curr.getFirst(), curr.getSecond() - 1);
-	       next = this.get(curr.getFirst(), curr.getSecond() - 1); 
-	    case 4:
-	      nextPair = new Pair<Integer, Integer>(curr.getFirst(), curr.getSecond() + 1);
-	       next = this.get(curr.getFirst(), curr.getSecond() + 1);     
+        nextPair = new Pair<Integer, Integer>(curr.getFirst() - 1, curr.getSecond());
+        next = this.get(curr.getFirst() - 1, curr.getSecond()); 
+        break;
+        
+     case 4:
+       nextPair = new Pair<Integer, Integer>(curr.getFirst() + 1, curr.getSecond());
+        next = this.get(curr.getFirst() + 1, curr.getSecond()); 
+        break;
+     case 1:
+       nextPair = new Pair<Integer, Integer>(curr.getFirst(), curr.getSecond() - 1);
+        next = this.get(curr.getFirst(), curr.getSecond() - 1); 
+        break;
+     case 3:
+       nextPair = new Pair<Integer, Integer>(curr.getFirst(), curr.getSecond() + 1);
+        next = this.get(curr.getFirst(), curr.getSecond() + 1);
+        break;   
 	  }
 	  if (next != null && next.getRepresentation().equals("l") && counter < 4) {
 	    currentList.add(nextPair);
