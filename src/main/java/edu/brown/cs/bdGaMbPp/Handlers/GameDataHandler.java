@@ -43,6 +43,8 @@ public class GameDataHandler implements Route{
 
 		Querier.setKills(id, kills);
 		Querier.setTime(id, time);
+		
+		System.out.println(result);
 
 		if (survival.equals("true") && result.equals("false")) {
 			int currentRound = Integer.parseInt(request.session().attribute("survival").toString());
