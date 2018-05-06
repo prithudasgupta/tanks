@@ -26,7 +26,7 @@ public class GameDataHandler implements Route{
 
 		String survival = qm.value("survival");
 
-		String result = qm.value("won");
+		String result = qm.value("result");
 
 
 		int time = Integer.parseInt(qm.value("currentTime"));
@@ -43,12 +43,13 @@ public class GameDataHandler implements Route{
 
 		Querier.setKills(id, kills);
 		Querier.setTime(id, time);
+		
 
-		if (survival.equals("true") && result.equals("false")) {
+		if (survival.equals("true") && result.equals("win")) {
 			int currentRound = Integer.parseInt(request.session().attribute("survival").toString());
-			request.session().removeAttribute("survival");
 			Querier.setSurvival(id, currentRound);
-			//update database
+		}else if(survival.equals("true") && result.equals("lose")) {
+		  request.session().removeAttribute("survival");
 		}
 
 		if (user2 != 0) {
