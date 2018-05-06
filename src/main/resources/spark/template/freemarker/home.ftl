@@ -100,9 +100,12 @@
     </div>
 	    
 	    <h2 id="user-heading" style="position: absolute; left: 77.5%; top: 5%;"> Inbox: </h2>
-    <div id="inbox"></div>
-
+    <div id="inbox">
+    <center>
+        <table id="inboxTable"></table>
+    </center>
     </div>
+
 
 </div>
 
@@ -195,6 +198,12 @@ h1 {
     /*overflow: none;*/
     overflow-y: scroll;
     /*display: block;*/
+}
+
+#inboxTable {
+    border-collapse: collapse;
+    width: 100%;
+    overflow-y: scroll;
 }
 
 #friendsTable2 {
@@ -348,6 +357,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     background-repeat: repeat;
     border: solid;
     border-color: silver;
+    overflow-y: scroll;
 }
 
 #games h4 {

@@ -856,7 +856,8 @@ function getBorderingLandTiles(xCoord, yCoord){
 }
 
 function checkEndGame() {
-    return (statEnemies.length === 0 && dumbEnemies.length === 0 && pathEnemies.length === 0 && homingEnemies.length === 0);
+    return (statEnemies.length === 0 && dumbEnemies.length === 0 &&
+        pathEnemies.length === 0 && homingEnemies.length === 0 && allEnemies.length === 0);
 }
 
 function homingHelper(movingEnemy) {
@@ -956,13 +957,13 @@ function addRoute(movingEnemy){
      for(let i = 0; i < route.length; i++){
         if(route[i].first == Math.floor(movingEnemy.y/45) && route[i].second == Math.floor(movingEnemy.x/45)){
             movingEnemy.routeIndex = i;
-            console.log("chose index " + i);
+           // console.log("chose index " + i);
             break;
         }
      }
             movingEnemy.collided = false;
 
-     console.log("done with route " + route);
+    // console.log("done with route " + route);
       movingEnemy.loading = false;
       //movingEnemy.nextRoute = undefined;
 
@@ -995,7 +996,7 @@ function movingEnemyLogic(movingEnemy) {
 
             }
         }
-        if(!movingEnemy.collided && movingEnemy.routeIndex != undefined){
+        if(movingEnemy.routeIndex != undefined){
            moveBetween(movingEnemy);
         }
 
@@ -1283,14 +1284,14 @@ $(document).ready(() => {
 function movePath(tank) {
 	
 	console.log("tank is going from " + tank.prevRow + " , " + tank.prevCol + " to " + tank.goalRow + " , " + tank.goalCol);
-	
+	let rot;
+
     let dx = (tank.goalCol * 45) - tank.x;
     let dy = (tank.goalRow * 45) - tank.y;
     rot = Math.atan2(dy, dx);
     rot = (rot % 6.28);
-    
+
     tank.angle = rot;
-    //console.log(rot);
 
 
     if (user !== undefined && withinSight(tank.x, tank.y)) {
@@ -1303,6 +1304,7 @@ function movePath(tank) {
         fire(tank);
     }
     else {
+
         let mov = forwardByAngle(tank.angle, 1.5);
         tank.move(mov[0], mov[1]);
         tank.cannon.move(mov[0],mov[1]);
