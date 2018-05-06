@@ -132,6 +132,9 @@
     <h2 id="user-heading" style="position: absolute; left: 12.5%; top: 5%;"> Friends: </h2>
     <div id="friends">
         <center>
+        		<p>
+        		<input type="text" placeholder="Add friend" id="friendUse">
+  			<input type="submit" value="Submit" id="sub" onclick="addFriend()"></p>
             <table id="friendsTable"></table>
         </center>
     </div>
