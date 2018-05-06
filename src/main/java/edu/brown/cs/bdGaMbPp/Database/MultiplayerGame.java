@@ -24,4 +24,16 @@ public class MultiplayerGame {
 
 	}
 
+	@Override
+	public String toString() {
+		return "MultiplayerGame{" +
+						"id1=" + id1 +
+						", id2=" + id2 +
+						", username1='" + username1 + '\'' +
+						", username2='" + username2 + '\'' +
+						", winner=" + winner +
+						", isOver=" + isOver +
+						", gameId=" + gameId +
+						'}';
+	}
 }

@@ -28,7 +28,7 @@
             Return to Main Menu
         </button>
 
-        <button class="endBut" onclick="visitPage('')">
+        <button class="endBut" id="retry" onclick="visitPage('')">
             Retry?
         </button>
         <header id="enemyKill"> </header>

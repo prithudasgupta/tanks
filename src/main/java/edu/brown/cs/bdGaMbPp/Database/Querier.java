@@ -525,6 +525,32 @@ public final class Querier {
 		        		 boolean winner = false;
 		        		 int over = 0;
 		        		 if (Integer.parseInt(rs.getString(7)) == -1) {
+		        			 over = -1;
+		        		 }
+		        		 else {
+		        			 int win = getWinner(user, playerTwo, game);
+		        			 if (win == user) {
+		        				 winner = true;
+		        			 }
+		        		 }
+							MultiplayerGame g = new MultiplayerGame(user, playerTwo, user2, winner, game, over);
+		        		 currList.add(g);
+		        }
+		        prep.close();
+		        rs.close();
+
+		        PreparedStatement prep2 = instance.conn
+				        .prepareStatement("SELECT * FROM multiplayer WHERE playerTwo = ?");
+				
+		        prep2.setString(1, Integer.toString(user));
+				ResultSet rs2 = prep2.executeQuery();
+		        while (rs2.next()) {
+		        		 int playerTwo = Integer.parseInt(rs2.getString(1));
+		        		 String user2 = getProfile(playerTwo).getUsername();
+		        		 int game = Integer.parseInt(rs2.getString(3));
+		        		 boolean winner = false;
+		        		 int over = 0;
+		        		 if (Integer.parseInt(rs2.getString(7)) == -1) {
 		        			 over = 1;
 		        		 }
 		        		 else {
@@ -534,38 +560,8 @@ public final class Querier {
 		        			 }
 		        			 
 		        		 }
-		        		 
-		        		 currList.add(new MultiplayerGame(user, playerTwo, user2, winner, game, over));
-		        		 
-		        }
-		        
-		        prep.close();
-		        rs.close();
-		        
-		        PreparedStatement prep2 = instance.conn
-				        .prepareStatement("SELECT * FROM multiplayer WHERE playerTwo = ?");
-				
-		        prep2.setString(1, Integer.toString(user));
-			
-				ResultSet rs2 = prep2.executeQuery();
-		        while (rs2.next()) {
-		        		 int playerTwo = Integer.parseInt(rs2.getString(1));
-		        		 String user2 = getProfile(playerTwo).getUsername();
-		        		 int game = Integer.parseInt(rs2.getString(3));
-		        		 boolean winner = false;
-		        		 int over = 0;
-		        		 if (Integer.parseInt(rs2.getString(7)) == -1) {
-		        			 over = -1;
-		        		 }
-		        		 else {
-		        			 int win = getWinner(user, playerTwo, game);
-		        			 if (win == user) {
-		        				 winner = true;
-		        			 }
-		        			 
-		        		 }
-		        		 
-		        		 currList.add(new MultiplayerGame(user, playerTwo, user2, winner, game, over));
+		        		 MultiplayerGame g = new MultiplayerGame(user, playerTwo, user2, winner, game, over);
+		        		 currList.add(g);
 		        		 
 		        }
 			        
@@ -583,8 +579,8 @@ public final class Querier {
 		
 		try {
 		PreparedStatement prep = instance.conn
-		        .prepareStatement("UPDATE multiplayer set secondTime = ? AND secondKills = ? WHERE game = ? AND playerOne = ? AND playerTwo = ?");
-		
+		        .prepareStatement("UPDATE multiplayer set secondTime = ? ," +
+										" secondKills = ? WHERE game = ? AND playerOne = ? AND playerTwo = ? AND multiplayer.secondTime = -1");
 			prep.setString(1, Integer.toString(playerTwoTime));
 			prep.setString(2, Integer.toString(playerTwoKills));
 			prep.setString(3, Integer.toString(gameId));
@@ -614,6 +610,9 @@ public final class Querier {
 		        if (rs.next()) {
 		        		 int time = Integer.parseInt(rs.getString(1));
 		        		 int kills = Integer.parseInt(rs.getString(2));
+		        		 if (kills == -1){
+		        		 		return -1;
+								 }
 		        		 
 		        		  getPlayerTwo = new Pair<Integer, Integer>(kills, time);
 		        		 
@@ -641,7 +640,7 @@ public final class Querier {
 			catch(Exception e) {
 				
 			}
-		return user2;
+		return -1;
 		
 	}
 	
@@ -745,11 +744,11 @@ public final class Querier {
 				        .prepareStatement("SELECT * FROM friends WHERE second = ?");
 				
 					prep2.setString(1, Integer.toString(id));
-					ResultSet rs2 = prep.executeQuery();
+					ResultSet rs2 = prep2.executeQuery();
 					while (rs2.next()) {
-		        		int first = Integer.parseInt(rs.getString(2));
+		        		int first = Integer.parseInt(rs2.getString(1));
 								Profile prof = getProfile(first);
-		        		int status = Integer.parseInt(rs.getString(3));
+		        		int status = Integer.parseInt(rs2.getString(3));
 		        		friends.add(new Friend(id, first, status * -1, prof.getUsername()));
 		        }
 			        prep2.close();

@@ -44,6 +44,9 @@ public class MapHandler implements Route {
     		String [] splited = id.split("#");
     		int gameId = Integer.parseInt(splited[0]);
     		int playerTwo = Integer.parseInt(splited[1]);
+    		if (playerTwo < 0){
+
+				}
     		Game data = Querier.getGameById(gameId);
     		variables = ImmutableMap.of("map", data.getRepresentations(), "game", data, "enemies", data.getEnemies(), "survival", false, "playerTwo", playerTwo);
     }
