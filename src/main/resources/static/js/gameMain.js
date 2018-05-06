@@ -725,6 +725,7 @@ function updateBullet() {
                             console.log(homingEnemies);
                             allEnemies.splice(allEnemies.indexOf(collideable[i]), 1);
                             kills++;
+
                             let ind = nonTrav.indexOf(collideable[i]);
                             if (ind >= 0) {
                                 nonTrav.splice(ind, 1);
@@ -774,6 +775,28 @@ function updateBullet() {
         }
     }
 
+}
+
+
+function explode(sprite) {
+
+    let ind = nonTrav.indexOf(sprite);
+    if (ind >= 0) {
+        nonTrav.splice(ind, 1);
+    }
+    let explosion = new Explosion(sprite);
+    explosion.sprite.loadImg("/sprites/explo1.png");
+    explosion.sprite.update();
+    explosions.push(explosion);
+    if ((sprite).tankType !== "s") {
+        collideable[i].cannon.remove();
+
+    }
+    collideable.splice(i, 1);
+
+
+    bullet.sprite.remove();
+    bullets.splice(b,1);
 }
 
 function shortenVector(v1, shortenValue){
@@ -1166,15 +1189,16 @@ function displayWinGame() {
     if (playerTwo === 0) {
         if (level >= 0 && level <= 19) {
 
+        } else if (survival) {
+
         } else {
             $('#next').toggle();
         }
     } else {
-        console.log("hello");
         $('#next').toggle();
         $('#retry').toggle();
     }
-    $.post('/endGame', {"kills": kills, "currentTime":globalTime,
+    $.post('/endGame', {"kills": kills, "currentTime": globalTime,
         "gameId": level, "survival":survival, "result": won, "userTwo": playerTwo}, responseJSON => {
     });
 }
