@@ -298,7 +298,9 @@ function loadMap() {
 
                 if (map[row][col] === "u" || map[row][col] === "x") {
                     next = canvasbg.Sprite("/sprites/wall.png");
+                    next.isBreakable = false;
                     mapLand[row][col] = next;
+
                     walls.push(next);
                     nonTrav.push(next);
                 } else if (map[row][col] === "b") {
@@ -943,10 +945,10 @@ function getCenter(spriteTank) {
 
 function addRoute(movingEnemy){
    movingEnemy.loading = true;
-   movingEnemy.route = undefined;
-      movingEnemy.routeIndex = undefined;
+   //movingEnemy.route = undefined;
+    //  movingEnemy.routeIndex = undefined;
 
- $.post('/homing', {"userRow": Math.floor(user.y/45), "representation": represent,"userCol": Math.floor(user.x/45),
+ $.post('/homing', {"userRow": -1, "representation": represent,"userCol": -1,
   "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
      const respObject = JSON.parse(responseJSON);
      const route =  respObject.route;
@@ -954,12 +956,13 @@ function addRoute(movingEnemy){
      for(let i = 0; i < route.length; i++){
         if(route[i].first == Math.floor(movingEnemy.y/45) && route[i].second == Math.floor(movingEnemy.x/45)){
             movingEnemy.routeIndex = i;
-            console.log("chose index " + i);
+           // console.log("chose index " + i);
             break;
         }
      }
+            movingEnemy.collided = false;
 
-     console.log("done with route " + route);
+    // console.log("done with route " + route);
       movingEnemy.loading = false;
       //movingEnemy.nextRoute = undefined;
 
@@ -979,24 +982,23 @@ function movingEnemyLogic(movingEnemy) {
             fire(movingEnemy);
         }
 
-        let movedSoFar = euclidDist(movingEnemy.startX, movingEnemy.startY, movingEnemy.x, movingEnemy.y);
-
        if(reachedBlock(movingEnemy)){
                 movingEnemy.routeIndex += 1;
 
-            if(!movingEnemy.loading && movingEnemy.route.length < (movingEnemy.routeIndex + 4)){
+            if(movingEnemy.collided || (!movingEnemy.loading && movingEnemy.route.length < (movingEnemy.routeIndex + 4))){
                 console.log("asked");
 
                 addRoute(movingEnemy);
 
                  }
-                console.log("iter " + movingEnemy.routeIndex);
+                //console.log("iter " + movingEnemy.routeIndex);
 
             }
         }
         if(movingEnemy.routeIndex != undefined){
            moveBetween(movingEnemy);
         }
+
     }
 
 
@@ -1006,10 +1008,10 @@ function reachedBlock(movingEnemy){
     //const center = getCenter(movingEnemy);
     const pix_x_diff = (movingEnemy.x + 8) - ((movingEnemy.route[movingEnemy.routeIndex].second *45)+22.5); //7.5
     const pix_y_diff = (movingEnemy.y + 7.5) - ((movingEnemy.route[movingEnemy.routeIndex].first *45)+22.5); //8
-    console.log("x diff " + pix_x_diff)
-        console.log("y diff " + pix_y_diff)
+    //console.log("x diff " + pix_x_diff)
+     //   console.log("y diff " + pix_y_diff)
 
-   if(Math.abs(pix_x_diff) <= 15 && Math.abs(pix_y_diff) <= 5){
+   if(Math.abs(pix_x_diff) <= 15 && Math.abs(pix_y_diff) <= 7){
     return true;
     }
 
@@ -1279,30 +1281,47 @@ $(document).ready(() => {
 });
 
 function movePath(tank) {
+	
+	console.log("tank is going from " + tank.prevRow + " , " + tank.prevCol + " to " + tank.goalRow + " , " + tank.goalCol);
+	
     let dx = (tank.goalCol * 45) - tank.x;
     let dy = (tank.goalRow * 45) - tank.y;
     rot = Math.atan2(dy, dx);
+<<<<<<< HEAD
     rot = (rot % 6.28);
+    
+    tank.angle = rot;
+    //console.log(rot);
+=======
+    rot = rot;
+
+>>>>>>> a387d133ab270faf9220daf0077560df16c957da
 
     if (user !== undefined && withinSight(tank.x, tank.y)) {
         let dx = tank.cannon.x - user.x;
         let dy = tank.cannon.y - user.y;
-        rot = Math.atan2(-dy, -dx);
+        let canrot = Math.atan2(-dy, -dx);
         tank.cannon.setAngle(0);
-        tank.cannon.rotate(rot);
-        tank.cannon.correctAngle = tank.cannon.angle + rot;
+        tank.cannon.rotate(canrot);
+        tank.cannon.correctAngle = tank.cannon.angle + canrot;
         fire(tank);
     }
-    if ((tank.angle % 6.28) < rot-0.02) {
+<<<<<<< HEAD
+=======
+
+    if ((tank.angle % 6.28) < rot-0.04) {
         tank.rotate(0.02);
-    } else if ((tank.angle % 6.28) > rot+0.02) {
+    } else if ((tank.angle % 6.28) > rot+0.04) {
         tank.rotate(-0.02);
     }
+
+>>>>>>> a387d133ab270faf9220daf0077560df16c957da
     else {
-        let mov = forwardByAngle(tank.angle, 2);
+        let mov = forwardByAngle(tank.angle, 1.5);
         tank.move(mov[0], mov[1]);
         tank.cannon.move(mov[0],mov[1]);
         if (tank.collidesWithArray(nonTrav)) {
+
             tank.move(-mov[0], -mov[1]);
             tank.cannon.move(-mov[0], -mov[1]);
             let tempCol = tank.goalCol;
@@ -1315,6 +1334,7 @@ function movePath(tank) {
         tank.cannon.update();
 
         if (tank.goalCol === Math.floor((tank.x+8) / 45) && tank.goalRow === Math.floor((tank.y+8) / 45)) {
+
             let tempCol = tank.goalCol;
             let tempRow = tank.goalRow;
             tank.goalCol = tank.prevCol;

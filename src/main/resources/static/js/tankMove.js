@@ -10,6 +10,14 @@ function getFixedAngle(angle){
 
 }
 
+function getRandomTile(sprite){
+    const row = Math.floor(sprite.y/45);
+    const col = Math.floor(sprite.x/45);
+
+
+}
+
+
 function getSpeed(angle){
     return (2.00679* Math.pow(0.104099, Math.abs(angle)));
 }
@@ -24,35 +32,60 @@ function getSpeed(angle){
 
 
 function moveBetween(enemyObj){
-    const route = enemyObj.route;
-    const index = enemyObj.routeIndex;
+    let route;
+    let index;
+    if(enemyObj.route[enemyObj.routeIndex] == undefined){
+        route = getBorderingLandTiles(enemyObj.x, enemyObj.y);
+         index = Math.floor(Math.random() * route.length);
+        console.log("error");
+    }else{
+        route = enemyObj.route;
+        index = enemyObj.routeIndex;
+    }
+
     //console.log("index " + index);
     //    console.log("size " + route.length);
 
 
     const curRow = Math.floor(enemyObj.y / 45);
     const curCol = Math.floor(enemyObj.x / 45);
-    const nextTile = route[index];
-    const futureTile = route[index +1];
+      const center = [];
+        center[0] =  enemyObj.x + 7.5;
+        center[1] = enemyObj.y + 8;
+    let xFixer = 0;
+    let yFixer = 0;
+
     if (route[index].first - curRow === 0){
                          if (route[index].second - curCol === 1){
                              enemyObj.nextAngle = 0;
-                           }
+                              const upDiff = center[1] - (route[index].first *45);
+                              yFixer = (22.5 - upDiff);
+                             //xFixer = enemyObj.x
+                                                       }
                           else if (route[index].second - curCol === -1){
                                   enemyObj.nextAngle = 3.1415;
+
+                                const upDiff = center[1] - (route[index].first *45);
+                              yFixer = (22.5 - upDiff);
 
                                               }
                           }
                                   else if(route[index].first - curRow === -1){
                                 enemyObj.nextAngle = 1.5707;
+                                const leftDiff = center[0] - (route[index].second *45);
+                                xFixer = (22.5 - leftDiff);
+
+
 
                              }
                        else{
                               enemyObj.nextAngle = 4.712;
+                               const leftDiff = center[0] - (route[index].second *45);
+                              xFixer = (22.5 - leftDiff);
 
                                  }
 
-        console.log("from " + curRow + ", " + curCol + " to " + route[index].first + ", " +  route[index].second + ", " + enemyObj.nextAngle);
+       //console.log("from " + curRow + ", " + curCol + " to " + route[index].first + ", " +  route[index].second + ", " + enemyObj.nextAngle);
 
 
     //console.log("next " + enemyObj.nextAngle);
@@ -82,20 +115,36 @@ function moveBetween(enemyObj){
 
         }
             mov = forwardByAngle(enemyObj.angle, getSpeed(angleDiff));
-            enemyObj.move(mov[0], mov[1]);
-            enemyObj.cannon.move(mov[0], mov[1]);
+            enemyObj.move(mov[0] + (xFixer/10), mov[1] + (yFixer/10));
+            enemyObj.cannon.move(mov[0] + (xFixer/10), mov[1] + (yFixer/10));
 
 
        if (enemyObj.collidesWithArray(nonTrav)) {
+            let breakable = true;
             for (let i in collideable) {
                         if (enemyObj.collidesWith(collideable[i])) {
+
                             if (collideable[i].isBreakable) {
                                enemyObj.cannon.setAngle(0);
                                enemyObj.cannon.rotate(enemyObj.angle);
                                fire(enemyObj);
+                               breakable = false;
+                               break;
+                            }else if(collideable[i].isBreakable === undefined){
+                                breakable = false;
+                                break;
                             }
                         }
                     }
+              if(breakable){
+              /*enemyObj.move(-mov[0], -mov[1]);
+              enemyObj.cannon.move(-mov[0], -mov[1]);
+              //const landSpots = getBorderingLandTiles(enemyObj.x, enemyObj.y);
+              //enemyObj.route = landSpots;
+              //enemyObj.routeIndex = 0;
+              addRoute(enemyObj);
+              enemyObj.collided = true;*/
+              }
             // if there is a collision revert back to old location
             //enemyObj.move(-mov[0], -mov[1]);
             //enemyObj.cannon.move(-mov[0], -mov[1]);

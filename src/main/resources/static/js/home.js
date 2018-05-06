@@ -224,6 +224,43 @@ function generateFriendsList(friendsList) {
 
 }
 
+function generateFriendsMult(friendsList) {
+
+    let table = document.getElementById("friendsTable2");
+    let tableBody = document.createElement("tbody");
+
+    let firstRow  = document.createElement("tr");
+    let textTitle1 = document.createTextNode("Username");
+    let title1 = document.createElement("th");
+    title1.appendChild(textTitle1);
+    firstRow.appendChild(title1);
+    tableBody.appendChild(firstRow);
+
+    for(let curRow = 0; curRow < friendsList.length; curRow++) {
+        let row = document.createElement("tr");
+        for (let c = 0; c < 2; c++) {
+            let text;
+            let status = friendsList[curRow].status;
+            let cell = document.createElement("td");
+            if (status === 0) {
+                if (c === 0) {
+                    text = document.createTextNode(friendsList[curRow].friendName);
+                    cell.appendChild(text);
+                } else {
+                    let select = document.createElement("button");
+                    select.appendChild(document.createTextNode("select"));
+                    cell.appendChild(select);
+                }
+                row.appendChild(cell);
+            }
+        }
+        tableBody.appendChild(row);
+    }
+
+    table.appendChild(tableBody);
+
+}
+
 function generateMapsList(gameList) {
 
     let table = document.getElementById("mapsTable");
@@ -265,6 +302,45 @@ function generateMapsList(gameList) {
         tableBody.appendChild(row);
     }
 
+    table.appendChild(tableBody);
+
+}
+
+
+function generateMapsMult(gameList) {
+    let table = document.getElementById("gamesTable");
+    let tableBody = document.createElement("tbody");
+    let firstRow  = document.createElement("tr");
+    let textTitle1 = document.createTextNode("Map ID");
+    let textTitle2 = document.createTextNode("Options");
+    let title1 = document.createElement("th");
+    let title2 = document.createElement("th");
+    title1.appendChild(textTitle1);
+    title2.appendChild(textTitle2);
+    firstRow.appendChild(title1);
+    firstRow.appendChild(title2);
+    tableBody.appendChild(firstRow);
+
+    for(let curRow = 0; curRow < gameList.length; curRow++) {
+        let row = document.createElement("tr");
+        for (let c = 0; c < 2; c++) {
+            let text;
+            let cell = document.createElement("td");
+            // id of the game
+            if (c === 0) {
+                text = document.createTextNode(gameList[curRow]);
+                cell.appendChild(text);
+            } else {
+                // options
+                let play = document.createElement("button");
+                play.appendChild(document.createTextNode("select"));
+                cell.appendChild(play);
+            }
+
+            row.appendChild(cell);
+        }
+        tableBody.appendChild(row);
+    }
     table.appendChild(tableBody);
 
 }
@@ -316,6 +392,9 @@ function userData() {
             generateMapsList(mapsList);
             getLeaderboardLists();
             setupCampaign(campaign);
+            generateMapsMult(mapsList);
+            generateFriendsMult(friendsList);
+            
         }
     });
 }
@@ -350,11 +429,8 @@ function setupCampaign(level) {
 }
 
 function generateLeaderboard(id, list, time) {
-
     let table = document.getElementById(id);
-
     let tableBody = document.createElement("tbody");
-
     for(let curRow = 0; curRow < list.length; curRow++) {
         let row = document.createElement("tr");
         for (let c = 0; c < 3; c++) {
@@ -560,9 +636,6 @@ $(document).ready(() => {
         $('#login').toggle();
     });
 
-    $('#exitLogin').on('click', function () {
-        $('#login').toggle();
-    });
    
 
 
