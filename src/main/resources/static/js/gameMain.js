@@ -379,7 +379,8 @@ function loadMap() {
 
         for (let i in homingStart) {
             let cur = homingStart[i];
-            createHomingTank(cur[1], cur[0]);
+            const tank = createHomingTank(cur[1], cur[0]);
+            addRoute(tank);
         }
         
         // now loading screen
@@ -461,6 +462,7 @@ function createHomingTank(row, col) {
     homingEnemies.push(tank);
     tank.tankType = "h";
     allEnemies.push(tank);
+    return tank;
 }
 
 function createSamePathTank(pair){
@@ -936,36 +938,37 @@ function getCenter(spriteTank) {
              py: ( y + wp * sina + hp * cosa ) };
 }
 
-//function getCenter(spriteTank){
-//    const coord = [];
-//    let x = spriteTank.x + (8);
-//    let y = spriteTank.y + (7.5);
-//    return {px: x , py: y};
-//
-//}
-
 function addRoute(movingEnemy){
+    let toCol;
+    let toRow;
+    switch(movingEnemy.tankType){
+        case "d":
+            toCol = -1;
+            toRow = -1;
+        break;
+        case "h":
+            toCol = Math.floor(user.x/45);
+            toRow = Math.floor(user.y/45);
+        break;
+    }
    movingEnemy.loading = true;
-   //movingEnemy.route = undefined;
-    //  movingEnemy.routeIndex = undefined;
 
- $.post('/homing', {"userRow": -1, "representation": represent,"userCol": -1,
+ $.post('/homing', {"userRow": toRow, "representation": represent,"userCol": toCol,
   "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
      const respObject = JSON.parse(responseJSON);
+
      const route =  respObject.route;
+
      movingEnemy.route = route;
      for(let i = 0; i < route.length; i++){
         if(route[i].first == Math.floor(movingEnemy.y/45) && route[i].second == Math.floor(movingEnemy.x/45)){
             movingEnemy.routeIndex = i;
-           // console.log("chose index " + i);
             break;
         }
      }
             movingEnemy.collided = false;
 
-    // console.log("done with route " + route);
       movingEnemy.loading = false;
-      //movingEnemy.nextRoute = undefined;
 
 });
 }
@@ -987,7 +990,6 @@ function movingEnemyLogic(movingEnemy) {
                 movingEnemy.routeIndex += 1;
 
             if(movingEnemy.collided || (!movingEnemy.loading && movingEnemy.route.length < (movingEnemy.routeIndex + 4))){
-                console.log("asked");
 
                 addRoute(movingEnemy);
 
@@ -1188,6 +1190,9 @@ function main() {
             for (let i in dumbEnemies) {
                 movingEnemyLogic(dumbEnemies[i]);
             }
+            for (let i in homingEnemies) {
+                movingEnemyLogic(homingEnemies[i]);
+            }
             
             for (let i in pathEnemies) {
                 movePath(pathEnemies[i]);
@@ -1283,12 +1288,13 @@ $(document).ready(() => {
 
 function movePath(tank) {
 	
-	console.log("tank is going from " + tank.prevRow + " , " + tank.prevCol + " to " + tank.goalRow + " , " + tank.goalCol);
+	//console.log("tank is going from " + tank.prevRow + " , " + tank.prevCol + " to " + tank.goalRow + " , " + tank.goalCol);
 	let rot;
 
     let dx = (tank.goalCol * 45) - tank.x;
     let dy = (tank.goalRow * 45) - tank.y;
     rot = Math.atan2(dy, dx);
+
     rot = (rot % 6.28);
 
     tank.angle = rot;

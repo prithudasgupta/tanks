@@ -224,6 +224,25 @@ function generateFriendsList(friendsList) {
 
 }
 
+// variables keeping track of the next friend game
+let nextFriendId = -1;
+let selected;
+
+function selectFriend(button, id) {
+    if (selected === button) {
+
+    } else if (selected === undefined) {
+        nextFriendId = id;
+        selected = button;
+        selected.innnerHTML = "CHOSEN";
+    } else {
+        selected.innnerHTML = "select";
+        nextFriendId = id;
+        selected = button;
+        selected.innnerHTML = "CHOSEN";
+    }
+}
+
 function generateFriendsMult(friendsList) {
 
     let table = document.getElementById("friendsTable2");
@@ -249,6 +268,7 @@ function generateFriendsMult(friendsList) {
                 } else {
                     let select = document.createElement("button");
                     select.setAttribute("id", "friendSelect");
+                    select.onclick = function() { selectFriend(select, friendsList[curRow].friend) };
                     select.appendChild(document.createTextNode("select"));
                     cell.appendChild(select);
                 }
@@ -319,7 +339,7 @@ function generateMapsMult(gameList) {
     let table = document.getElementById("gamesTable");
     let tableBody = document.createElement("tbody");
     let firstRow  = document.createElement("tr");
-    let textTitle1 = document.createTextNode("Map ID");
+    let textTitle1 = document.createTextNode("Game ID");
     let textTitle2 = document.createTextNode("Options");
     let title1 = document.createElement("th");
     let title2 = document.createElement("th");
@@ -341,7 +361,8 @@ function generateMapsMult(gameList) {
             } else {
                 // options
                 let play = document.createElement("button");
-                play.appendChild(document.createTextNode("select"));
+                play.onclick = function() { loadMultipler(gameList[curRow]) };
+                play.appendChild(document.createTextNode("play"));
                 cell.appendChild(play);
             }
 
@@ -376,7 +397,7 @@ function updateProfilePage(profile) {
     let time = profile.time;
     let timeString = parseTime(time);
     timeString = "Total Time Played : " + timeString;
-    document.getElementById("timestat").innerHTML = timeString
+    document.getElementById("timestat").innerHTML = timeString;
     document.getElementById("campstat").innerHTML = "Campaign : " + profile.campaign;
     document.getElementById("survivalstat").innerHTML = "Survival : " + profile.bestSurvival;
 
@@ -714,14 +735,8 @@ $(document).ready(() => {
 		}
 	});
  });
-
-
-
-
+    
     loadMap();
-
-
-
 
 });
 
@@ -730,6 +745,17 @@ function loadCampLevel(level) {
     let next = url.lastIndexOf("/");
     let newUrl = url.substr(0, next) + "/tank/game/" + level;
     window.location.replace(newUrl);
+}
+
+function loadMultipler(level) {
+    if (nextFriendId !== -1) {
+        let url = window.location.href;
+        let next = url.lastIndexOf("/");
+        let newUrl = url.substr(0, next) + "/tank/game/" + level + "#" + nextFriendId;
+        window.location.replace(newUrl);
+    } else {
+        alert("Please select a friend to challenge to a game.");
+    }
 }
 
 function main() {
