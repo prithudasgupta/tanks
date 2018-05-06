@@ -76,7 +76,7 @@ public final class Querier {
 	        return num;
 	}
 	
-	private static int getNumGames() {
+	public static int getNumGames() {
 		int num = 0;
 		try {
 			PreparedStatement prep = instance.conn
@@ -94,7 +94,7 @@ public final class Querier {
 	        return num;
 	}
 	
-	private static int getNumProfiles() {
+	public static int getNumProfiles() {
 		int num = 0;
 		try {
 			PreparedStatement prep = instance.conn
