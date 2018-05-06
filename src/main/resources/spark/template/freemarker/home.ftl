@@ -85,10 +85,17 @@
          
          <center>
          
-         <h2 id="user-heading1" style="position: absolute; left: 45%; top: 0;"> Multiplayer: </h2>
+         <h2 style="position: absolute; left: 45%; top: 0;"> Multiplayer: </h2>
 	
          
          </center>
+         
+         <h2 id="user-heading" style="position: absolute; left: 12.5%; top: 5%;"> Friends: </h2>
+    <div id="friends">
+        <center>
+            <table id="friendsTable"></table>
+        </center>
+    </div>
 
 </div>
 
