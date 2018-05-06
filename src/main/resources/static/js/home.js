@@ -204,17 +204,24 @@ function generateFriendsList(friendsList) {
             let cell = document.createElement("td");
             if (c === 0) {
                 text = document.createTextNode(friendsList[curRow].friendName);
+                cell.appendChild(text);
             } else {
                 let status = friendsList[curRow].status;
                 if (status === 0) {
-                    text = document.createTextNode("friend");
+                    text = document.createTextNode("Friend");
+                    cell.appendChild(text);
                 } else if (status === 1) {
-                    text = document.createTextNode("pending");
+                    text = document.createTextNode("Pending");
+                    cell.appendChild(text);
                 } else {
-                    text = document.createTextNode("request");
+                    let but = document.createElement("button");
+                    but.onclick = function () { friendRequest(friendsList[curRow].friend, but) };
+                    text = document.createTextNode("Accept");
+                    but.appendChild(text);
+                    cell.appendChild(but);
                 }
             }
-            cell.appendChild(text);
+
             row.appendChild(cell);
         }
         tableBody.appendChild(row);
@@ -222,6 +229,15 @@ function generateFriendsList(friendsList) {
 
     table.appendChild(tableBody);
 
+}
+
+function friendRequest(friendId, but) {
+
+    $.post('/friendAccept', {"friendId": friendId}, responseJSON => {
+        const respObject = JSON.parse(responseJSON);
+    });
+    but.disabled = true;
+    but.innerHTML = "accepted";
 }
 
 // variables keeping track of the next friend game
