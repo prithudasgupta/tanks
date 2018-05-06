@@ -384,7 +384,7 @@ function userData() {
             let mapsList = respObject.games;
             let profile = respObject.profile;
             let campaign = profile.campaign;
-            
+            let inbox = respObject.inbox;
             username = profile.username;
             id = profile.id;
             generateFriendsList(friendsList);
@@ -394,12 +394,12 @@ function userData() {
             setupCampaign(campaign);
             generateMapsMult(mapsList);
             generateFriendsMult(friendsList);
-
+            generateInbox(inbox);
         }
     });
 }
 
-function setUpInbox(list) {
+function generateInbox(list) {
     let table = document.getElementById("inboxTable");
     let tableBody = document.createElement("tbody");
 
@@ -431,6 +431,7 @@ function setUpInbox(list) {
                 cell.appendChild(text);
             }  else {
                 let state = list[curRow].isOver;
+                let text1;
                 switch (state) {
                     case 1:
                         let play = document.createElement("button");
@@ -438,17 +439,17 @@ function setUpInbox(list) {
                         cell.appendChild(play);
                         break;
                     case 0:
-                        let text;
+
                         if (list[curRow].winner === "true") {
-                            text = document.createTextNode("Won!");
+                            text1 = document.createTextNode("Won!");
                         } else {
-                            text = document.createTextNode("Lost...");
+                            text1 = document.createTextNode("Lost...");
                         }
-                        cell.appendChild(text);
+                        cell.appendChild(text1);
                         break;
                     case -1:
-                        let text = document.createTextNode("Pending");
-                        cell.appendChild(text);
+                        text1 = document.createTextNode("Pending");
+                        cell.appendChild(text1);
                         break;
 
                 }

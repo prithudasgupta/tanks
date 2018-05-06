@@ -958,6 +958,8 @@ function addRoute(movingEnemy){
             toCol = Math.floor(user.x/45);
             toRow = Math.floor(user.y/45);
 
+                console.log("homing");
+
         break;
     }
    movingEnemy.loading = true;
@@ -1203,6 +1205,9 @@ function main() {
             for (let i in dumbEnemies) {
                 movingEnemyLogic(dumbEnemies[i]);
             }
+            for (let i in homingEnemies) {
+                movingEnemyLogic(homingEnemies[i]);
+            }
             
             for (let i in pathEnemies) {
                 movePath(pathEnemies[i]);
@@ -1299,15 +1304,16 @@ $(document).ready(() => {
 function movePath(tank) {
 	
 	console.log("tank is going from " + tank.prevRow + " , " + tank.prevCol + " to " + tank.goalRow + " , " + tank.goalCol);
-	
+	let rot;
+
     let dx = (tank.goalCol * 45) - tank.x;
     let dy = (tank.goalRow * 45) - tank.y;
     rot = Math.atan2(dy, dx);
 
     rot = (rot % 6.28);
-    
+
     tank.angle = rot;
-    //console.log(rot);
+
 
     if (user !== undefined && withinSight(tank.x, tank.y)) {
         let dx = tank.cannon.x - user.x;
@@ -1319,6 +1325,7 @@ function movePath(tank) {
         fire(tank);
     }
     else {
+
         let mov = forwardByAngle(tank.angle, 1.5);
         tank.move(mov[0], mov[1]);
         tank.cannon.move(mov[0],mov[1]);
