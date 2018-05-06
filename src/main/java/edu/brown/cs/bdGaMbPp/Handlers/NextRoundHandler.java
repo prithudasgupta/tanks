@@ -11,8 +11,10 @@ public class NextRoundHandler implements Route{
 	@Override
 	public Object handle(Request request, Response arg1) throws Exception {
 		// TODO Auto-generated method stub
+	  
 		if (request.session().attributes().contains("survival")) {
 			int currentRound = Integer.parseInt(request.session().attribute("survival").toString());
+			
 			request.session().attribute("survival", Integer.toString((currentRound + 1))); 	
 		}
 		
