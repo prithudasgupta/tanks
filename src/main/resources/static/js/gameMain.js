@@ -53,7 +53,7 @@ let dumbStart = [];
 let homingStart = [];
 let mapLand = [];
 
-let allEnemies = [];
+
 
 
 let kills = 0;
@@ -422,7 +422,6 @@ function createStationaryTank(row, col) {
     collideable.push(tank);
     nonTrav.push(tank);
     statEnemies.push(tank);
-    allEnemies.push(tank);
 }
 
 
@@ -445,7 +444,6 @@ function createDumbTank(row, col) {
     nonTrav.push(tank);
     dumbEnemies.push(tank);
     tank.tankType = "d";
-    allEnemies.push(tank);
     return tank;
 }
 
@@ -468,7 +466,6 @@ function createHomingTank(row, col) {
     nonTrav.push(tank);
     homingEnemies.push(tank);
     tank.tankType = "h";
-    allEnemies.push(tank);
     return tank;
 }
 
@@ -501,7 +498,6 @@ function createSamePathTank(pair){
     nonTrav.push(tank);
     pathEnemies.push(tank);
     tank.tankType = "p";
-	allEnemies.push(tank);
 }
 
 
@@ -709,44 +705,44 @@ function updateBullet() {
                 for (let i in collideable) {
                     // for everything on map that needs handling if bullet hits it
                     if (bullet.sprite.collidesWith(collideable[i])) {
-                        // if collides with enemy
-                        if (allEnemies.includes(collideable[i])) {
-                            console.log(homingEnemies);
-                            switch ((collideable[i]).tankType) {
-                                case "s":
-                                    statEnemies.splice(statEnemies.indexOf(collideable[i]), 1);
-                                case "d":
-                                    dumbEnemies.splice(dumbEnemies.indexOf(collideable[i]), 1);
-                                case "h":
-                                    homingEnemies.splice(homingEnemies.indexOf(collideable[i]), 1);
-                                case "p":
-                                    pathEnemies.splice(pathEnemies.indexOf(collideable[i]), 1);
-                            }
-                            console.log(homingEnemies);
-                            allEnemies.splice(allEnemies.indexOf(collideable[i]), 1);
+
+                        if (statEnemies.includes(collideable[i])) {
+                            statEnemies.splice(statEnemies.indexOf(collideable[i]), 1);
                             kills++;
-
-                            let ind = nonTrav.indexOf(collideable[i]);
-                            if (ind >= 0) {
-                                nonTrav.splice(ind, 1);
-                            }
-                            let explosion = new Explosion(collideable[i]);
-                            explosion.sprite.loadImg("/sprites/explo1.png");
-                            explosion.sprite.update();
-                            explosions.push(explosion);
-                            if ((collideable[i]).tankType !== "s") {
-                                collideable[i].cannon.remove();
-
-                            }
+                            explode(collideable[i]);
                             collideable.splice(i, 1);
-
-
                             bullet.sprite.remove();
                             bullets.splice(b,1);
                             collided = true;
                             break;
-                        }
-                        else {
+                        } else if (pathEnemies.includes(collideable[i])) {
+                            pathEnemies.splice(pathEnemies.indexOf(collideable[i]), 1);
+                            kills++;
+                            explode(collideable[i]);
+                            collideable.splice(i, 1);
+                            bullet.sprite.remove();
+                            bullets.splice(b,1);
+                            collided = true;
+                            break;
+                        } else if (homingEnemies.includes(collideable[i])) {
+                            homingEnemies.splice(homingEnemies.indexOf(collideable[i]), 1);
+                            kills++;
+                            explode(collideable[i]);
+                            collideable.splice(i, 1);
+                            bullet.sprite.remove();
+                            bullets.splice(b,1);
+                            collided = true;
+                            break;
+                        } else if (dumbEnemies.includes(collideable[i])) {
+                            dumbEnemies.splice(dumbEnemies.indexOf(collideable[i]), 1);
+                            kills++;
+                            explode(collideable[i]);
+                            collideable.splice(i, 1);
+                            bullet.sprite.remove();
+                            bullets.splice(b,1);
+                            collided = true;
+                            break;
+                        } else {
                             let ind = nonTrav.indexOf(collideable[i]);
                             if (ind >= 0) {
                                 nonTrav.splice(ind, 1);
@@ -779,7 +775,6 @@ function updateBullet() {
 
 
 function explode(sprite) {
-
     let ind = nonTrav.indexOf(sprite);
     if (ind >= 0) {
         nonTrav.splice(ind, 1);
@@ -789,14 +784,8 @@ function explode(sprite) {
     explosion.sprite.update();
     explosions.push(explosion);
     if ((sprite).tankType !== "s") {
-        collideable[i].cannon.remove();
-
+        sprite.cannon.remove();
     }
-    collideable.splice(i, 1);
-
-
-    bullet.sprite.remove();
-    bullets.splice(b,1);
 }
 
 function shortenVector(v1, shortenValue){
@@ -890,7 +879,7 @@ function getBorderingLandTiles(xCoord, yCoord){
 
 function checkEndGame() {
     return (statEnemies.length === 0 && dumbEnemies.length === 0 &&
-        pathEnemies.length === 0 && homingEnemies.length === 0 && allEnemies.length === 0);
+        pathEnemies.length === 0 && homingEnemies.length === 0);
 }
 
 function homingHelper(movingEnemy) {
@@ -1009,33 +998,29 @@ function addRoute(movingEnemy){
 
 function movingEnemyLogic(movingEnemy) {
     if (ready) {
-        if (user !== undefined && withinSight(movingEnemy.x, movingEnemy.y)) {
-            let dx = movingEnemy.cannon.x - user.x;
-            let dy = movingEnemy.cannon.y - user.y;
-            rot = Math.atan2(-dy, -dx);
-            movingEnemy.cannon.setAngle(0);
-            movingEnemy.cannon.rotate(rot);
-            movingEnemy.cannon.correctAngle = movingEnemy.cannon.angle + rot;
-            fire(movingEnemy);
-        }
-
-       if(reachedBlock(movingEnemy)){
+        if(reachedBlock(movingEnemy)){
                 movingEnemy.routeIndex += 1;
 
             if(movingEnemy.collided || (!movingEnemy.loading && movingEnemy.route.length < (movingEnemy.routeIndex + 4))){
 
                 addRoute(movingEnemy);
-
                  }
                 //console.log("iter " + movingEnemy.routeIndex);
-
             }
         }
         if(movingEnemy.routeIndex != undefined && !movingEnemy.loading){
            moveBetween(movingEnemy);
         }
-
+    if (user !== undefined && withinSight(movingEnemy.x, movingEnemy.y)) {
+        let dx = movingEnemy.cannon.x - user.x;
+        let dy = movingEnemy.cannon.y - user.y;
+        rot = Math.atan2(-dy, -dx);
+        movingEnemy.cannon.setAngle(0);
+        movingEnemy.cannon.rotate(rot);
+        movingEnemy.cannon.correctAngle = movingEnemy.cannon.angle + rot;
+        fire(movingEnemy);
     }
+}
 
 
 
