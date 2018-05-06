@@ -379,7 +379,8 @@ function loadMap() {
 
         for (let i in homingStart) {
             let cur = homingStart[i];
-            createHomingTank(cur[1], cur[0]);
+            const tank = createHomingTank(cur[1], cur[0]);
+            addRoute(tank);
         }
         
         // now loading screen
@@ -461,6 +462,7 @@ function createHomingTank(row, col) {
     homingEnemies.push(tank);
     tank.tankType = "h";
     allEnemies.push(tank);
+    return tank;
 }
 
 function createSamePathTank(pair){
@@ -945,11 +947,26 @@ function getCenter(spriteTank) {
 //}
 
 function addRoute(movingEnemy){
+    let toCol;
+    let toRow;
+    switch(movingEnemy.tankType){
+        case "d":
+            toCol = -1;
+            toRow = -1;
+        break;
+        case "h":
+            toCol = Math.floor(user.x/45);
+            toRow = Math.floor(user.y/45);
+
+                console.log("homing");
+
+        break;
+    }
    movingEnemy.loading = true;
    //movingEnemy.route = undefined;
     //  movingEnemy.routeIndex = undefined;
 
- $.post('/homing', {"userRow": -1, "representation": represent,"userCol": -1,
+ $.post('/homing', {"userRow": toRow, "representation": represent,"userCol": toCol,
   "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
      const respObject = JSON.parse(responseJSON);
      const route =  respObject.route;
@@ -1188,6 +1205,9 @@ function main() {
             for (let i in dumbEnemies) {
                 movingEnemyLogic(dumbEnemies[i]);
             }
+            for (let i in homingEnemies) {
+                movingEnemyLogic(homingEnemies[i]);
+            }
             
             for (let i in pathEnemies) {
                 movePath(pathEnemies[i]);
@@ -1284,19 +1304,16 @@ $(document).ready(() => {
 function movePath(tank) {
 	
 	console.log("tank is going from " + tank.prevRow + " , " + tank.prevCol + " to " + tank.goalRow + " , " + tank.goalCol);
-	
+	let rot;
+
     let dx = (tank.goalCol * 45) - tank.x;
     let dy = (tank.goalRow * 45) - tank.y;
     rot = Math.atan2(dy, dx);
-<<<<<<< HEAD
-    rot = (rot % 6.28);
-    
-    tank.angle = rot;
-    //console.log(rot);
-=======
-    rot = rot;
 
->>>>>>> a387d133ab270faf9220daf0077560df16c957da
+    rot = (rot % 6.28);
+
+    tank.angle = rot;
+
 
     if (user !== undefined && withinSight(tank.x, tank.y)) {
         let dx = tank.cannon.x - user.x;
@@ -1307,17 +1324,8 @@ function movePath(tank) {
         tank.cannon.correctAngle = tank.cannon.angle + canrot;
         fire(tank);
     }
-<<<<<<< HEAD
-=======
-
-    if ((tank.angle % 6.28) < rot-0.04) {
-        tank.rotate(0.02);
-    } else if ((tank.angle % 6.28) > rot+0.04) {
-        tank.rotate(-0.02);
-    }
-
->>>>>>> a387d133ab270faf9220daf0077560df16c957da
     else {
+
         let mov = forwardByAngle(tank.angle, 1.5);
         tank.move(mov[0], mov[1]);
         tank.cannon.move(mov[0],mov[1]);
