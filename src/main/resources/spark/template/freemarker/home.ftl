@@ -79,33 +79,29 @@
 </div>
 
 <div id="multiplayer">
-
 <img id="exitMulti" src="/images/exit.png" onmouseover="this.src='/images/exit_hover.png';"
          onmouseout="this.src='/images/exit.png';" style="position: absolute; top: 6px; right: 9px;">
-         
          <center>
-         
          <h2 style="position: absolute; left: 45%; top: 0;"> Multiplayer: </h2>
-	
-         
          </center>
          <h2 id="user-heading" style="position: absolute; left: 12.5%; top: 5%;"> Friends: </h2>
-         <div id="friendsLeaderboard">
-	        <center>
-	            
-	        </center>
-	    </div>
+     <div id="friendsMult">
+         <center>
+             <table id="friendsTable2"></table>
+         </center>
+    </div>
+
 	    <h2 id="user-heading" style="position: absolute; left: 45%; top: 5%;"> Games: </h2>
-	    <div id="games">
-	        
-	    </div>
+
+    <div id="games">
+        <center>
+            <table id="gamesTable"></table>
+        </center>
+    </div>
 	    
 	    <h2 id="user-heading" style="position: absolute; left: 77.5%; top: 5%;"> Inbox: </h2>
-	    <div id="inbox">
-	        <center>
-	            <table id="mapsTable"></table>
-	        </center>
-	    </div>
+    <div id="inbox"></div>
+
     </div>
 
 </div>
@@ -191,16 +187,20 @@ h1 {
     /*display: block;*/
 }
 
-/*#killsGlobal {*/
-     /*overflow-y: scroll;*/
- /*}*/
+#gamesTable {
+    /*position: absolute;*/
+    border-collapse: collapse;
+    width: 100%;
+    /*margin-left: 15%;*/
+    /*overflow: none;*/
+    overflow-y: scroll;
+    /*display: block;*/
+}
 
-/*#time {*/
-    /*overflow-y: scroll;*/
-/*}*/
-/*#survival {*/
-    /*overflow-y: scroll;*/
-/*}*/
+#friendsTable2 {
+    border-collapse: collapse;
+    width: 100%;
+}
 
 th, td {
     text-align: center;
@@ -318,9 +318,32 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     left: 5%;
 }
 
+
+/*Multiplayer page maps subcontent*/
 #games {
     flex: 1;
     left: 35%;
+    background-image: url("/sprites/menu.png");
+    background-repeat: repeat;
+    border: solid;
+    border-color: silver;
+
+    overflow-y: scroll;
+    display:block;
+}
+
+#friendsMult {
+    left: 2.5%;
+    flex: 1;
+    background-image: url("/sprites/menu.png");
+    background-repeat: repeat;
+    border: solid;
+    border-color: silver;
+}
+
+#inbox {
+    flex: 1;
+    left: 67.5%;
     background-image: url("/sprites/menu.png");
     background-repeat: repeat;
     border: solid;
