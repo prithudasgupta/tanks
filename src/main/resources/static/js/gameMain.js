@@ -761,7 +761,7 @@ function updateBullet() {
                     }
                 }
                 if (bullet.sprite.collidesWith(user)) {
-                    // isGameOver = true;
+                     isGameOver = true;
                 }
                 if (!collided) {
                     bullet.sprite.update();
