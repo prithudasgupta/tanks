@@ -1287,15 +1287,11 @@ function movePath(tank) {
     let dx = (tank.goalCol * 45) - tank.x;
     let dy = (tank.goalRow * 45) - tank.y;
     rot = Math.atan2(dy, dx);
-<<<<<<< HEAD
     rot = (rot % 6.28);
     
     tank.angle = rot;
     //console.log(rot);
-=======
-    rot = rot;
 
->>>>>>> a387d133ab270faf9220daf0077560df16c957da
 
     if (user !== undefined && withinSight(tank.x, tank.y)) {
         let dx = tank.cannon.x - user.x;
@@ -1306,16 +1302,6 @@ function movePath(tank) {
         tank.cannon.correctAngle = tank.cannon.angle + canrot;
         fire(tank);
     }
-<<<<<<< HEAD
-=======
-
-    if ((tank.angle % 6.28) < rot-0.04) {
-        tank.rotate(0.02);
-    } else if ((tank.angle % 6.28) > rot+0.04) {
-        tank.rotate(-0.02);
-    }
-
->>>>>>> a387d133ab270faf9220daf0077560df16c957da
     else {
         let mov = forwardByAngle(tank.angle, 1.5);
         tank.move(mov[0], mov[1]);
