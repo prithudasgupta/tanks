@@ -547,14 +547,14 @@ public final class Querier {
 				
 		        prep2.setString(1, Integer.toString(user));
 			
-				ResultSet rs2 = prep.executeQuery();
-		        while (rs.next()) {
-		        		 int playerTwo = Integer.parseInt(rs.getString(1));
+				ResultSet rs2 = prep2.executeQuery();
+		        while (rs2.next()) {
+		        		 int playerTwo = Integer.parseInt(rs2.getString(1));
 		        		 String user2 = getProfile(playerTwo).getUsername();
-		        		 int game = Integer.parseInt(rs.getString(3));
+		        		 int game = Integer.parseInt(rs2.getString(3));
 		        		 boolean winner = false;
 		        		 int over = 0;
-		        		 if (Integer.parseInt(rs.getString(7)) == -1) {
+		        		 if (Integer.parseInt(rs2.getString(7)) == -1) {
 		        			 over = -1;
 		        		 }
 		        		 else {
