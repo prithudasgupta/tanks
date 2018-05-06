@@ -290,6 +290,7 @@ public final class GameInitializer {
         newTank = new DrunkWalkTank(convertToCoordinate(newStart));
         break;
       case 2:
+
         Pair<Integer, Integer> endPoint = map.getStraightLineEnd(newStart);
         newTank = new PathTank(convertToCoordinate(newStart), convertToCoordinate(endPoint));
         break;

@@ -216,7 +216,7 @@ function setPossiblePath(start) {
         if (belowClear && row+i <= 15) {
             if (map[row+i][col].type === "l") {
                 map[row+i][col].sprite.loadImg("/sprites/freeSpacePath.png");
-                map[row-i][col].sprite.update();
+                map[row+i][col].sprite.update();
                 pathOptions.push(map[row+i][col]);
             } else {
                 belowClear = false;
@@ -225,7 +225,7 @@ function setPossiblePath(start) {
         if (rightClear && col+i <= 23) {
             if (map[row][col+i].type === "l") {
                 map[row][col+i].sprite.loadImg("/sprites/freeSpacePath.png");
-                map[row-i][col].sprite.update();
+                map[row][col+i].sprite.update();
                 pathOptions.push(map[row][col+i]);
 
             } else {
@@ -235,7 +235,7 @@ function setPossiblePath(start) {
         if (leftClear && col-i >= 0) {
             if (map[row][col-i].type === "l") {
                 map[row][col-i].sprite.loadImg("/sprites/freeSpacePath.png");
-                map[row-i][col].sprite.update();
+                map[row][col-i].sprite.update();
                 pathOptions.push(map[row][col-i]);
             } else {
                 leftClear = false;
@@ -250,6 +250,7 @@ function removePossiblePaths() {
         pathOptions[i].sprite.loadImg("/sprites/freeSpace.png");
         pathOptions[i].sprite.update();
     }
+    pathOptions = [];
 }
 
     $(document).ready(() => {
@@ -344,6 +345,7 @@ function removePossiblePaths() {
                         curRow = Math.floor(e.clientY/45);
                         curCol = Math.floor(e.clientX/45);
                         console.log(map[curRow][curCol].type);
+                        // if the map location is not a pothole, breakable, or a wall
                         if (map[curRow][curCol].type !== "p" && map[curRow][curCol].type !== "u"
                             && map[curRow][curCol].type !== "b") {
                             // only allow user to be placed once
@@ -360,8 +362,9 @@ function removePossiblePaths() {
                             if (map[curRow][curCol].type === "user") {
                                 userLoc = undefined;
                             }
-
+                            console.log(cur.sel.type);
                             if (cur.sel.type === "path") {
+                                console.log(map[curRow][curCol]);
                                 if (pathStage === 0) {
                                     setPossiblePath([curRow,curCol]);
                                     pathStage = 1;
@@ -369,15 +372,22 @@ function removePossiblePaths() {
                                     map[curRow][curCol].type = cur.sel.type;
                                     map[curRow][curCol].sprite.loadImg(cur.sel.string);
                                     map[curRow][curCol].sprite.update();
-                                } else if (pathOptions.contains(map[curCol][curCol])) {
+                                } else if (pathOptions.includes(map[curRow][curCol])) {
                                     removePossiblePaths();
+                                    curPath.endToPath = map[curRow][curCol];
                                     map[curRow][curCol].sprite.loadImg("/sprites/EndPath.png");
                                     map[curRow][curCol].sprite.update();
                                     map[curRow][curCol].type = "pathEnd";
+                                    map[curRow][curCol].endToPath = curPath;
                                     pathStage = 0;
                                 }
 
                             } else {
+                                if (map[curRow][curCol].type === "path" || map[curRow][curCol].type === "pathEnd") {
+                                    map[curRow][curCol].endToPath.type = "l";
+                                    map[curRow][curCol].endToPath.sprite.loadImg("/sprites/freeSpace.png");
+                                    map[curRow][curCol].endToPath.sprite.update();
+                                }
                                 map[curRow][curCol].type = cur.sel.type;
                                 map[curRow][curCol].sprite.loadImg(cur.sel.string);
                                 map[curRow][curCol].sprite.update();
@@ -528,10 +538,15 @@ function getLoTanks() {
                 loEnemies += "h," + row.toString() + "," + col.toString() + "#";
             }
             if (map[row][col].type === "path") {
-                loEnemies += "p," + row.toString() + "," + col.toString() + "#";
+                let end = map[row][col].endToPath;
+                let endRow = Math.floor(end.sprite.y / 45);
+                let endCol = Math.floor(end.sprite.x / 45);
+                loEnemies += "p," + row.toString() + "," + col.toString() +","
+                    + endRow.toString() + "," + endCol.toString() + "#";
             }
         }
     }
+    console.log(loEnemies);
     return loEnemies;
 }
 
