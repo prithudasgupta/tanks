@@ -453,6 +453,124 @@ public final class Querier {
 		}
 	}
 	
+	public static void gameSent(int user1, int user2, int gameId, int playerOneTime, int playerOneKills) {
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("INSERT INTO multiplayer VALUES (?, ?, ?, ?, ?, ?, ?);");
+			
+				prep.setString(1, Integer.toString(user1));
+				prep.setString(2, Integer.toString(user2));
+				prep.setString(3, Integer.toString(gameId));
+				
+				prep.setString(4, Integer.toString(playerOneTime));
+				prep.setString(5, Integer.toString(playerOneKills));
+				
+				prep.setString(6, Integer.toString(-1));
+				prep.setString(7, Integer.toString(-1));
+				
+				
+				prep.addBatch();
+				prep.executeBatch();
+				prep.close();
+				
+		}
+		catch (Exception e){
+			
+		}
+	}
+	
+	public static Pair<Integer, Integer> getGameSent(int user1, int user2, int gameId) {
+		
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("SELECT firstTime, firstKills FROM multiplayer WHERE game = ? AND playerOne = ? AND playerTwo = ?");
+			
+			prep.setString(1, Integer.toString(gameId));
+			prep.setString(2, Integer.toString(user1));
+			prep.setString(3, Integer.toString(user2));
+				ResultSet rs = prep.executeQuery();
+		        if (rs.next()) {
+		        		 int time = Integer.parseInt(rs.getString(1));
+		        		 int kills = Integer.parseInt(rs.getString(2));
+		        		 
+		        		 return new Pair<Integer, Integer>(kills, time);
+		        		 
+		        }
+		        
+		        prep.close();
+		        rs.close();
+			}
+			catch(Exception e) {
+				
+			}
+			return null;
+	}
+	
+	public static void updateGameFinal(int user1, int user2, int gameId, int playerTwoTime, int playerTwoKills) {
+		
+		try {
+		PreparedStatement prep = instance.conn
+		        .prepareStatement("UPDATE multiplayer set secondTime = ? AND secondKills = ? WHERE game = ? AND playerOne = ? AND playerTwo = ?");
+		
+			prep.setString(1, Integer.toString(playerTwoTime));
+			prep.setString(2, Integer.toString(playerTwoKills));
+			prep.setString(3, Integer.toString(gameId));
+			prep.setString(4, Integer.toString(user1));
+			prep.setString(5, Integer.toString(user2));
+
+			prep.executeUpdate();
+			prep.close();
+		}
+		catch(Exception e) {
+			
+		}
+	}
+	
+	public static int getWinner(int user1, int user2, int gameId) {
+		Pair<Integer, Integer> getPlayerOne = getGameSent(user1, user2, gameId);
+		Pair<Integer, Integer> getPlayerTwo = null;
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("SELECT secondTime, secondKills FROM multiplayer WHERE game = ? AND playerOne = ? AND playerTwo = ?");
+			
+			prep.setString(1, Integer.toString(gameId));
+			prep.setString(2, Integer.toString(user1));
+			prep.setString(3, Integer.toString(user2));
+				ResultSet rs = prep.executeQuery();
+		        if (rs.next()) {
+		        		 int time = Integer.parseInt(rs.getString(1));
+		        		 int kills = Integer.parseInt(rs.getString(2));
+		        		 
+		        		  getPlayerTwo = new Pair<Integer, Integer>(kills, time);
+		        		 
+		        }
+		        prep.close();
+		        rs.close();
+		        
+		        if(getPlayerOne.getFirst() < getPlayerTwo.getFirst()) {
+		        		return user2;
+		        }
+		        else if(getPlayerOne.getFirst() > getPlayerTwo.getFirst()) {
+	        			return user1;
+		        }
+		        else {
+			        	if(getPlayerOne.getSecond() < getPlayerTwo.getSecond()) {
+			        		return user1;
+			        }
+			        else  {
+		        			return user2;
+			        }
+		        }
+		        
+		        
+			}
+			catch(Exception e) {
+				
+			}
+		return user2;
+		
+	}
+	
 	public static void friendRequest(int id1, int id2, int status) {
 		try {
 			PreparedStatement prep = instance.conn
