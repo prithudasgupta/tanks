@@ -38,8 +38,15 @@ public class MapHandler implements Route {
 
 			Game aGame = GameInitializer.initializeGame(map, 5);
 			representations = map.getRepresentations();
-			variables = ImmutableMap.of("map", representations, "game", aGame, "enemies", aGame.getEnemies(), "survival", false);
+			variables = ImmutableMap.of("map", representations, "game", aGame, "enemies", aGame.getEnemies(), "survival", false, "playerTwo", -1);
 		} 
+    else if (id.contains("#")) {
+    		String [] splited = id.split("#");
+    		int gameId = Integer.parseInt(splited[0]);
+    		int playerTwo = Integer.parseInt(splited[1]);
+    		Game data = Querier.getGameById(gameId);
+    		variables = ImmutableMap.of("map", data.getRepresentations(), "game", data, "enemies", data.getEnemies(), "survival", false, "playerTwo", playerTwo);
+    }
     else if (id.equals("survival")) {
     		
     		int difficulty = 1;
@@ -69,7 +76,7 @@ public class MapHandler implements Route {
 				variables = ImmutableMap.of("map", representations, "game", aGame, "enemies", aGame.getEnemies());
 			}
 			else {
-				variables = ImmutableMap.of("map", data.getRepresentations(), "game", data, "enemies", data.getEnemies(), "survival", false);
+				variables = ImmutableMap.of("map", data.getRepresentations(), "game", data, "enemies", data.getEnemies(), "survival", false, "playerTwo", -1);
 			}
 		}
     
