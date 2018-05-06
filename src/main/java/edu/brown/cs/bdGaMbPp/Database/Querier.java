@@ -663,6 +663,24 @@ public final class Querier {
 		}
 	}
 	
+	public static void acceptRequest(int id2, int id1) {
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("UPDATE friends set status = 0 where first = ? AND second = ?;");
+			
+				prep.setString(1, Integer.toString(id1));
+				prep.setString(2, Integer.toString(id2));
+
+				prep.executeUpdate();
+				prep.close();
+				
+		}
+		catch (Exception e){
+			
+		}
+	
+	}
+	
 	public static int getTime(int gameId, int userId) {
 		int time = -1;
 		try {

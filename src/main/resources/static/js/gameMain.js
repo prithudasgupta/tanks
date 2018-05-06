@@ -222,7 +222,7 @@ function getMap () {
         		survivalLevel = respObject.round;
         }
         if (!survival) {
-            if (respObject.playerTwo !== 0) {
+            if (respObject.playerTwo !== -1) {
                 playerTwo = respObject.playerTwo;
             }
         }
@@ -711,6 +711,7 @@ function updateBullet() {
                     if (bullet.sprite.collidesWith(collideable[i])) {
                         // if collides with enemy
                         if (allEnemies.includes(collideable[i])) {
+                            console.log(homingEnemies);
                             switch ((collideable[i]).tankType) {
                                 case "s":
                                     statEnemies.splice(statEnemies.indexOf(collideable[i]), 1);
@@ -721,6 +722,7 @@ function updateBullet() {
                                 case "p":
                                     pathEnemies.splice(pathEnemies.indexOf(collideable[i]), 1);
                             }
+                            console.log(homingEnemies);
                             allEnemies.splice(allEnemies.indexOf(collideable[i]), 1);
                             kills++;
                             let ind = nonTrav.indexOf(collideable[i]);
@@ -762,7 +764,7 @@ function updateBullet() {
                     }
                 }
                 if (bullet.sprite.collidesWith(user)) {
-                    isGameOver = true;
+                    // isGameOver = true;
                 }
                 if (!collided) {
                     bullet.sprite.update();
@@ -981,15 +983,6 @@ function addRoute(movingEnemy){
 }
 
 
-/*$(function(){
-setInterval(oneSecondFunction, 1000);
-});
-
-function oneSecondFunction() {
-    for(let i = 0; i < dumbEnemies.length; i++){
-        console.log(i + " , index: " + dumbEnemies[i].routeIndex + " size: " + dumbEnemies[i].route.length);
-        }
-}*/
 
 function movingEnemyLogic(movingEnemy) {
     if (ready) {
@@ -1169,6 +1162,7 @@ function displayWinGame() {
     let urlArr = document.URL.split("/");
     let level = parseInt(urlArr[urlArr.length -1]);
     console.log(playerTwo);
+
     if (playerTwo === 0) {
         if (level >= 0 && level <= 19) {
 
@@ -1176,6 +1170,7 @@ function displayWinGame() {
             $('#next').toggle();
         }
     } else {
+        console.log("hello");
         $('#next').toggle();
         $('#retry').toggle();
     }
