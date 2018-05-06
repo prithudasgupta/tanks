@@ -248,6 +248,7 @@ function generateFriendsMult(friendsList) {
                     cell.appendChild(text);
                 } else {
                     let select = document.createElement("button");
+                    select.setAttribute("id", "friendSelect");
                     select.appendChild(document.createTextNode("select"));
                     cell.appendChild(select);
                 }
