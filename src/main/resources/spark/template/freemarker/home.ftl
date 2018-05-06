@@ -22,7 +22,7 @@
 <img id="mapBuild" src='/images/mapBuilder.png' onmouseover="this.src='/images/mapBuilder_hover.png';"
      onmouseout="this.src='/images/mapBuilder.png';" style="position: absolute; right: 10%; top: 44%;" />
 <br />
-<img id="menuOp" src='/images/multiplayer.png' onmouseover="this.src='/images/multiplayer_hover.png';"
+<img id="multiBut" src='/images/multiplayer.png' onmouseover="this.src='/images/multiplayer_hover.png';"
      onmouseout="this.src='/images/multiplayer.png';" style="position: absolute; right: 10%; top: 61%;" />
 <br />
 <img id="leader" src='/images/leaderboards.png' onmouseover="this.src='/images/leaderboards_hover.png';"
@@ -78,6 +78,20 @@
     </div>
 </div>
 
+<div id="multiplayer">
+
+<img id="exitMulti" src="/images/exit.png" onmouseover="this.src='/images/exit_hover.png';"
+         onmouseout="this.src='/images/exit.png';" style="position: absolute; top: 6px; right: 9px;">
+         
+         <center>
+         
+         <h2 id="user-heading1" style="position: absolute; left: 45%; top: 0;"> Multiplayer: </h2>
+	
+         
+         </center>
+
+</div>
+
 <div id="signin">
     <img id="exitProf" src="/images/exit.png" onmouseover="this.src='/images/exit_hover.png';"
          onmouseout="this.src='/images/exit.png';" style="position: absolute; top: 6px; right: 9px;">
@@ -101,12 +115,6 @@
     <h2 id="user-heading" style="position: absolute; left: 12.5%; top: 5%;"> Friends: </h2>
     <div id="friends">
         <center>
-         	<br />
-         	
-         	<p>
-        		<input id = "friendId" type = "text" placeholder="Search for friend"></input>
-        		<<input id = "newFriendSubmit" type = "submit" onclick="newFriendRequest()"></input>
-        		</p>
             <table id="friendsTable"></table>
         </center>
     </div>
@@ -194,6 +202,19 @@ h1 {
     display: none;
     z-index: 99;
 }
+
+#multiplayer {
+    border-radius: 25px;
+    position: absolute;
+    top: 12.5%;
+    left: 10%;
+    width: 75%;
+    height: 75%;
+    background-image: url("/sprites/menu.png");
+    background-repeat: repeat;
+    display: none;
+    z-index: 99;
+ }
 
 #signin {
     border-radius: 25px;

@@ -489,6 +489,19 @@ $(document).ready(() => {
         });
     });
 
+    $('#multiBut').on('click', function () {
+        $.post('/authenticate', {}, responseJSON => {
+            const respObject = JSON.parse(responseJSON);
+            if (respObject.id === -1){
+                console.log("invalid");
+                document.getElementById("login").style.display = "block";
+            }
+            else{
+            	$('#multiplayer').toggle();
+            }
+        });
+    });
+    
     $('#leader').on('click', function () {
         $.post('/authenticate', {}, responseJSON => {
             const respObject = JSON.parse(responseJSON);
@@ -508,6 +521,10 @@ $(document).ready(() => {
 
     $('#exitLeader').on('click', function () {
         $('#leaderboard').toggle();
+    });
+    
+    $('#exitMulti').on('click', function () {
+        $('#multiplayer').toggle();
     });
     
     $('#exitProfile').on('click', function () {
