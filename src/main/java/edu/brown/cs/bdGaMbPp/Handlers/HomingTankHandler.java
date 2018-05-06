@@ -44,7 +44,6 @@ public class HomingTankHandler implements Route {
 
 	    }
 	    List<Pair<Integer, Integer>> route = map.getRoute(start, end);
-
 		Map<String, Object> variables = ImmutableMap.of("route", route);
 		Gson GSON = new Gson();
 	    return GSON.toJson(variables);

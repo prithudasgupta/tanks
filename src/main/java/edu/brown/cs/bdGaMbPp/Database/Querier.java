@@ -162,7 +162,7 @@ public final class Querier {
 	
 	private static void addTankToDatabase(Tank tank, String id, int gameId) {
 
-    System.out.println(tank.toString());
+    
 		try {
 			PreparedStatement prep = instance.conn
 			        .prepareStatement("INSERT INTO tanks VALUES (?, ?, ?, ?, ?, ?, ?);");
@@ -488,10 +488,12 @@ public final class Querier {
 			        .prepareStatement("SELECT firstTime, firstKills FROM multiplayer WHERE game = ? AND playerOne = ? AND playerTwo = ?");
 			
 			prep.setString(1, Integer.toString(gameId));
-			prep.setString(2, Integer.toString(user1));
-			prep.setString(3, Integer.toString(user2));
+			prep.setString(2, Integer.toString(user2));
+			prep.setString(3, Integer.toString(user1));
+			
 				ResultSet rs = prep.executeQuery();
 		        if (rs.next()) {
+		    
 		        		 int time = Integer.parseInt(rs.getString(1));
 		        		 int kills = Integer.parseInt(rs.getString(2));
 		        		 
@@ -503,7 +505,7 @@ public final class Querier {
 		        rs.close();
 			}
 			catch(Exception e) {
-				
+				e.printStackTrace();
 			}
 			return null;
 	}
@@ -529,6 +531,7 @@ public final class Querier {
 		        		 }
 		        		 else {
 		        			 int win = getWinner(user, playerTwo, game);
+		        			 
 		        			 if (win == user) {
 		        				 winner = true;
 		        			 }
@@ -554,7 +557,8 @@ public final class Querier {
 		        			 over = 1;
 		        		 }
 		        		 else {
-		        			 int win = getWinner(user, playerTwo, game);
+		        			 int win = getWinner(playerTwo, user, game);
+		        			 
 		        			 if (win == user) {
 		        				 winner = true;
 		        			 }
@@ -569,7 +573,7 @@ public final class Querier {
 			        rs2.close();
 			}
 			catch(Exception e) {
-				
+				e.printStackTrace();
 			}
 		return currList;
 	}
@@ -597,7 +601,8 @@ public final class Querier {
 	
 	
 	public static int getWinner(int user1, int user2, int gameId) {
-		Pair<Integer, Integer> getPlayerOne = getGameSent(user1, user2, gameId);
+		Pair<Integer, Integer> getPlayerOne = getGameSent(user2, user1, gameId);
+		
 		Pair<Integer, Integer> getPlayerTwo = null;
 		try {
 			PreparedStatement prep = instance.conn
@@ -610,15 +615,13 @@ public final class Querier {
 		        if (rs.next()) {
 		        		 int time = Integer.parseInt(rs.getString(1));
 		        		 int kills = Integer.parseInt(rs.getString(2));
-		        		 if (kills == -1){
-		        		 		return -1;
-								 }
 		        		 
 		        		  getPlayerTwo = new Pair<Integer, Integer>(kills, time);
 		        		 
 		        }
 		        prep.close();
 		        rs.close();
+		        
 		        
 		        if(getPlayerOne.getFirst() < getPlayerTwo.getFirst()) {
 		        		return user2;
@@ -638,7 +641,7 @@ public final class Querier {
 		        
 			}
 			catch(Exception e) {
-				
+				e.printStackTrace();
 			}
 		return -1;
 		
