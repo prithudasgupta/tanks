@@ -582,8 +582,11 @@ function fire(sprite) {
         b.update();
         // create an object for storage with bullet trajectory
         let bullet = new Bullet(b);
-        if (user === sprite) {
+        if (user === sprite ) {
             bullet.movDir = forwardByAngle(uCannon.angle, BULLET_SPEED);
+            bullet.type = 1;
+        } else if (sprite.tankType === "p") {
+            bullet.movDir = forwardByAngle(sprite.cannon.angle, BULLET_SPEED);
             bullet.type = 1;
         } else if (sprite.cannon !== undefined) {
             bullet.movDir = forwardByAngle(sprite.cannon.angle, BULLET_SPEED);
@@ -1281,7 +1284,8 @@ function movePath(tank) {
     let dx = (tank.goalCol * 45) - tank.x;
     let dy = (tank.goalRow * 45) - tank.y;
     rot = Math.atan2(dy, dx);
-    rot = (rot % 6.28);
+    rot = rot;
+
 
     if (user !== undefined && withinSight(tank.x, tank.y)) {
         let dx = tank.cannon.x - user.x;
@@ -1292,16 +1296,19 @@ function movePath(tank) {
         tank.cannon.correctAngle = tank.cannon.angle + rot;
         fire(tank);
     }
-    if ((tank.angle % 6.28) < rot-0.02) {
+
+    if ((tank.angle % 6.28) < rot-0.04) {
         tank.rotate(0.02);
-    } else if ((tank.angle % 6.28) > rot+0.02) {
+    } else if ((tank.angle % 6.28) > rot+0.04) {
         tank.rotate(-0.02);
     }
+
     else {
         let mov = forwardByAngle(tank.angle, 2);
         tank.move(mov[0], mov[1]);
         tank.cannon.move(mov[0],mov[1]);
         if (tank.collidesWithArray(nonTrav)) {
+
             tank.move(-mov[0], -mov[1]);
             tank.cannon.move(-mov[0], -mov[1]);
             let tempCol = tank.goalCol;
@@ -1314,6 +1321,7 @@ function movePath(tank) {
         tank.cannon.update();
 
         if (tank.goalCol === Math.floor((tank.x+8) / 45) && tank.goalRow === Math.floor((tank.y+8) / 45)) {
+
             let tempCol = tank.goalCol;
             let tempRow = tank.goalRow;
             tank.goalCol = tank.prevCol;
