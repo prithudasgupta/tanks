@@ -957,13 +957,13 @@ function addRoute(movingEnemy){
      for(let i = 0; i < route.length; i++){
         if(route[i].first == Math.floor(movingEnemy.y/45) && route[i].second == Math.floor(movingEnemy.x/45)){
             movingEnemy.routeIndex = i;
-            console.log("chose index " + i);
+           // console.log("chose index " + i);
             break;
         }
      }
             movingEnemy.collided = false;
 
-     console.log("done with route " + route);
+    // console.log("done with route " + route);
       movingEnemy.loading = false;
       //movingEnemy.nextRoute = undefined;
 
@@ -996,7 +996,7 @@ function movingEnemyLogic(movingEnemy) {
 
             }
         }
-        if(!movingEnemy.collided && movingEnemy.routeIndex != undefined){
+        if(movingEnemy.routeIndex != undefined){
            moveBetween(movingEnemy);
         }
 
@@ -1282,21 +1282,33 @@ $(document).ready(() => {
 });
 
 function movePath(tank) {
+	
+	console.log("tank is going from " + tank.prevRow + " , " + tank.prevCol + " to " + tank.goalRow + " , " + tank.goalCol);
+	
     let dx = (tank.goalCol * 45) - tank.x;
     let dy = (tank.goalRow * 45) - tank.y;
     rot = Math.atan2(dy, dx);
+<<<<<<< HEAD
+    rot = (rot % 6.28);
+    
+    tank.angle = rot;
+    //console.log(rot);
+=======
     rot = rot;
 
+>>>>>>> a387d133ab270faf9220daf0077560df16c957da
 
     if (user !== undefined && withinSight(tank.x, tank.y)) {
         let dx = tank.cannon.x - user.x;
         let dy = tank.cannon.y - user.y;
-        rot = Math.atan2(-dy, -dx);
+        let canrot = Math.atan2(-dy, -dx);
         tank.cannon.setAngle(0);
-        tank.cannon.rotate(rot);
-        tank.cannon.correctAngle = tank.cannon.angle + rot;
+        tank.cannon.rotate(canrot);
+        tank.cannon.correctAngle = tank.cannon.angle + canrot;
         fire(tank);
     }
+<<<<<<< HEAD
+=======
 
     if ((tank.angle % 6.28) < rot-0.04) {
         tank.rotate(0.02);
@@ -1304,8 +1316,9 @@ function movePath(tank) {
         tank.rotate(-0.02);
     }
 
+>>>>>>> a387d133ab270faf9220daf0077560df16c957da
     else {
-        let mov = forwardByAngle(tank.angle, 2);
+        let mov = forwardByAngle(tank.angle, 1.5);
         tank.move(mov[0], mov[1]);
         tank.cannon.move(mov[0],mov[1]);
         if (tank.collidesWithArray(nonTrav)) {
