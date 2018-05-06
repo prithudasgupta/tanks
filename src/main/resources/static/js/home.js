@@ -14,6 +14,9 @@ let mousX, mousY;
 let user;
 let nonTrav = [];
 
+let id;
+let username;
+
 // create the Scene object and create the map
 let scene = sjs.Scene({w:numCols * TILE_SIZE, h:numRows * TILE_SIZE});
 let game = scene.Layer('background', {useCanvas:false, autoClear:true});
@@ -305,6 +308,9 @@ function userData() {
             let mapsList = respObject.games;
             let profile = respObject.profile;
             let campaign = profile.campaign;
+            
+            username = profile.username;
+            id = profile.id;
             generateFriendsList(friendsList);
             updateProfilePage(profile);
             generateMapsList(mapsList);
@@ -387,6 +393,18 @@ function switchFilter(current, switchTo, type, next) {
     }
     document.getElementById(next).innerHTML = type;
 
+}
+
+function getUserPayload(){
+	
+	return obj = {type: 1, payload: {id: myId, name: username}};
+	
+}
+
+function friendRequestPayload(){
+	const friendName =  $('#newFriendSubmit').val();
+	
+	return obj = {type: 2, payload:{name: friendName}};
 }
 
 
@@ -496,6 +514,19 @@ $(document).ready(() => {
         });
     });
 
+    $('#multiBut').on('click', function () {
+        $.post('/authenticate', {}, responseJSON => {
+            const respObject = JSON.parse(responseJSON);
+            if (respObject.id === -1){
+                console.log("invalid");
+                document.getElementById("login").style.display = "block";
+            }
+            else{
+            	$('#multiplayer').toggle();
+            }
+        });
+    });
+    
     $('#leader').on('click', function () {
         $.post('/authenticate', {}, responseJSON => {
             const respObject = JSON.parse(responseJSON);
@@ -517,6 +548,10 @@ $(document).ready(() => {
         $('#leaderboard').toggle();
     });
     
+    $('#exitMulti').on('click', function () {
+        $('#multiplayer').toggle();
+    });
+    
     $('#exitProfile').on('click', function () {
         $('#profile').toggle();
     });
@@ -525,6 +560,10 @@ $(document).ready(() => {
         $('#login').toggle();
     });
 
+    $('#exitLogin').on('click', function () {
+        $('#login').toggle();
+    });
+   
 
 
     $('#mapBuild').on('click', function () {

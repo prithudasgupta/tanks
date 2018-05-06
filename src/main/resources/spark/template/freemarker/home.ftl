@@ -22,7 +22,7 @@
 <img id="mapBuild" src='/images/mapBuilder.png' onmouseover="this.src='/images/mapBuilder_hover.png';"
      onmouseout="this.src='/images/mapBuilder.png';" style="position: absolute; right: 10%; top: 44%;" />
 <br />
-<img id="menuOp" src='/images/multiplayer.png' onmouseover="this.src='/images/multiplayer_hover.png';"
+<img id="multiBut" src='/images/multiplayer.png' onmouseover="this.src='/images/multiplayer_hover.png';"
      onmouseout="this.src='/images/multiplayer.png';" style="position: absolute; right: 10%; top: 61%;" />
 <br />
 <img id="leader" src='/images/leaderboards.png' onmouseover="this.src='/images/leaderboards_hover.png';"
@@ -76,6 +76,20 @@
         <table id="timeGlobal"></table>
         <table id="timeFriends" style="display: none;"></table>
     </div>
+</div>
+
+<div id="multiplayer">
+
+<img id="exitMulti" src="/images/exit.png" onmouseover="this.src='/images/exit_hover.png';"
+         onmouseout="this.src='/images/exit.png';" style="position: absolute; top: 6px; right: 9px;">
+         
+         <center>
+         
+         <h2 id="user-heading1" style="position: absolute; left: 45%; top: 0;"> Multiplayer: </h2>
+	
+         
+         </center>
+
 </div>
 
 <div id="signin">
@@ -193,6 +207,19 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     display: none;
     z-index: 99;
 }
+
+#multiplayer {
+    border-radius: 25px;
+    position: absolute;
+    top: 12.5%;
+    left: 10%;
+    width: 75%;
+    height: 75%;
+    background-image: url("/sprites/menu.png");
+    background-repeat: repeat;
+    display: none;
+    z-index: 99;
+ }
 
 #signin {
     border-radius: 25px;

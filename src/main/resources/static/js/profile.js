@@ -35,6 +35,8 @@ function signIn(username, password){
 			$('#signin').toggle();
 			 $('#profile').toggle();
 			 userData();
+			 new_send(getUserPayload());
+			 
 		}
 	});
 }
