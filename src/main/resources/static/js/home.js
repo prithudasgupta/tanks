@@ -394,6 +394,12 @@ function generateMapsMult(gameList, campaign) {
 
 }
 
+function addFriend(){
+	 $.post('/friendRequest', {"username": document.getElementById("friendUse").value}, responseJSON => {
+		//addToTable
+	});
+}
+
 function parseTime(time) {
     const totalSeconds = parseInt(time / 1000);
     const seconds = totalSeconds % 60;
