@@ -22,18 +22,12 @@ public class HomingTankHandler implements Route {
 	
 	@Override
 	  public String handle(Request request, Response response) {
-		System.out.println("here");
 	    QueryParamsMap qm = request.queryMap();
 	    int userTankRow = Integer.parseInt(qm.value("userRow"));
 	    int userTankCol = Integer.parseInt(qm.value("userCol"));
 	    int enemyRow = Integer.parseInt(qm.value("enemyRow"));
 	    int enemyCol = Integer.parseInt(qm.value("enemyCol"));
 	    String representation = qm.value("representation");
-	    System.out.println("tank row " + userTankRow);
-	    System.out.println("tank col " + userTankCol);
-	    System.out.println("enemy row " + enemyRow);
-	    System.out.println("enemy col " + enemyCol);
-
 		GameMap map = Querier.convertFromDatabase(representation);
 	    Pair<Integer, Integer> start = new Pair<Integer, Integer>(enemyRow, enemyCol);
 	    Pair<Integer, Integer> end;
@@ -51,16 +45,8 @@ public class HomingTankHandler implements Route {
 	    }
 	    List<Pair<Integer, Integer>> route = map.getRoute(start, end);
 
-	    /*Pair<Integer, Integer> next = start;
-
-
-		if (route.size() > 0) {
-			next = route.get(0);
-		}*/
-
 		Map<String, Object> variables = ImmutableMap.of("route", route);
 		Gson GSON = new Gson();
-		System.out.println("bouta return");
 	    return GSON.toJson(variables);
 	    
 	}

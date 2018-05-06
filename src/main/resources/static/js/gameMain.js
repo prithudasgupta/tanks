@@ -756,7 +756,6 @@ function updateBullet() {
                 }
                 if (bullet.sprite.collidesWith(user)) {
                     isGameOver = true;
-                    //window.alert("Game OVER!");
                 }
                 if (!collided) {
                     bullet.sprite.update();
@@ -963,6 +962,7 @@ function addRoute(movingEnemy){
      for(let i = 0; i < route.length; i++){
         if(route[i].first == Math.floor(movingEnemy.y/45) && route[i].second == Math.floor(movingEnemy.x/45)){
             movingEnemy.routeIndex = i;
+            console.log("chose " + i);
             break;
         }
      }
@@ -973,6 +973,16 @@ function addRoute(movingEnemy){
 });
 }
 
+
+/*$(function(){
+setInterval(oneSecondFunction, 1000);
+});
+
+function oneSecondFunction() {
+    for(let i = 0; i < dumbEnemies.length; i++){
+        console.log(i + " , index: " + dumbEnemies[i].routeIndex + " size: " + dumbEnemies[i].route.length);
+        }
+}*/
 
 function movingEnemyLogic(movingEnemy) {
     if (ready) {
@@ -998,7 +1008,7 @@ function movingEnemyLogic(movingEnemy) {
 
             }
         }
-        if(movingEnemy.routeIndex != undefined){
+        if(movingEnemy.routeIndex != undefined && !movingEnemy.loading){
            moveBetween(movingEnemy);
         }
 
@@ -1009,6 +1019,7 @@ function movingEnemyLogic(movingEnemy) {
 
 function reachedBlock(movingEnemy){
     //const center = getCenter(movingEnemy);
+
     const pix_x_diff = (movingEnemy.x + 8) - ((movingEnemy.route[movingEnemy.routeIndex].second *45)+22.5); //7.5
     const pix_y_diff = (movingEnemy.y + 7.5) - ((movingEnemy.route[movingEnemy.routeIndex].first *45)+22.5); //8
     //console.log("x diff " + pix_x_diff)
