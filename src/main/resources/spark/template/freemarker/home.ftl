@@ -57,24 +57,24 @@
         <button class="tablinks" onclick="switchFilter('survivalFriends','survivalGlobal', 'Survival: Global', 'survivalTitle')">Global</button>
         <button class="tablinks" onclick="switchFilter('survivalGlobal','survivalFriends', 'Survival: Friends', 'survivalTitle')">Friends</button>
         <h3 id = "survivalTitle">Survival: Global</h3>
-        <table id="survivalGlobal"></table>
-        <table id="survivalFriends" style="display: none;"></table>
+        <table class="leaderboardTab" id="survivalGlobal"></table>
+        <table class="leaderboardTab" id="survivalFriends" style="display: none;"></table>
     </div>
 
     <div id="kills"  class="tabcontent">
         <button class="tablinks" onclick="switchFilter('killsFriends','killsGlobal', 'Kills: Global', 'killsTitle')">Global</button>
         <button class="tablinks" onclick="switchFilter('killsGlobal','killsFriends', 'Kills: Friends', 'killsTitle')">Friends</button>
         <h3 id = "killsTitle">Kills: Global</h3>
-        <table id="killsGlobal"></table>
-        <table id="killsFriends" style="display: none;"></table>
+        <table class="leaderboardTab" id="killsGlobal"></table>
+        <table class="leaderboardTab" id="killsFriends" style="display: none;"></table>
     </div>
 
     <div id="time" class="tabcontent">
         <button class="tablinks" onclick="switchFilter('timeFriends','timeGlobal', 'Time: Global', 'timeTitle')">Global</button>
         <button class="tablinks" onclick="switchFilter('timeGlobal','timeFriends', 'Time: Friends', 'timeTitle')">Friends</button>
         <h3 id = "timeTitle">Time: Global</h3>
-        <table id="timeGlobal"></table>
-        <table id="timeFriends" style="display: none;"></table>
+        <table class="leaderboardTab" id="timeGlobal"></table>
+        <table class="leaderboardTab" id="timeFriends" style="display: none;"></table>
     </div>
 </div>
 
@@ -173,6 +173,17 @@ h1 {
     /*display: block;*/
 }
 
+/*#killsGlobal {*/
+     /*overflow-y: scroll;*/
+ /*}*/
+
+/*#time {*/
+    /*overflow-y: scroll;*/
+/*}*/
+/*#survival {*/
+    /*overflow-y: scroll;*/
+/*}*/
+
 th, td {
     text-align: center;
     padding: 8px;
@@ -199,13 +210,14 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     border-radius: 25px;
     position: absolute;
     top: 12.5%;
-    left: 10%;
-    width: 75%;
+    left: 40%;
+    width: 20%;
     height: 75%;
     background-image: url("/sprites/menu.png");
     background-repeat: repeat;
     display: none;
     z-index: 99;
+    overflow-y: scroll;
 }
 
 #multiplayer {
