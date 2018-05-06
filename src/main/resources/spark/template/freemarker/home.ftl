@@ -54,25 +54,25 @@
         <button class="tablinks" onclick="openTab(event, 'time')">Time</button>
     </div>
     <div id="survival" class="tabcontent">
-        <button class="tablinks" onclick="switchFilter('survivalFriends','survivalGlobal')">Global</button>
-        <button class="tablinks" onclick="switchFilter('survivalGlobal','survivalFriends')">Friends</button>
-        <h3>Survival</h3>
+        <button class="tablinks" onclick="switchFilter('survivalFriends','survivalGlobal', 'Survival: Global', 'survivalTitle')">Global</button>
+        <button class="tablinks" onclick="switchFilter('survivalGlobal','survivalFriends', 'Survival: Friends', 'survivalTitle')">Friends</button>
+        <h3 id = "survivalTitle">Survival: Global</h3>
         <table id="survivalGlobal"></table>
         <table id="survivalFriends" style="display: none;"></table>
     </div>
 
     <div id="kills"  class="tabcontent">
-        <button class="tablinks" onclick="switchFilter('killsFriends','killsGlobal')">Global</button>
-        <button class="tablinks" onclick="switchFilter('killsGlobal','killsFriends')">Friends</button>
-        <h3>Kills</h3>
+        <button class="tablinks" onclick="switchFilter('killsFriends','killsGlobal', 'Kills: Global', 'killsTitle')">Global</button>
+        <button class="tablinks" onclick="switchFilter('killsGlobal','killsFriends', 'Kills: Friends', 'killsTitle')">Friends</button>
+        <h3 id = "killsTitle">Kills: Global</h3>
         <table id="killsGlobal"></table>
         <table id="killsFriends" style="display: none;"></table>
     </div>
 
     <div id="time" class="tabcontent">
-        <button class="tablinks" onclick="switchFilter('timeFriends','timeGlobal')">Global</button>
-        <button class="tablinks" onclick="switchFilter('timeGlobal','timeFriends')">Friends</button>
-        <h3>Time</h3>
+        <button class="tablinks" onclick="switchFilter('timeFriends','timeGlobal', 'Time: Global', 'timeTitle')">Global</button>
+        <button class="tablinks" onclick="switchFilter('timeGlobal','timeFriends', 'Time: Friends', 'timeTitle')">Friends</button>
+        <h3 id = "timeTitle">Time: Global</h3>
         <table id="timeGlobal"></table>
         <table id="timeFriends" style="display: none;"></table>
     </div>
@@ -144,24 +144,29 @@ h1 {
 	font-weight: 500;
 }
 
-.menuoption {
+#friendsTable {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#mapsTable {
+    /*position: absolute;*/
+    border-collapse: collapse;
+    width: 100%;
+    /*margin-left: 15%;*/
+    /*overflow: none;*/
+    overflow-y: scroll;
+    /*display: block;*/
+}
+
+th, td {
     text-align: center;
-    color: white;
+    padding: 8px;
 }
 
 
+tr:nth-child(even) {background-color: #f2f2f2;}
 
-.centeredOption {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: Impact, Haettenschweiler, "Franklin Gothic Bold", Charcoal, "Helvetica Inserat", "Bitstream Vera Sans Bold", "Arial Black", "sans serif";
-    font-size: 25px;
-    color: black;
-    font-style: italic;
-    z-index: 100;
-}
 
 #campaign {
     border-radius: 25px;
@@ -299,11 +304,7 @@ color: red;
     padding: 18px;
 }
 
-#mapsTable {
-    overflow: none;
-    overflow-y: scroll;
-    display:block;
-}
+
 
 
 /* Style the tab */

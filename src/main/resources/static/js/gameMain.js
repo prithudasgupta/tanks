@@ -576,8 +576,11 @@ function fire(sprite) {
         b.update();
         // create an object for storage with bullet trajectory
         let bullet = new Bullet(b);
-        if (user === sprite) {
+        if (user === sprite ) {
             bullet.movDir = forwardByAngle(uCannon.angle, BULLET_SPEED);
+            bullet.type = 1;
+        } else if (sprite.tankType === "p") {
+            bullet.movDir = forwardByAngle(sprite.cannon.angle, BULLET_SPEED);
             bullet.type = 1;
         } else if (sprite.cannon !== undefined) {
             bullet.movDir = forwardByAngle(sprite.cannon.angle, BULLET_SPEED);
