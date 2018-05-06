@@ -238,23 +238,28 @@ public class GameMap {
 	    vertical = bottom;
 	  }
 	  
-//	  int rand = (int)(Math.random() * 2);
-//	  if (rand == 0) {
-//	    if (vertical.size() > 0) {
-//	      return vertical.get(vertical.size() - 1);
-//	    }
-//	  }
-//	  else {
-//	    if (horizontal.size() > 0) {
-//        return horizontal.get(horizontal.size() - 1);
-//      }
-//	  }
-	  
-	  if(vertical.size() > horizontal.size()) {
-	    return vertical.get(vertical.size() - 1);
-	  }else if(horizontal.size() > 0) {
-	    return horizontal.get(horizontal.size() - 1);
+	  int rand = (int)(Math.random() * 2);
+	  if (rand == 0) {
+	    if (vertical.size() > 3) {
+	      return vertical.get(vertical.size() - 1);
+	    }
 	  }
+	  else {
+	    if (horizontal.size() > 3) {
+        return horizontal.get(horizontal.size() - 1);
+      }
+	  }
+	  
+//	  if(vertical.size() < 3 && horizontal.size() < 3) {
+//	    return null;
+//	  }
+//	  
+//	  if(vertical.size() >= horizontal.size()) {
+//	    return vertical.get(vertical.size() - 1);
+//	  }else if(horizontal.size() > 0) {
+//	    
+//	    return horizontal.get(horizontal.size() - 1);
+//	  }
 
 	  }
 	  return null;

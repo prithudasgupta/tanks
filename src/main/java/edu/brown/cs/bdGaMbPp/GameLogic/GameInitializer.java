@@ -190,6 +190,7 @@ public final class GameInitializer {
 	    int randStat = getRandomInt(1, 3);
 	    int randDumb = getRandomInt(1,2);
 	    int randPath = getRandomInt(0,1);
+//	    int randPath = getRandomInt(1,3);
 	    int randHome = 0;
 	   
       tankNumbers.put(0, randStat);
@@ -228,7 +229,20 @@ public final class GameInitializer {
         
         if(!map.withinSight(newStart, userTankStart)) {
           
-          Tank newTank = addTank(newStart, currType);
+          Pair<Integer, Integer> newEnd = null;
+          
+          if(currType == 2) {
+            
+            
+            newEnd = map.getStraightLineEnd(newStart);
+            System.out.println(newEnd);
+            if(newEnd == null) {
+              i--;
+              continue;
+            }
+          }
+          
+          Tank newTank = addTank(newStart, currType, newEnd);
           
           landIndices.remove(randIndex);
           currentList.add(newTank);
@@ -274,7 +288,7 @@ public final class GameInitializer {
   }
 
 
-  private static Tank addTank(Pair<Integer, Integer> newStart, int currType) {
+  private static Tank addTank(Pair<Integer, Integer> newStart, int currType, Pair<Integer, Integer> newEnd) {
     
     Tank newTank = null;
     
@@ -287,9 +301,9 @@ public final class GameInitializer {
         break;
       case 2:
 
-        Pair<Integer, Integer> endPoint = map.getStraightLineEnd(newStart);
-        System.out.println(endPoint.getFirst() + " " + endPoint.getSecond());
-        newTank = new PathTank(convertToCoordinate(newStart), convertToCoordinate(endPoint));
+        //Pair<Integer, Integer> endPoint = map.getStraightLineEnd(newStart);
+        //System.out.println(endPoint.getFirst() + " " + endPoint.getSecond());
+        newTank = new PathTank(convertToCoordinate(newStart), convertToCoordinate(newEnd));
         break;
       case 3:
         newTank = new HomingTank(convertToCoordinate(newStart));

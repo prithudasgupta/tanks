@@ -379,7 +379,8 @@ function loadMap() {
 
         for (let i in homingStart) {
             let cur = homingStart[i];
-            createHomingTank(cur[1], cur[0]);
+            const tank = createHomingTank(cur[1], cur[0]);
+            addRoute(tank);
         }
         
         // now loading screen
@@ -461,6 +462,7 @@ function createHomingTank(row, col) {
     homingEnemies.push(tank);
     tank.tankType = "h";
     allEnemies.push(tank);
+    return tank;
 }
 
 function createSamePathTank(pair){
@@ -945,11 +947,26 @@ function getCenter(spriteTank) {
 //}
 
 function addRoute(movingEnemy){
+    let toCol;
+    let toRow;
+    switch(movingEnemy.tankType){
+        case "d":
+            toCol = -1;
+            toRow = -1;
+        break;
+        case "h":
+            toCol = Math.floor(user.x/45);
+            toRow = Math.floor(user.y/45);
+
+                console.log("homing");
+
+        break;
+    }
    movingEnemy.loading = true;
    //movingEnemy.route = undefined;
     //  movingEnemy.routeIndex = undefined;
 
- $.post('/homing', {"userRow": -1, "representation": represent,"userCol": -1,
+ $.post('/homing', {"userRow": toRow, "representation": represent,"userCol": toCol,
   "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
      const respObject = JSON.parse(responseJSON);
      const route =  respObject.route;
@@ -1188,6 +1205,9 @@ function main() {
             for (let i in dumbEnemies) {
                 movingEnemyLogic(dumbEnemies[i]);
             }
+            for (let i in homingEnemies) {
+                movingEnemyLogic(homingEnemies[i]);
+            }
             
             for (let i in pathEnemies) {
                 movePath(pathEnemies[i]);
@@ -1289,6 +1309,7 @@ function movePath(tank) {
     let dx = (tank.goalCol * 45) - tank.x;
     let dy = (tank.goalRow * 45) - tank.y;
     rot = Math.atan2(dy, dx);
+
     rot = (rot % 6.28);
 
     tank.angle = rot;
@@ -1302,7 +1323,9 @@ function movePath(tank) {
         tank.cannon.rotate(canrot);
         tank.cannon.correctAngle = tank.cannon.angle + canrot;
         fire(tank);
-    } else {
+    }
+    else {
+
         let mov = forwardByAngle(tank.angle, 1.5);
         tank.move(mov[0], mov[1]);
         tank.cannon.move(mov[0],mov[1]);
