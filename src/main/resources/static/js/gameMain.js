@@ -24,7 +24,6 @@ let gameTime = false;
 let globalTime = 0;
 
 let represent = "";
-let won;
 
 let isGameOver;
 let winner = false;
@@ -1162,7 +1161,6 @@ function updateExplosions() {
 let firstIteration = true;
 
 function displayEndGame() {
-    won = "false";
     $('#next').toggle();
     document.getElementById("result").innerHTML = "GAME OVER!";
     $('#endGame').toggle();
@@ -1172,14 +1170,13 @@ function displayEndGame() {
     let urlArr = document.URL.split("/");
     let level = parseInt(urlArr[urlArr.length -1]);
     $.post('/endGame', {"kills": kills, "currentTime":globalTime,
-        "gameId": level, "survival": survival, "result": won, "userTwo": playerTwo}, responseJSON => {
+        "gameId": level, "survival": survival, "result": "lose", "userTwo": playerTwo}, responseJSON => {
     });
 
 
 }
 
 function displayWinGame() {
-    won = "true";
     document.getElementById("result").innerHTML = "GAME WON!";
     $('#endGame').toggle();
     let urlArr = document.URL.split("/");
@@ -1199,7 +1196,7 @@ function displayWinGame() {
         $('#retry').toggle();
     }
     $.post('/endGame', {"kills": kills, "currentTime": globalTime,
-        "gameId": level, "survival":survival, "result": won, "userTwo": playerTwo}, responseJSON => {
+        "gameId": level, "survival":survival, "result": "win", "userTwo": playerTwo}, responseJSON => {
     });
 }
 
