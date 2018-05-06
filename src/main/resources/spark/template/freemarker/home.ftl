@@ -89,12 +89,23 @@
 	
          
          </center>
-         
          <h2 id="user-heading" style="position: absolute; left: 12.5%; top: 5%;"> Friends: </h2>
-    <div id="friends">
-        <center>
-            <table id="friendsTable"></table>
-        </center>
+         <div id="friendsLeaderboard">
+	        <center>
+	            
+	        </center>
+	    </div>
+	    <h2 id="user-heading" style="position: absolute; left: 45%; top: 5%;"> Games: </h2>
+	    <div id="games">
+	        
+	    </div>
+	    
+	    <h2 id="user-heading" style="position: absolute; left: 77.5%; top: 5%;"> Inbox: </h2>
+	    <div id="inbox">
+	        <center>
+	            <table id="mapsTable"></table>
+	        </center>
+	    </div>
     </div>
 
 </div>
@@ -263,6 +274,14 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     border-radius: 10px;
 }
 
+#multiplayer div {
+    position: absolute;
+    width: 30%;
+    height: 80%;
+    top: 15%;
+    border-radius: 10px;
+}
+
 #friends{
     flex: 1;
     left: 2.5%;
@@ -283,6 +302,20 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 }
 
 #stats h4 {
+    position: relative;
+    left: 5%;
+}
+
+#games {
+    flex: 1;
+    left: 35%;
+    background-image: url("/sprites/menu.png");
+    background-repeat: repeat;
+    border: solid;
+    border-color: silver;
+}
+
+#games h4 {
     position: relative;
     left: 5%;
 }
