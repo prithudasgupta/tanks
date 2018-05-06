@@ -519,7 +519,7 @@ public final class Querier {
 			
 				ResultSet rs = prep.executeQuery();
 		        while (rs.next()) {
-		        		 int playerTwo = Integer.parseInt(rs.getString(3));
+		        		 int playerTwo = Integer.parseInt(rs.getString(2));
 		        		 String user2 = getProfile(playerTwo).getUsername();
 		        		 int game = Integer.parseInt(rs.getString(3));
 		        		 boolean winner = false;
