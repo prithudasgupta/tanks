@@ -956,13 +956,13 @@ function addRoute(movingEnemy){
      for(let i = 0; i < route.length; i++){
         if(route[i].first == Math.floor(movingEnemy.y/45) && route[i].second == Math.floor(movingEnemy.x/45)){
             movingEnemy.routeIndex = i;
-            console.log("chose index " + i);
+           // console.log("chose index " + i);
             break;
         }
      }
             movingEnemy.collided = false;
 
-     console.log("done with route " + route);
+    // console.log("done with route " + route);
       movingEnemy.loading = false;
       //movingEnemy.nextRoute = undefined;
 
@@ -995,7 +995,7 @@ function movingEnemyLogic(movingEnemy) {
 
             }
         }
-        if(!movingEnemy.collided && movingEnemy.routeIndex != undefined){
+        if(movingEnemy.routeIndex != undefined){
            moveBetween(movingEnemy);
         }
 

@@ -32,15 +32,23 @@ function getSpeed(angle){
 
 
 function moveBetween(enemyObj){
-    const route = enemyObj.route;
-    const index = enemyObj.routeIndex;
+    let route;
+    let index;
+    if(enemyObj.route[enemyObj.routeIndex] == undefined){
+        route = getBorderingLandTiles(enemyObj.x, enemyObj.y);
+         index = Math.floor(Math.random() * route.length);
+        console.log("error");
+    }else{
+        route = enemyObj.route;
+        index = enemyObj.routeIndex;
+    }
+
     //console.log("index " + index);
     //    console.log("size " + route.length);
 
 
     const curRow = Math.floor(enemyObj.y / 45);
     const curCol = Math.floor(enemyObj.x / 45);
-    const nextTile = route[index];
       const center = [];
         center[0] =  enemyObj.x + 7.5;
         center[1] = enemyObj.y + 8;
