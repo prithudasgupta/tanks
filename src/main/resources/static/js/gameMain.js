@@ -14,6 +14,7 @@ let aKey, sKey, wKey, dKey, space;
 let ready = false;
 let mousX, mousY, rot;
 let bullets = [];
+let bullSprites = [];
 let nonTrav = [];
 let treads = [];
 let USER_SPEED = 2.5;
@@ -598,6 +599,8 @@ function fire(sprite) {
             bullet.movDir = forwardByAngle(sprite.angle, BULLET_SPEED);
         }
         bullets.push(bullet);
+        b.destroyed = false;
+        bullSprites.push(b);
         sprite.lastFire = Date.now();
     }
 }
@@ -692,10 +695,14 @@ function updateBullet() {
                     bullet.sprite.rotate(angleBetweenVectors(old,bullet.movDir));
                     
                 } else {
-
+                    bullSprites.splice(bullSprites.indexOf(bullet.sprite), 1);
                     bullet.sprite.remove();
                     bullets.splice(b, 1);
                 }
+            } else if (bullet.sprite.destroyed) {
+                bullSprites.splice(bullSprites.indexOf(bullet.sprite), 1);
+                bullet.sprite.remove();
+                bullets.splice(b, 1);
             }
             // otherwise check for collision with other entities (tanks, breakable walls)
             else {
@@ -710,6 +717,7 @@ function updateBullet() {
                             kills++;
                             explode(collideable[i]);
                             collideable.splice(i, 1);
+                            bullSprites.splice(bullSprites.indexOf(bullet.sprite), 1);
                             bullet.sprite.remove();
                             bullets.splice(b,1);
                             collided = true;
@@ -719,6 +727,7 @@ function updateBullet() {
                             kills++;
                             explode(collideable[i]);
                             collideable.splice(i, 1);
+                            bullSprites.splice(bullSprites.indexOf(bullet.sprite), 1);
                             bullet.sprite.remove();
                             bullets.splice(b,1);
                             collided = true;
@@ -728,6 +737,7 @@ function updateBullet() {
                             kills++;
                             explode(collideable[i]);
                             collideable.splice(i, 1);
+                            bullSprites.splice(bullSprites.indexOf(bullet.sprite), 1);
                             bullet.sprite.remove();
                             bullets.splice(b,1);
                             collided = true;
@@ -737,6 +747,7 @@ function updateBullet() {
                             kills++;
                             explode(collideable[i]);
                             collideable.splice(i, 1);
+                            bullSprites.splice(bullSprites.indexOf(bullet.sprite), 1);
                             bullet.sprite.remove();
                             bullets.splice(b,1);
                             collided = true;
@@ -750,7 +761,7 @@ function updateBullet() {
                             collideable[i].update();
 
                             collideable.splice(i, 1);
-
+                            bullSprites.splice(bullSprites.indexOf(bullet.sprite), 1);
                             bullet.sprite.remove();
                             bullets.splice(b,1);
                             collided = true;
@@ -759,6 +770,24 @@ function updateBullet() {
 
                     }
                 }
+                for(let i in bullSprites) {
+                    if (bullSprites[i] !== bullet.sprite) {
+                        if (bullSprites[i].collidesWith(bullet.sprite)) {
+                            bullSprites[i].destroyed = true;
+                            bullSprites.splice(i, 1);
+                            bullSprites.splice(bullSprites.indexOf(bullet.sprite), 1);
+                            let explosion = new Explosion(bullet.sprite);
+                            explosion.sprite.loadImg("/sprites/explo1.png");
+                            explosion.sprite.scale(1.5);
+                            explosion.sprite.update();
+                            explosions.push(explosion);
+                            bullets.splice(b,1);
+                            collided = true;
+                            break;
+                        }
+                    }
+                }
+
                 if (bullet.sprite.collidesWith(user)) {
                      isGameOver = true;
                 }
@@ -786,6 +815,7 @@ function explode(sprite) {
         sprite.cannon.remove();
     }
 }
+
 
 function shortenVector(v1, shortenValue){
     const x1 = v1[0];
