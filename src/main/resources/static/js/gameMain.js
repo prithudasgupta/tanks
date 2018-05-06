@@ -755,7 +755,7 @@ function updateBullet() {
                     }
                 }
                 if (bullet.sprite.collidesWith(user)) {
-                    isGameOver = true;
+                    //isGameOver = true;
                 }
                 if (!collided) {
                     bullet.sprite.update();
@@ -857,8 +857,8 @@ function getBorderingLandTiles(xCoord, yCoord){
 }
 
 function checkEndGame() {
-    return (statEnemies.length === 0 && dumbEnemies.length === 0 &&
-        pathEnemies.length === 0 && homingEnemies.length === 0 && allEnemies.length === 0);
+    return false ;/*(statEnemies.length === 0 && dumbEnemies.length === 0 &&
+        pathEnemies.length === 0 && homingEnemies.length === 0 && allEnemies.length === 0);*/
 }
 
 function homingHelper(movingEnemy) {
