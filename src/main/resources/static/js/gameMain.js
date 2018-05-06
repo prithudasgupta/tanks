@@ -1139,7 +1139,7 @@ function updateExplosions() {
 let firstIteration = true;
 
 function displayEndGame() {
-    won = false;
+    won = "false";
     $('#next').toggle();
     document.getElementById("result").innerHTML = "GAME OVER!";
     $('#endGame').toggle();
@@ -1153,7 +1153,7 @@ function displayEndGame() {
 }
 
 function displayWinGame() {
-    won = true;
+    won = "true";
     document.getElementById("result").innerHTML = "GAME WON!";
     $('#endGame').toggle();
     let urlArr = document.URL.split("/");
