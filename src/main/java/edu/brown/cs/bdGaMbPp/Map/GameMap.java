@@ -240,7 +240,6 @@ public class GameMap {
 	  
 	  int rand = (int)(Math.random() * 2);
 	  
-	  //System.out.println(rand + " " + vertical.size() + " " + horizontal.size());
 	  
 	  if (rand == 0) {
 	    if (vertical.size() > 3) {
@@ -253,16 +252,6 @@ public class GameMap {
       }
 	  }
 	  
-//	  if(vertical.size() < 3 && horizontal.size() < 3) {
-//	    return null;
-//	  }
-//	  
-//	  if(vertical.size() >= horizontal.size()) {
-//	    return vertical.get(vertical.size() - 1);
-//	  }else if(horizontal.size() > 0) {
-//	    
-//	    return horizontal.get(horizontal.size() - 1);
-//	  }
 
 	  }
 	  return null;
@@ -400,7 +389,9 @@ public class GameMap {
 			for(PathNode<Pair<Integer, Integer>, String> node: path) {
 				output.add(node.getSource());
 			}
-			output.add(path.get(path.size()-1).getDestination());
+			if(path.size() != 0) {
+				output.add(path.get(path.size()-1).getDestination());
+			}
 			return output;
 		}
 	
