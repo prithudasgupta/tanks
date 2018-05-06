@@ -2,9 +2,11 @@ package edu.brown.cs.bdGaMbPp.Main;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.bdGaMbPp.Handlers.AcceptFriendRequestHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.AuthenticateHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.CreateProfileHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.DisplayProfileHandler;
+import edu.brown.cs.bdGaMbPp.Handlers.FriendRequestHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.GameHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.GameLeaderboardHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.HomeHandler;
@@ -139,6 +141,8 @@ public final class Main {
     Spark.post("/logout", new LogoutHandler());
     Spark.post("/authenticate", new AuthenticateHandler());
     Spark.post("/profileData", new DisplayProfileHandler());
+    Spark.post("/friendRequest", new FriendRequestHandler());
+    Spark.post("/friendAccept", new AcceptFriendRequestHandler());
     Spark.post("/leaderboard", new LeaderboardHandler());
     Spark.post("/gameLeaderboard", new GameLeaderboardHandler());
 

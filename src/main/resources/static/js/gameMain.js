@@ -222,7 +222,7 @@ function getMap () {
         		survivalLevel = respObject.round;
         }
         if (!survival) {
-            if (respObject.playerTwo !== 0) {
+            if (respObject.playerTwo !== -1) {
                 playerTwo = respObject.playerTwo;
             }
         }
@@ -711,6 +711,7 @@ function updateBullet() {
                     if (bullet.sprite.collidesWith(collideable[i])) {
                         // if collides with enemy
                         if (allEnemies.includes(collideable[i])) {
+                            console.log(homingEnemies);
                             switch ((collideable[i]).tankType) {
                                 case "s":
                                     statEnemies.splice(statEnemies.indexOf(collideable[i]), 1);
@@ -721,8 +722,10 @@ function updateBullet() {
                                 case "p":
                                     pathEnemies.splice(pathEnemies.indexOf(collideable[i]), 1);
                             }
+                            console.log(homingEnemies);
                             allEnemies.splice(allEnemies.indexOf(collideable[i]), 1);
                             kills++;
+
                             let ind = nonTrav.indexOf(collideable[i]);
                             if (ind >= 0) {
                                 nonTrav.splice(ind, 1);
@@ -762,7 +765,7 @@ function updateBullet() {
                     }
                 }
                 if (bullet.sprite.collidesWith(user)) {
-                    //isGameOver = true;
+                     isGameOver = true;
                 }
                 if (!collided) {
                     bullet.sprite.update();
@@ -772,6 +775,28 @@ function updateBullet() {
         }
     }
 
+}
+
+
+function explode(sprite) {
+
+    let ind = nonTrav.indexOf(sprite);
+    if (ind >= 0) {
+        nonTrav.splice(ind, 1);
+    }
+    let explosion = new Explosion(sprite);
+    explosion.sprite.loadImg("/sprites/explo1.png");
+    explosion.sprite.update();
+    explosions.push(explosion);
+    if ((sprite).tankType !== "s") {
+        collideable[i].cannon.remove();
+
+    }
+    collideable.splice(i, 1);
+
+
+    bullet.sprite.remove();
+    bullets.splice(b,1);
 }
 
 function shortenVector(v1, shortenValue){
@@ -864,8 +889,8 @@ function getBorderingLandTiles(xCoord, yCoord){
 }
 
 function checkEndGame() {
-    return false ;/*(statEnemies.length === 0 && dumbEnemies.length === 0 &&
-        pathEnemies.length === 0 && homingEnemies.length === 0 && allEnemies.length === 0);*/
+    return /*false ;*/(statEnemies.length === 0 && dumbEnemies.length === 0 &&
+        pathEnemies.length === 0 && homingEnemies.length === 0 && allEnemies.length === 0);
 }
 
 function homingHelper(movingEnemy) {
@@ -981,15 +1006,6 @@ function addRoute(movingEnemy){
 }
 
 
-/*$(function(){
-setInterval(oneSecondFunction, 1000);
-});
-
-function oneSecondFunction() {
-    for(let i = 0; i < dumbEnemies.length; i++){
-        console.log(i + " , index: " + dumbEnemies[i].routeIndex + " size: " + dumbEnemies[i].route.length);
-        }
-}*/
 
 function movingEnemyLogic(movingEnemy) {
     if (ready) {
@@ -1169,8 +1185,11 @@ function displayWinGame() {
     let urlArr = document.URL.split("/");
     let level = parseInt(urlArr[urlArr.length -1]);
     console.log(playerTwo);
+
     if (playerTwo === 0) {
         if (level >= 0 && level <= 19) {
+
+        } else if (survival) {
 
         } else {
             $('#next').toggle();
@@ -1179,7 +1198,7 @@ function displayWinGame() {
         $('#next').toggle();
         $('#retry').toggle();
     }
-    $.post('/endGame', {"kills": kills, "currentTime":globalTime,
+    $.post('/endGame', {"kills": kills, "currentTime": globalTime,
         "gameId": level, "survival":survival, "result": won, "userTwo": playerTwo}, responseJSON => {
     });
 }

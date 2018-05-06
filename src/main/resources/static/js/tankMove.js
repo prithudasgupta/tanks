@@ -128,7 +128,7 @@ function moveBetween(enemyObj){
                                enemyObj.cannon.rotate(enemyObj.angle);
                                fire(enemyObj);
                                enemyObj.move(-1*(mov[0] + (xFixer/10)), -1 *(mov[1] + (yFixer/10)));
-                                enemyObj.cannon.move(-1*(mov[0] + (xFixer/10)), -1*(mov[1] + (yFixer/10)));
+                               enemyObj.cannon.move(-1*(mov[0] + (xFixer/10)), -1*(mov[1] + (yFixer/10)));
 
                                breakable = false;
                                break;
