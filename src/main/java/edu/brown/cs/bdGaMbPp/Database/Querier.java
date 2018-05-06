@@ -508,6 +508,77 @@ public final class Querier {
 			return null;
 	}
 	
+	public static List<MultiplayerGame> getInbox(int user){
+		
+		List<MultiplayerGame> currList = new ArrayList<MultiplayerGame>();
+		try {
+			PreparedStatement prep = instance.conn
+			        .prepareStatement("SELECT * FROM multiplayer WHERE playerOne = ?");
+			
+				prep.setString(1, Integer.toString(user));
+			
+				ResultSet rs = prep.executeQuery();
+		        while (rs.next()) {
+		        		 int playerTwo = Integer.parseInt(rs.getString(3));
+		        		 String user2 = getProfile(playerTwo).getUsername();
+		        		 int game = Integer.parseInt(rs.getString(3));
+		        		 boolean winner = false;
+		        		 int over = 0;
+		        		 if (Integer.parseInt(rs.getString(7)) == -1) {
+		        			 over = 1;
+		        		 }
+		        		 else {
+		        			 int win = getWinner(user, playerTwo, game);
+		        			 if (win == user) {
+		        				 winner = true;
+		        			 }
+		        			 
+		        		 }
+		        		 
+		        		 currList.add(new MultiplayerGame(user, playerTwo, user2, winner, game, over));
+		        		 
+		        }
+		        
+		        prep.close();
+		        rs.close();
+		        
+		        PreparedStatement prep2 = instance.conn
+				        .prepareStatement("SELECT * FROM multiplayer WHERE playerTwo = ?");
+				
+		        prep2.setString(1, Integer.toString(user));
+			
+				ResultSet rs2 = prep.executeQuery();
+		        while (rs.next()) {
+		        		 int playerTwo = Integer.parseInt(rs.getString(1));
+		        		 String user2 = getProfile(playerTwo).getUsername();
+		        		 int game = Integer.parseInt(rs.getString(3));
+		        		 boolean winner = false;
+		        		 int over = 0;
+		        		 if (Integer.parseInt(rs.getString(7)) == -1) {
+		        			 over = -1;
+		        		 }
+		        		 else {
+		        			 int win = getWinner(user, playerTwo, game);
+		        			 if (win == user) {
+		        				 winner = true;
+		        			 }
+		        			 
+		        		 }
+		        		 
+		        		 currList.add(new MultiplayerGame(user, playerTwo, user2, winner, game, over));
+		        		 
+		        }
+			        
+			        prep2.close();
+			        rs2.close();
+			}
+			catch(Exception e) {
+				
+			}
+		return currList;
+	}
+	
+	
 	public static void updateGameFinal(int user1, int user2, int gameId, int playerTwoTime, int playerTwoKills) {
 		
 		try {
@@ -527,6 +598,7 @@ public final class Querier {
 			
 		}
 	}
+	
 	
 	public static int getWinner(int user1, int user2, int gameId) {
 		Pair<Integer, Integer> getPlayerOne = getGameSent(user1, user2, gameId);

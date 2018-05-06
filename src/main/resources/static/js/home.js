@@ -394,9 +394,72 @@ function userData() {
             setupCampaign(campaign);
             generateMapsMult(mapsList);
             generateFriendsMult(friendsList);
-            
+
         }
     });
+}
+
+function setUpInbox(list) {
+    let table = document.getElementById("inboxTable");
+    let tableBody = document.createElement("tbody");
+
+    let firstRow  = document.createElement("tr");
+    let textTitle1 = document.createTextNode("Opponent");
+    let textTitle2 = document.createTextNode("Game ID");
+    let textTitle3 = document.createTextNode("Result/Pending");
+    let title1 = document.createElement("th");
+    let title2 = document.createElement("th");
+    let title3 = document.createElement("th");
+    title1.appendChild(textTitle1);
+    title2.appendChild(textTitle2);
+    title3.appendChild(textTitle3);
+    firstRow.appendChild(title1);
+    firstRow.appendChild(title2);
+    firstRow.appendChild(title3);
+    tableBody.appendChild(firstRow);
+
+    for(let curRow = 0; curRow < list.length; curRow++) {
+        let row = document.createElement("tr");
+        for (let c = 0; c < 3; c++) {
+            let text;
+            let cell = document.createElement("td");
+            if (c === 0) {
+                text = document.createTextNode(list[curRow].username2);
+                cell.appendChild(text);
+            }else if (c === 1) {
+                text = document.createTextNode(list[curRow].gameId);
+                cell.appendChild(text);
+            }  else {
+                let state = list[curRow].isOver;
+                switch (state) {
+                    case 1:
+                        let play = document.createElement("button");
+                        play.appendChild(document.createTextNode("Play"));
+                        cell.appendChild(play);
+                        break;
+                    case 0:
+                        let text;
+                        if (list[curRow].winner === "true") {
+                            text = document.createTextNode("Won!");
+                        } else {
+                            text = document.createTextNode("Lost...");
+                        }
+                        cell.appendChild(text);
+                        break;
+                    case -1:
+                        let text = document.createTextNode("Pending");
+                        cell.appendChild(text);
+                        break;
+
+                }
+            }
+            row.appendChild(cell);
+        }
+        tableBody.appendChild(row);
+    }
+
+    table.appendChild(tableBody);
+
 }
 
 function getLeaderboardLists() {
@@ -469,18 +532,6 @@ function switchFilter(current, switchTo, type, next) {
     }
     document.getElementById(next).innerHTML = type;
 
-}
-
-function getUserPayload(){
-	
-	return obj = {type: 1, payload: {id: myId, name: username}};
-	
-}
-
-function friendRequestPayload(){
-	const friendName =  $('#newFriendSubmit').val();
-	
-	return obj = {type: 2, payload:{name: friendName}};
 }
 
 

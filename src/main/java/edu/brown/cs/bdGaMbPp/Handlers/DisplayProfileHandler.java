@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
 import edu.brown.cs.bdGaMbPp.Database.Friend;
+import edu.brown.cs.bdGaMbPp.Database.MultiplayerGame;
 import edu.brown.cs.bdGaMbPp.Database.Profile;
 import edu.brown.cs.bdGaMbPp.Database.Querier;
 import spark.QueryParamsMap;
@@ -35,7 +36,8 @@ public class DisplayProfileHandler implements Route {
 			Profile prof = Querier.getProfile(userId);
 			List<Friend> friends = Querier.getFriendIds(userId);
 			List<Integer> games = Querier.getGamesByCreator(userId);
-			variables = ImmutableMap.of("profile", prof, "friends", friends, "games", games);
+			List<MultiplayerGame> inbox = Querier.getInbox(userId);
+			variables = ImmutableMap.of("profile", prof, "friends", friends, "games", games, "inbox", inbox);
 			Gson GSON = new Gson();
 			return GSON.toJson(variables);
 
