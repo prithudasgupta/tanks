@@ -47,8 +47,8 @@ function moveBetween(enemyObj){
     //    console.log("size " + route.length);
 
 
-    const curRow = Math.floor(enemyObj.y / 45);
-    const curCol = Math.floor(enemyObj.x / 45);
+    const curRow = Math.floor(enemyObj.y / TILE_SIZE);
+    const curCol = Math.floor(enemyObj.x / TILE_SIZE);
       const center = [];
         center[0] =  enemyObj.x + 7.5;
         center[1] = enemyObj.y + 8;
@@ -58,20 +58,20 @@ function moveBetween(enemyObj){
     if (route[index].first - curRow === 0){
                          if (route[index].second - curCol === 1){
                              enemyObj.nextAngle = 0;
-                              const upDiff = center[1] - (route[index].first *45);
+                              const upDiff = center[1] - (route[index].first *TILE_SIZE);
                               yFixer = (22.5 - upDiff);
                                                        }
                           else if (route[index].second - curCol === -1){
                                   enemyObj.nextAngle = 3.1415;
 
-                                const upDiff = center[1] - (route[index].first *45);
+                                const upDiff = center[1] - (route[index].first *TILE_SIZE);
                               yFixer = (22.5 - upDiff);
 
                                               }
                           }
                                   else if(route[index].first - curRow === -1){
                                 enemyObj.nextAngle = 1.5707;
-                                const leftDiff = center[0] - (route[index].second *45);
+                                const leftDiff = center[0] - (route[index].second *TILE_SIZE);
                                 xFixer = (22.5 - leftDiff);
 
 
@@ -79,7 +79,7 @@ function moveBetween(enemyObj){
                              }
                        else{
                               enemyObj.nextAngle = 4.712;
-                               const leftDiff = center[0] - (route[index].second *45);
+                               const leftDiff = center[0] - (route[index].second *TILE_SIZE);
                               xFixer = (22.5 - leftDiff);
 
                                  }
@@ -105,13 +105,11 @@ function moveBetween(enemyObj){
     let mov;
         if (angleDiff < 0){
             enemyObj.rotate(-0.04);
-             enemyObj.cannon.rotate(-0.04);
+            enemyObj.cannon.rotate(-0.04);
         }
         else if(angleDiff > 0){
-
             enemyObj.rotate(0.04);
              enemyObj.cannon.rotate(0.04);
-
         }
             mov = forwardByAngle(enemyObj.angle, getSpeed(angleDiff));
             enemyObj.move(mov[0] + (xFixer/10), mov[1] + (yFixer/10));
@@ -119,7 +117,6 @@ function moveBetween(enemyObj){
 
 
        if (enemyObj.collidesWithArray(nonTrav)) {
-            let breakable = true;
             for (let i in collideable) {
                         if (enemyObj.collidesWith(collideable[i])) {
 
@@ -129,12 +126,7 @@ function moveBetween(enemyObj){
                                fire(enemyObj);
                                enemyObj.move(-1*(mov[0] + (xFixer/10)), -1 *(mov[1] + (yFixer/10)));
                                enemyObj.cannon.move(-1*(mov[0] + (xFixer/10)), -1*(mov[1] + (yFixer/10)));
-
-                               breakable = false;
                                break;
-                            }else if(collideable[i].isBreakable === undefined){
-                                breakable = false;
-                                break;
                             }
                         }
                     }
@@ -154,8 +146,8 @@ function compareEuclid(potMov, enemy) {
     let curY = enemy.y;
     let potX = enemy.x + potMov[0];
     let potY = enemy.y + potMov[1];
-    let goalX = (enemy.nextCol * 45) + 22.5;
-    let goalY = (enemy.nextRow * 45) + 22.5;
+    let goalX = (enemy.nextCol * TILE_SIZE) + (TILE_SIZE/2);
+    let goalY = (enemy.nextRow * TILE_SIZE) + (TILE_SIZE/2);
 
     let curDist = euclidDist(curX, curY, goalX, goalY);
     let potDist = euclidDist(potX, potY, goalX, goalY);

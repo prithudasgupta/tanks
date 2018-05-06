@@ -377,6 +377,7 @@ function loadMap() {
         for (let i in dumbStart) {
             let cur = dumbStart[i];
             const tank = createDumbTank(cur[1], cur[0]);
+            tank.isReady = false;
             addRoute(tank);
         }
         
@@ -387,6 +388,7 @@ function loadMap() {
         for (let i in homingStart) {
             let cur = homingStart[i];
             const tank = createHomingTank(cur[1], cur[0]);
+            tank.isReady = false;
             addRoute(tank);
         }
         
@@ -890,18 +892,20 @@ function addRoute(movingEnemy){
      const respObject = JSON.parse(responseJSON);
 
      const route =  respObject.route;
-
-     movingEnemy.route = route;
-     for(let i = 0; i < route.length; i++){
-        if(route[i].first == Math.floor(movingEnemy.y/45) && route[i].second == Math.floor(movingEnemy.x/45)){
-            movingEnemy.routeIndex = i;
-            console.log("chose " + i);
-            break;
-        }
+     if(route.length == 0){
+        movingEnemy.isReady = false;
+     }else{
+      movingEnemy.route = route;
+          for(let i = 0; i < route.length; i++){
+             if(route[i].first == Math.floor(movingEnemy.y/45) && route[i].second == Math.floor(movingEnemy.x/45)){
+                 movingEnemy.routeIndex = i;
+                 break;
+             }
+          }
+           movingEnemy.loading = false;
+           movingEnemy.isReady = true;
      }
-            movingEnemy.collided = false;
 
-      movingEnemy.loading = false;
 
 });
 }
@@ -910,17 +914,17 @@ function addRoute(movingEnemy){
 
 function movingEnemyLogic(movingEnemy) {
     if (ready) {
-        if(reachedBlock(movingEnemy)){
+        if(movingEnemy.isReady && reachedBlock(movingEnemy)){
                 movingEnemy.routeIndex += 1;
 
-            if(movingEnemy.collided || (!movingEnemy.loading && movingEnemy.route.length < (movingEnemy.routeIndex + 4))){
+            if((!movingEnemy.loading && movingEnemy.route.length < (movingEnemy.routeIndex + 4))){
 
                 addRoute(movingEnemy);
                  }
                 //console.log("iter " + movingEnemy.routeIndex);
             }
         }
-        if(movingEnemy.routeIndex != undefined && !movingEnemy.loading){
+        if(movingEnemy.isReady && !movingEnemy.loading){
            moveBetween(movingEnemy);
         }
     if (user !== undefined && withinSight(movingEnemy.x, movingEnemy.y)) {
@@ -1168,21 +1172,26 @@ $(document).ready(() => {
     document.addEventListener('keydown', function (e) {
         switch (e.key) {
             case "a":
+            case "A":
                 aKey = true;
                 break;
             case "s":
+            case "S":
                 sKey = true;
                 break;
             case "w":
+            case "W":
                 wKey = true;
                 break;
             case "d":
+            case "D":
                 dKey = true;
                 break;
             case " ":
                 space = true;
                 break;
             case "p":
+            case "P":
                 if (pause) {
                     pause = false;
                     let timePaused = (Date.now() - pauseStart);
@@ -1339,7 +1348,7 @@ function withinSight(cpuX, cpuY){
     const deltaY = user.y - cpuY;
     const deltaX = user.x - cpuX;
     const distance = enemyDetector(cpuX, cpuY);
-    const epsilon = 5;
+    const epsilon = .1;
 
     const userXTile = Math.floor(parseInt(user.x) / TILE_SIZE);
     const userYTile = Math.floor(parseInt(user.y) / TILE_SIZE);
