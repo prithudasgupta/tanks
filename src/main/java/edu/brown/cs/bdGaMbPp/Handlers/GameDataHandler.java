@@ -28,8 +28,10 @@ public class GameDataHandler implements Route{
 
 		String result = qm.value("won");
 
+
 		int time = Integer.parseInt(qm.value("currentTime"));
-		int user2 = Integer.parseInt("user2");
+
+		int user2 = Integer.parseInt(qm.value("userTwo"));
 
 		int id = -1;
 		Set<String> attributes = request.session().attributes();
@@ -37,6 +39,7 @@ public class GameDataHandler implements Route{
 
 			id = Integer.parseInt(request.session().attribute("user").toString());
 		}
+
 
 		Querier.setKills(id, kills);
 		Querier.setTime(id, time);
@@ -47,18 +50,27 @@ public class GameDataHandler implements Route{
 			Querier.setSurvival(id, currentRound);
 			//update database
 		}
-		if (user2 != - 1) {
-			Querier.gameSent(id, user2, Integer.parseInt(gameId), time, kills);
+
+		if (user2 != 0) {
+			if (user2 > 0) {
+				Querier.gameSent(id, user2, Integer.parseInt(gameId), time, kills);
+			}
+			else{
+				Querier.updateGameFinal(-1 * user2, id, Integer.parseInt(gameId), time, kills);
+			}
 		}
 
 		if (!gameId.equals("survival")) {
-			int gameIdNumber = Integer.parseInt(gameId);
-			if (gameIdNumber >= 0 && gameIdNumber < 20) {
-				Querier.setCampaign(id, gameIdNumber);
+
+			if (user2 == 0) {
+				int gameIdNumber = Integer.parseInt(gameId);
+				if (gameIdNumber >= 0 && gameIdNumber < 20) {
+					Querier.setCampaign(id, gameIdNumber);
+				}
+				Querier.updateLeaderboard(gameIdNumber, id, time);
 			}
-			Querier.updateLeaderboard(gameIdNumber, id, time);
 		}
-		
+
 		return new Gson();
 	}
 
