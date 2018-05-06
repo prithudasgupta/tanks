@@ -214,6 +214,7 @@ function setUpLeaderboard() {
 function getMap () {
     $.post('/map', {"url": window.location.href}, responseJSON => {
         const respObject = JSON.parse(responseJSON);
+        console.log(respObject);
         survival = respObject.survival;
         if (survival){
         		survivalLevel = respObject.round;
@@ -224,17 +225,13 @@ function getMap () {
             }
             if (respObject.enemies[i].type === "d") {
                 dumbStart.push(respObject.enemies[i].location.coordinates);
-
             }
             if (respObject.enemies[i].type === "p") {
                 pathStart.push(respObject.enemies[i].location.coordinates);
-                pathOfPath.push(respObject.enemies[i].location.coordinates, [0,0]);
-
+                pathOfPath.push([respObject.enemies[i].location.coordinates, respObject.enemies[i].endLocation.coordinates]);
             }
-
             if (respObject.enemies[i].type === "h") {
                 homingStart.push(respObject.enemies[i].location.coordinates);
-
             }
             
         }
@@ -314,6 +311,7 @@ function loadMap() {
                     breakable.move(col * TILE_SIZE, row * TILE_SIZE);
                     // update it
                     breakable.update();
+                    breakable.isBreakable = true;
                     collideable.push(breakable);
                     nonTrav.push(breakable);
 
@@ -369,16 +367,16 @@ function loadMap() {
 
         for (let i in dumbStart) {
             let cur = dumbStart[i];
-            createDumbTank(cur[1], cur[0]);
+            const tank = createDumbTank(cur[1], cur[0]);
+            addRoute(tank);
         }
         
-        for (let i in pathStart) {
-            let cur = pathStart[i];
-            createSamePathTank(cur[1], cur[0]);
+        for (let i in pathOfPath) {
+            createSamePathTank(pathOfPath[i]);
         }
 
         for (let i in homingStart) {
-            let cur = pathStart[i];
+            let cur = homingStart[i];
             createHomingTank(cur[1], cur[0]);
         }
         
@@ -398,6 +396,7 @@ function loadMap() {
 
 }
 
+
 function createStationaryTank(row, col) {
     //let space = canvasbg.Sprite("/sprites/tank_space.png");
     let tank = canvasbg.Sprite("/sprites/imm_tank.png");
@@ -415,6 +414,7 @@ function createStationaryTank(row, col) {
     statEnemies.push(tank);
     allEnemies.push(tank);
 }
+
 
 function createDumbTank(row, col) {
     //let space = canvasbg.Sprite("/sprites/tank_space.png");
@@ -436,6 +436,7 @@ function createDumbTank(row, col) {
     dumbEnemies.push(tank);
     tank.tankType = "d";
     allEnemies.push(tank);
+    return tank;
 }
 
 function createHomingTank(row, col) {
@@ -460,12 +461,16 @@ function createHomingTank(row, col) {
     allEnemies.push(tank);
 }
 
-function createSamePathTank(row, col){
-	
-	 let tank = canvasbg.Sprite("/sprites/pathTank.png");
-	 let can = canvasbg.Sprite("/sprites/pathTank_Can.png");
-	 
-	 tank.move(col*TILE_SIZE + 11, row*TILE_SIZE + 11);
+function createSamePathTank(pair){
+
+	let row = pair[0][1];
+	let col = pair[0][0];
+	let goalRow = pair[1][1];
+	let goalCol = pair[1][0];
+    let tank = canvasbg.Sprite("/sprites/pathTank.png");
+    let can = canvasbg.Sprite("/sprites/pathTank_Can.png");
+
+    tank.move(col*TILE_SIZE + 11, row*TILE_SIZE + 11);
     can.move(col*TILE_SIZE + 11, row*TILE_SIZE + 11);
     //space.update();
     tank.update();
@@ -474,6 +479,13 @@ function createSamePathTank(row, col){
     tank.startY = tank.y;
     tank.lastFire = Date.now();
     tank.cannon = can;
+    // set these to move to path
+    tank.goalRow = goalRow;
+    tank.goalCol = goalCol;
+
+    tank.prevRow = row;
+    tank.prevCol = col;
+
     collideable.push(tank);
     nonTrav.push(tank);
     pathEnemies.push(tank);
@@ -568,8 +580,11 @@ function fire(sprite) {
         b.update();
         // create an object for storage with bullet trajectory
         let bullet = new Bullet(b);
-        if (user === sprite) {
+        if (user === sprite ) {
             bullet.movDir = forwardByAngle(uCannon.angle, BULLET_SPEED);
+            bullet.type = 1;
+        } else if (sprite.tankType === "p") {
+            bullet.movDir = forwardByAngle(sprite.cannon.angle, BULLET_SPEED);
             bullet.type = 1;
         } else if (sprite.cannon !== undefined) {
             bullet.movDir = forwardByAngle(sprite.cannon.angle, BULLET_SPEED);
@@ -839,7 +854,7 @@ function getBorderingLandTiles(xCoord, yCoord){
 }
 
 function checkEndGame() {
-    return (statEnemies.length === 0 && dumbEnemies.length === 0 && pathEnemies.length === 0);
+    return (statEnemies.length === 0 && dumbEnemies.length === 0 && pathEnemies.length === 0 && homingEnemies.length === 0);
 }
 
 function homingHelper(movingEnemy) {
@@ -926,9 +941,32 @@ function getCenter(spriteTank) {
 //
 //}
 
-document.addEventListener("click", function(e){
-    console.log(e);
+function addRoute(movingEnemy){
+   movingEnemy.loading = true;
+   movingEnemy.route = undefined;
+      movingEnemy.routeIndex = undefined;
+
+ $.post('/homing', {"userRow": Math.floor(user.y/45), "representation": represent,"userCol": Math.floor(user.x/45),
+  "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
+     const respObject = JSON.parse(responseJSON);
+     const route =  respObject.route;
+     movingEnemy.route = route;
+     for(let i = 0; i < route.length; i++){
+        if(route[i].first == Math.floor(movingEnemy.y/45) && route[i].second == Math.floor(movingEnemy.x/45)){
+            movingEnemy.routeIndex = i;
+            console.log("chose index " + i);
+            break;
+        }
+     }
+
+     console.log("done with route " + route);
+      movingEnemy.loading = false;
+      //movingEnemy.nextRoute = undefined;
+
 });
+}
+
+
 function movingEnemyLogic(movingEnemy) {
     if (ready) {
         if (user !== undefined && withinSight(movingEnemy.x, movingEnemy.y)) {
@@ -943,76 +981,17 @@ function movingEnemyLogic(movingEnemy) {
 
         let movedSoFar = euclidDist(movingEnemy.startX, movingEnemy.startY, movingEnemy.x, movingEnemy.y);
 
-        if (movingEnemy.routeIndex === undefined) {
-            // ("ne");console.log
-             $.post('/homing', {"userRow": Math.floor(user.y/45), "representation": represent,
-                        "userCol": Math.floor(user.x/45), "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
-                        const respObject = JSON.parse(responseJSON);
-                        
-                        // console.log(respObject);
-                        const currRoute = respObject.route;
-                        movingEnemy.routeIndex = 0;
-                        movingEnemy.route = currRoute;
-                        const curRow = Math.floor(movingEnemy.y/45);
-                        const curCol = Math.floor(movingEnemy.x/45);
-                        const route = movingEnemy.route;
-                        const index = movingEnemy.routeIndex;
-                        if (route[index].first - curRow === 0){
-                            if (route[index].second - curCol === 1){
-                               movingEnemy.nextAngle = 0;
-                               // console.log("right");
-                               }
-                                              else{
-                                                      movingEnemy.nextAngle = 3.1415;
-                                                      // console.log("left");
-
-                                                                  }
-                                              }
-                                                      else if(route[index].first - curRow === -1){
-                                                    movingEnemy.nextAngle = 1.5707;
-                                                         // console.log("up");
-
-                                                 }
-                                           else{
-                                                  movingEnemy.nextAngle = -1.5707;
-                                                  // console.log("down");
-
-                                                     }
-                        });
-
-
-
-        }else if(reachedBlock(movingEnemy)){
-            if(movingEnemy.route.length == movingEnemy.routeIndex + 1){
-                movingEnemy.routeIndex = undefined;
-                movingEnemy.route = undefined;
-            }else if(movingEnemy.route.length == movingEnemy.routeIndex + 3){
-
-            }else{
-            }
+       if(reachedBlock(movingEnemy)){
                 movingEnemy.routeIndex += 1;
-                // console.log("incr");
-                const curRow = Math.floor(movingEnemy.y/45);
-                const curCol = Math.floor(movingEnemy.x/45);
-                const route = movingEnemy.route;
-                const index = movingEnemy.routeIndex;
-                if (route[index].first - curRow === 0){
-                     if (route[index].second - curCol === 1){
-                         movingEnemy.nextAngle = 0;
-                       }
-                      else{
-                              movingEnemy.nextAngle = 3.1415;
 
-                                          }
-                      }
-                              else if(route[index].first - curRow === -1){
-                            movingEnemy.nextAngle = 1.5707;
+            if(!movingEnemy.loading && movingEnemy.route.length < (movingEnemy.routeIndex + 4)){
+                console.log("asked");
 
-                         }
-                   else{
-                          movingEnemy.nextAngle = 4.712;
+                addRoute(movingEnemy);
 
-                             }
+                 }
+                console.log("iter " + movingEnemy.routeIndex);
+
             }
         }
         if(movingEnemy.routeIndex != undefined){
@@ -1025,14 +1004,16 @@ function movingEnemyLogic(movingEnemy) {
 
 function reachedBlock(movingEnemy){
     //const center = getCenter(movingEnemy);
-    const pix_x_diff = movingEnemy.x - (movingEnemy.route[movingEnemy.routeIndex].second *45); //7.5
-    const pix_y_diff = movingEnemy.y - (movingEnemy.route[movingEnemy.routeIndex].first *45); //8
-   if(Math.abs(pix_x_diff) <= 30 && Math.abs(pix_y_diff) <= 30){
+    const pix_x_diff = (movingEnemy.x + 8) - ((movingEnemy.route[movingEnemy.routeIndex].second *45)+22.5); //7.5
+    const pix_y_diff = (movingEnemy.y + 7.5) - ((movingEnemy.route[movingEnemy.routeIndex].first *45)+22.5); //8
+    console.log("x diff " + pix_x_diff)
+        console.log("y diff " + pix_y_diff)
+
+   if(Math.abs(pix_x_diff) <= 15 && Math.abs(pix_y_diff) <= 5){
     return true;
     }
 
     return false;
-    //return (Math.floor(movingEnemy.x/45) == Math.floor(/45));
 
 }
 
@@ -1206,7 +1187,7 @@ function main() {
             }
             
             for (let i in pathEnemies) {
-                movingEnemyLogic(pathEnemies[i]);
+                movePath(pathEnemies[i]);
             }
 
             updateExplosions();
@@ -1296,6 +1277,54 @@ $(document).ready(() => {
     console.log(screen.width);
     document.getElementById('sideMenu').setAttribute("style","width:" + adWidth + "px");
 });
+
+function movePath(tank) {
+    let dx = (tank.goalCol * 45) - tank.x;
+    let dy = (tank.goalRow * 45) - tank.y;
+    rot = Math.atan2(dy, dx);
+    rot = (rot % 6.28);
+
+    if (user !== undefined && withinSight(tank.x, tank.y)) {
+        let dx = tank.cannon.x - user.x;
+        let dy = tank.cannon.y - user.y;
+        rot = Math.atan2(-dy, -dx);
+        tank.cannon.setAngle(0);
+        tank.cannon.rotate(rot);
+        tank.cannon.correctAngle = tank.cannon.angle + rot;
+        fire(tank);
+    }
+    if ((tank.angle % 6.28) < rot-0.02) {
+        tank.rotate(0.02);
+    } else if ((tank.angle % 6.28) > rot+0.02) {
+        tank.rotate(-0.02);
+    }
+    else {
+        let mov = forwardByAngle(tank.angle, 2);
+        tank.move(mov[0], mov[1]);
+        tank.cannon.move(mov[0],mov[1]);
+        if (tank.collidesWithArray(nonTrav)) {
+            tank.move(-mov[0], -mov[1]);
+            tank.cannon.move(-mov[0], -mov[1]);
+            let tempCol = tank.goalCol;
+            let tempRow = tank.goalRow;
+            tank.goalCol = tank.prevCol;
+            tank.goalRow = tank.prevRow;
+            tank.prevCol = tempCol;
+            tank.prevRow = tempRow;
+        }
+        tank.cannon.update();
+
+        if (tank.goalCol === Math.floor((tank.x+8) / 45) && tank.goalRow === Math.floor((tank.y+8) / 45)) {
+            let tempCol = tank.goalCol;
+            let tempRow = tank.goalRow;
+            tank.goalCol = tank.prevCol;
+            tank.goalRow = tank.prevRow;
+            tank.prevCol = tempCol;
+            tank.prevRow = tempRow;
+        }
+    }
+    tank.update();
+}
 
 
 function updateTime(time){

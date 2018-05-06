@@ -50,7 +50,7 @@ public class HomingTank implements Tank {
 	@Override
 	public Coordinate getCoord() {
 		// TODO Auto-generated method stub
-		return null;
+		return location;
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class HomingTank implements Tank {
 	@Override
 	public Coordinate getEndCoord() {
 		// TODO Auto-generated method stub
-		return null;
+		return location;
 	}
 	
 	

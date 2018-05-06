@@ -14,6 +14,9 @@ let mousX, mousY;
 let user;
 let nonTrav = [];
 
+let id;
+let username;
+
 // create the Scene object and create the map
 let scene = sjs.Scene({w:numCols * TILE_SIZE, h:numRows * TILE_SIZE});
 let game = scene.Layer('background', {useCanvas:false, autoClear:true});
@@ -182,7 +185,18 @@ function generateFriendsList(friendsList) {
 
     let table = document.getElementById("friendsTable");
     let tableBody = document.createElement("tbody");
-    console.log(friendsList.length);
+
+    let firstRow  = document.createElement("tr");
+    let textTitle1 = document.createTextNode("Username");
+    let textTitle2 = document.createTextNode("Status");
+    let title1 = document.createElement("th");
+    let title2 = document.createElement("th");
+    title1.appendChild(textTitle1);
+    title2.appendChild(textTitle2);
+    firstRow.appendChild(title1);
+    firstRow.appendChild(title2);
+    tableBody.appendChild(firstRow);
+
     for(let curRow = 0; curRow < friendsList.length; curRow++) {
         let row = document.createElement("tr");
         for (let c = 0; c < 2; c++) {
@@ -213,19 +227,32 @@ function generateFriendsList(friendsList) {
 function generateMapsList(gameList) {
 
     let table = document.getElementById("mapsTable");
-
     let tableBody = document.createElement("tbody");
+
+    let firstRow  = document.createElement("tr");
+    let textTitle1 = document.createTextNode("Map ID");
+    let textTitle2 = document.createTextNode("Options");
+    let title1 = document.createElement("th");
+    let title2 = document.createElement("th");
+    title1.appendChild(textTitle1);
+    title2.appendChild(textTitle2);
+    firstRow.appendChild(title1);
+    firstRow.appendChild(title2);
+    tableBody.appendChild(firstRow);
 
     for(let curRow = 0; curRow < gameList.length; curRow++) {
         let row = document.createElement("tr");
         for (let c = 0; c < 2; c++) {
             let text;
             let cell = document.createElement("td");
+            // id of the game
             if (c === 0) {
                 text = document.createTextNode(gameList[curRow]);
                 cell.appendChild(text);
             } else {
+                // options
                 let play = document.createElement("button");
+                play.onclick = function() { loadCampLevel(gameList[curRow]); };
                 play.appendChild(document.createTextNode("play"));
                 let edit = document.createElement("button");
                 edit.appendChild(document.createTextNode("edit"));
@@ -281,6 +308,9 @@ function userData() {
             let mapsList = respObject.games;
             let profile = respObject.profile;
             let campaign = profile.campaign;
+            
+            username = profile.username;
+            id = profile.id;
             generateFriendsList(friendsList);
             updateProfilePage(profile);
             generateMapsList(mapsList);
@@ -354,14 +384,27 @@ function generateLeaderboard(id, list, time) {
 }
 
 
-function switchFilter(current, switchTo) {
+function switchFilter(current, switchTo, type, next) {
     let cur = document.getElementById(current);
     if (cur.style.display !== "none") {
         cur.style.display = "none";
         document.getElementById(switchTo).style.display = "block";
     } else {
-
     }
+    document.getElementById(next).innerHTML = type;
+
+}
+
+function getUserPayload(){
+	
+	return obj = {type: 1, payload: {id: myId, name: username}};
+	
+}
+
+function friendRequestPayload(){
+	const friendName =  $('#newFriendSubmit').val();
+	
+	return obj = {type: 2, payload:{name: friendName}};
 }
 
 
@@ -471,6 +514,19 @@ $(document).ready(() => {
         });
     });
 
+    $('#multiBut').on('click', function () {
+        $.post('/authenticate', {}, responseJSON => {
+            const respObject = JSON.parse(responseJSON);
+            if (respObject.id === -1){
+                console.log("invalid");
+                document.getElementById("login").style.display = "block";
+            }
+            else{
+            	$('#multiplayer').toggle();
+            }
+        });
+    });
+    
     $('#leader').on('click', function () {
         $.post('/authenticate', {}, responseJSON => {
             const respObject = JSON.parse(responseJSON);
@@ -492,6 +548,10 @@ $(document).ready(() => {
         $('#leaderboard').toggle();
     });
     
+    $('#exitMulti').on('click', function () {
+        $('#multiplayer').toggle();
+    });
+    
     $('#exitProfile').on('click', function () {
         $('#profile').toggle();
     });
@@ -500,6 +560,10 @@ $(document).ready(() => {
         $('#login').toggle();
     });
 
+    $('#exitLogin').on('click', function () {
+        $('#login').toggle();
+    });
+   
 
 
     $('#mapBuild').on('click', function () {

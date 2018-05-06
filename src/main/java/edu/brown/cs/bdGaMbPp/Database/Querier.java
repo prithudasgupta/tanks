@@ -162,7 +162,7 @@ public final class Querier {
 	
 	private static void addTankToDatabase(Tank tank, String id, int gameId) {
 
-		
+    System.out.println(tank.toString());
 		try {
 			PreparedStatement prep = instance.conn
 			        .prepareStatement("INSERT INTO tanks VALUES (?, ?, ?, ?, ?, ?, ?);");
@@ -174,12 +174,12 @@ public final class Querier {
 				prep.setString(5, Integer.toString(gameId));
 				if (tank.getType().equals("p")) {
 					//fix
-					prep.setString(6, Integer.toString((int)tank.getEndCoord().getCoordinate(0)));
-					prep.setString(7, Integer.toString((int)tank.getEndCoord().getCoordinate(1)));
+					prep.setString(6, Integer.toString((int)(tank.getEndCoord().getCoordinate(0))));
+					prep.setString(7, Integer.toString((int)(tank.getEndCoord().getCoordinate(1))));
 				}
 				else {
-					prep.setString(6, "");
-					prep.setString(7, "");
+					prep.setString(6, "-1");
+					prep.setString(7, "-1");
 				}
 				
 				prep.addBatch();
@@ -188,7 +188,7 @@ public final class Querier {
 				
 		}
 		catch (Exception e){
-			
+			e.printStackTrace();
 		}
 		
 	}
@@ -246,7 +246,7 @@ public final class Querier {
 	        return tankList;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			
+			e.printStackTrace();
 		}
 	        return null;
 	}
@@ -319,7 +319,7 @@ public final class Querier {
 	        
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -395,38 +395,40 @@ public final class Querier {
 	
 	public static void setTime(int id, int t) {
 		Profile curr = getProfile(id);
-		try {
-			PreparedStatement prep = instance.conn
-			        .prepareStatement("UPDATE profiles SET time = ? WHERE id = ?;");
+		if (curr != null) {
+      try {
+        PreparedStatement prep = instance.conn
+                .prepareStatement("UPDATE profiles SET time = ? WHERE id = ?;");
 
-			prep.setString(2, Integer.toString(id));
-			prep.setString(1, Integer.toString(curr.getTime() + t));
+        prep.setString(2, Integer.toString(id));
+        prep.setString(1, Integer.toString(curr.getTime() + t));
 
-				prep.executeUpdate();
-				prep.close();
-				
-		}
-		catch (Exception e){
-			e.printStackTrace();
-		}
+        prep.executeUpdate();
+        prep.close();
+
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
 	}
 	
 	public static void setKills(int id, int kills) {
 		Profile curr = getProfile(id);
-		try {
-			PreparedStatement prep = instance.conn
-							.prepareStatement("UPDATE profiles SET kills = ? WHERE id = ?;");
-			
-				prep.setString(2, Integer.toString(id));
-				prep.setString(1, Integer.toString(curr.getKills() + kills));
+		if (curr != null) {
+      try {
+        PreparedStatement prep = instance.conn
+                .prepareStatement("UPDATE profiles SET kills = ? WHERE id = ?;");
 
-				prep.executeUpdate();
-				prep.close();
-				
-		}
-		catch (Exception e){
-			e.printStackTrace();
-		}
+        prep.setString(2, Integer.toString(id));
+        prep.setString(1, Integer.toString(curr.getKills() + kills));
+
+        prep.executeUpdate();
+        prep.close();
+
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
 	}
 
 	public static void createNewAccount(String username, String password) {
