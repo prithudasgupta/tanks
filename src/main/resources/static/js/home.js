@@ -262,6 +262,13 @@ function generateFriendsMult(friendsList) {
 
 }
 
+$("friendSelect").on("click",function(){
+	$("tr").each(function(){
+		$(this).removeClass("marked");
+	});
+	$(this).closest("tr").addClass("marked");
+});
+
 function generateMapsList(gameList) {
 
     let table = document.getElementById("mapsTable");
