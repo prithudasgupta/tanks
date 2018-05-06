@@ -52,3 +52,15 @@ const new_send = profile => {
 	
 	conn.send(JSON.stringify(profile));
 }
+
+function getUserPayload(){
+
+    return obj = {type: 1, payload: {id: myId, name: username}};
+
+}
+
+function friendRequestPayload(){
+    const friendName =  $('#newFriendSubmit').val();
+
+    return obj = {type: 2, payload:{name: friendName}};
+}
