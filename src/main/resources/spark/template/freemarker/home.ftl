@@ -107,8 +107,7 @@
         <table id="inboxTable"></table>
     </center>
     </div>
-
-
+    <button id="matchmake" onclick="matchmaker()" style="position: absolute; top: 9px; left: 12px;"> Matchmaker </button>
 </div>
 
 <div id="signin">

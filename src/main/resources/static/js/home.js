@@ -832,6 +832,20 @@ function loadMultiplayer(level, friendId) {
     }
 }
 
+function matchmaker(){
+	console.log("here");
+	$.post('/matchmaker', {}, responseJSON => {
+        let url = window.location.href;
+        let next = url.lastIndexOf("/");
+        let newUrl;
+        const respObject = JSON.parse(responseJSON);
+        
+      	newUrl = url.substr(0, next) + "/tank/game/" + respObject.game + "#" + respObject.opponent;
+
+        window.location.replace(newUrl);
+    });
+}
+
 function main() {
 
         userMove();

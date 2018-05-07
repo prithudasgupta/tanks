@@ -15,6 +15,7 @@ import edu.brown.cs.bdGaMbPp.Handlers.LeaderboardHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.LogoutHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.MapBuilderHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.MapHandler;
+import edu.brown.cs.bdGaMbPp.Handlers.MatchmakerHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.NextRoundHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.SignInHandler;
 import edu.brown.cs.bdGaMbPp.Handlers.GameDataHandler;
@@ -144,6 +145,7 @@ public final class Main {
     Spark.post("/friendRequest", new FriendRequestHandler());
     Spark.post("/friendAccept", new AcceptFriendRequestHandler());
     Spark.post("/leaderboard", new LeaderboardHandler());
+    Spark.post("/matchmaker", new MatchmakerHandler());
     Spark.post("/gameLeaderboard", new GameLeaderboardHandler());
 
     Spark.get("/test", new TestHandler(), freeMarker);
