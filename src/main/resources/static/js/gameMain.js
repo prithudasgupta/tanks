@@ -129,7 +129,6 @@ function visitPage(whereTo){
 				newUrl = "/home";
 			break;
 			case "Next":
-				console.log("heres and " + "survival: " + survival);
 				if(survival){
 					$.post('/nextRound', {}, responseJSON => {
 						//location.reload();
@@ -141,8 +140,7 @@ function visitPage(whereTo){
 					alert("Congratulations! you finished all campaign levels");
 					return;
 				}
-				
-				console.log(newUrl);
+
 				newUrl = nextLevel;
 				}
 			
@@ -223,7 +221,7 @@ function getMap () {
     $.post('/map', {"url": window.location.href}, responseJSON => {
         const respObject = JSON.parse(responseJSON);
 
-        console.log("round " + respObject.round);
+
         
         survival = respObject.survival;
         if (survival){
@@ -256,6 +254,7 @@ function getMap () {
                 populateMap(row, col, mapLoc[row][col]);
             }
         }
+
         setRepresentation();
         setStatTankMap(enemyLoc);
         startX = (respObject.game.user.location.coordinates[0] * 45) + 5;
@@ -300,6 +299,9 @@ function setStatTankMap(list) {
 let startX, startY;
 let collideable = [];
 
+function showInformation() {
+    $("#tankInformation").toggle();
+}
 // // load in the map
 function loadMap() {
     setUpLeaderboard();
@@ -400,7 +402,8 @@ function loadMap() {
             tank.isReady = false;
             addRoute(tank);
         }
-        
+
+        setUpTankInfo();
         // now loading screen
         three = canvasbg.Sprite("/sprites/one.png");
         two = canvasbg.Sprite("/sprites/two.png");
@@ -411,12 +414,42 @@ function loadMap() {
         pauseSprite.move(375, 275);
         pauseSprite.update();
 
-        window.requestAnimationFrame(oneM);
+        let urlArr = document.URL.split("/");
+        if(!survival) {
+            let level = parseInt(urlArr[urlArr.length - 1]);
+            if (level === 0) {
+                $('#tutorial').toggle();
+            } else {
+                window.requestAnimationFrame(oneM);
+            }
+        } else {
+            window.requestAnimationFrame(oneM);
+        }
 
     });
 
 }
 
+function setUpTankInfo() {
+    if (statEnemies.length === 0) {
+        $("#statT").toggle();
+    }
+    if (homingEnemies.length === 0) {
+        $("#homingT").toggle();
+    }
+    if (pathEnemies.length === 0) {
+        $("#pathT").toggle();
+    }
+    if (dumbEnemies.length === 0) {
+        $("#dumbT").toggle();
+    }
+}
+
+
+function exitTutorial() {
+    $('#tutorial').toggle();
+    window.requestAnimationFrame(oneM);
+}
 
 function createStationaryTank(row, col) {
     //let space = canvasbg.Sprite("/sprites/tank_space.png");

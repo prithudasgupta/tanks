@@ -789,7 +789,9 @@ $(document).ready(() => {
         $('#login').toggle();
     });
 
-   
+    $('#exitAbout').on('click', function () {
+        $('#about').toggle();
+    });
 
 
     $('#mapBuild').on('click', function () {
@@ -811,6 +813,10 @@ $(document).ready(() => {
     loadMap();
 
 });
+
+function openAbout() {
+    $("#about").toggle();
+}
 
 function loadCampLevel(level) {
     let url = window.location.href;
