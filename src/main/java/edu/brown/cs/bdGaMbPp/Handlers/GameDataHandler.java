@@ -67,7 +67,7 @@ public class GameDataHandler implements Route{
 				
 				int gameIdNumber = Integer.parseInt(gameId);
 				if (gameIdNumber >= 0 && gameIdNumber < 20) {
-					Querier.setCampaign(id, gameIdNumber);
+					Querier.setCampaign(id, gameIdNumber + 1);
 					
 				}
 				
