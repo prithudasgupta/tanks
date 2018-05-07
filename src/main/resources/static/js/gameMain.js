@@ -23,7 +23,10 @@ let USER_ROT = 0.04;
 let lastFire = Date.now();
 let gameTime = false;
 let globalTime = 0;
-
+let userShootRate = 500;
+let homingShootRate = 600;
+let dumbTankShootRate = 700;
+let stationaryShootRate = 800;
 let represent = "";
 
 let isGameOver;
@@ -369,6 +372,7 @@ function loadMap() {
         userTank.update();
         cannon.update();
         user = userTank;
+        userTank.shootRate = userShootRate;
         user.lastFire = Date.now();
         uCannon = cannon;
         ready = true;
@@ -420,7 +424,7 @@ function createStationaryTank(row, col) {
 
     //space.move(col*TILE_SIZE, row*TILE_SIZE);
     tank.move(col*TILE_SIZE, row*TILE_SIZE);
-
+    tank.shootRate = stationaryShootRate;
     //space.update();
     tank.update();
     tank.lastFire = Date.now();
@@ -442,7 +446,7 @@ function createDumbTank(row, col) {
     //space.update();
     tank.update();
     can.update();
-    console.log(tank);
+    tank.shootRate = dumbTankShootRate;
     tank.startX = tank.x;
     tank.startY = tank.y;
     tank.lastFire = Date.now();
@@ -468,6 +472,7 @@ function createHomingTank(row, col) {
     tank.startX = tank.x;
     tank.startY = tank.y;
     tank.lastFire = Date.now();
+    tank.shootRate = homingShootRate;
     tank.cannon = can;
     collideable.push(tank);
     nonTrav.push(tank);
@@ -563,7 +568,8 @@ class Bullet {
 }
 
 function fire(sprite) {
-    if (ready && (Date.now() - sprite.lastFire) > 400) {
+
+    if (ready && (Date.now() - sprite.lastFire) > sprite.shootRate) {
         let b = canvasbg.Sprite("/sprites/bullet.png");
 
         // make sure that it is to size
