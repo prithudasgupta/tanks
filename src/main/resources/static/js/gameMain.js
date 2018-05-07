@@ -33,6 +33,7 @@ let isGameOver;
 let winner = false;
 let survival = false;
 let survivalLevel = -1;
+let level;
 
 let playerTwo = 0;
 let gameId = 0;
@@ -1101,7 +1102,7 @@ function displayWinGame() {
     let urlArr = document.URL.split("/");
     
     if(!survival){
-    let level = parseInt(urlArr[urlArr.length -1]);
+     level = parseInt(urlArr[urlArr.length -1]);
     }else{
     	 level = survivalLevel;
     }

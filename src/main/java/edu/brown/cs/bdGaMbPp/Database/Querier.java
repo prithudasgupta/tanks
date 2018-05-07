@@ -268,8 +268,8 @@ public final class Querier {
 		try {
 			PreparedStatement prep = instance.conn
 							.prepareStatement("SELECT * FROM leaderboard WHERE game" +
-											" = ? ORDER BY time DESC;");
-			prep.setString(1, Integer.toString(id));
+											" = ? ORDER BY time ASC;");
+			prep.setString(1, Integer.toString(id - 1));
 			ResultSet rs = prep.executeQuery();
 			int mapId = -1;
 			int counter = 0;
@@ -284,7 +284,7 @@ public final class Querier {
 			rs.close();
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
 
 		}
 		return result;
@@ -688,7 +688,7 @@ public final class Querier {
 		int time = -1;
 		try {
 			PreparedStatement prep = instance.conn
-			        .prepareStatement("SELECT time FROM leaderboards WHERE game = ? AND user = ?");
+			        .prepareStatement("SELECT time FROM leaderboard WHERE game = ? AND user = ?");
 			
 				prep.setString(1, Integer.toString(gameId));
 				prep.setString(2, Integer.toString(userId));
@@ -701,7 +701,7 @@ public final class Querier {
 		        rs.close();
 			}
 			catch(Exception e) {
-				
+				e.printStackTrace();
 			}
 			return time;
 	}
@@ -723,12 +723,12 @@ public final class Querier {
 
 			}
 			catch (Exception e){
-
+				e.printStackTrace();
 			}
 		} else if (time < currentTime) {
 			try {
 				PreparedStatement prep = instance.conn
-				        .prepareStatement("UPDATE leaderboard set time = ? where user = ? AND game = ?;");
+				        .prepareStatement("UPDATE leaderboard set time = ? WHERE user = ? AND game = ?;");
 				
 					prep.setString(1, Integer.toString(time));
 					prep.setString(2, Integer.toString(userId));
@@ -739,7 +739,7 @@ public final class Querier {
 					
 			}
 			catch (Exception e){
-				
+				e.printStackTrace();
 			}
 		}
 	}
