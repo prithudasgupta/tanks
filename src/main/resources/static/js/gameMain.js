@@ -53,9 +53,6 @@ let dumbStart = [];
 let homingStart = [];
 let mapLand = [];
 
-
-
-
 let kills = 0;
 
 let enemyLoc = [];
@@ -220,6 +217,8 @@ function getMap () {
     $.post('/map', {"url": window.location.href}, responseJSON => {
         const respObject = JSON.parse(responseJSON);
 
+        console.log("round " + respObject.round);
+        
         survival = respObject.survival;
         if (survival){
         		survivalLevel = respObject.round;
@@ -1073,7 +1072,11 @@ function displayEndGame() {
         $('#retry').toggle();
     }
     let urlArr = document.URL.split("/");
-    let level = parseInt(urlArr[urlArr.length -1]);
+    if(!survival){
+        let level = parseInt(urlArr[urlArr.length -1]);
+        }else{
+        	 level = survivalLevel;
+        }
 
     $.post('/endGame', {"kills": kills, "currentTime":globalTime,
         "gameId": level, "survival": survival, "result": "lose", "userTwo": playerTwo}, responseJSON => {
@@ -1086,7 +1089,13 @@ function displayWinGame() {
     document.getElementById("result").innerHTML = "GAME WON!";
     $('#endGame').toggle();
     let urlArr = document.URL.split("/");
+    
+    if(!survival){
     let level = parseInt(urlArr[urlArr.length -1]);
+    }else{
+    	 level = survivalLevel;
+    }
+    
     console.log(playerTwo);
 
     if (playerTwo === 0) {
