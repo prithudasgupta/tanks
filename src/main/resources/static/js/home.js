@@ -185,6 +185,7 @@ function generateFriendsList(friendsList) {
 
     let table = document.getElementById("friendsTable");
     let tableBody = document.createElement("tbody");
+    
 
     let firstRow  = document.createElement("tr");
     let textTitle1 = document.createTextNode("Username");
@@ -410,9 +411,21 @@ function generateMapsMult(gameList, campaign) {
 
 }
 
-function addFriend(){
+function addFriend() {
 	 $.post('/friendRequest', {"username": document.getElementById("friendUse").value}, responseJSON => {
-		//addToTable
+		const respObject = JSON.parse(responseJSON);
+		if (respObject.success === true){
+		 let table = document.getElementById("friendsTable");
+    		 let tableBody = document.createElement("tbody");
+		 let row = document.createElement("tr");
+	     	let ele = document.createElement("td");
+			
+			document.createTextNode(list[curRow].username2);
+			row.append();
+		}
+		else{
+			alert("User not found! Please try again...");
+		}
 	});
 }
 
