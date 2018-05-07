@@ -2,6 +2,7 @@
 
 <#assign content>
     <canvas id="canvas"></canvas>
+    <audio id="gunShot" src="audio/gunShot.mp3" autostart="false" ></audio>
 
     <div id="sideMenu">
         <center>

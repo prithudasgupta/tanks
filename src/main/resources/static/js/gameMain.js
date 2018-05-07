@@ -590,6 +590,8 @@ function fire(sprite) {
             b.rotate(sprite.angle);
         }
         b.scale(1.7);
+        
+        this.playBulletTune();
         // update it
         b.update();
         // create an object for storage with bullet trajectory
@@ -610,6 +612,14 @@ function fire(sprite) {
         bullSprites.push(b);
         sprite.lastFire = Date.now();
     }
+}
+
+function playBulletTune(){
+		
+	let myAudio = document.getElementById("gunShot");
+
+		myAudio.play();
+	
 }
 
 function findCollisionDirection(x1, y1, x2, y2){

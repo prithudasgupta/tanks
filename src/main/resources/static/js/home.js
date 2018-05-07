@@ -627,11 +627,20 @@ function switchFilter(current, switchTo, type, next) {
 
 }
 
+function playTune(){
+	let myAudio = new Audio('audio/homeTune.wav'); 
+	myAudio.addEventListener('ended', function() {
+	    this.currentTime = 0;
+	    this.play();
+	}, false);
+	myAudio.play();
+}
+
 
 $(document).ready(() => {
 
     userData();
-
+    playTune();
 
 	document.getElementById("login").style.display = "none";
     //generate_table();
