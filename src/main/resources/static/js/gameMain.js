@@ -129,9 +129,10 @@ function visitPage(whereTo){
 				console.log("heres and " + "survival: " + survival);
 				if(survival){
 					$.post('/nextRound', {}, responseJSON => {
-						location.reload();
+						//location.reload();
+						newUrl = "survival";
 					});
-				}
+				}else{
 				const nextLevel = parseInt(urlArr[urlArr.length -1])+1;
 				if(nextLevel > 20 && survival !== true){
 					alert("Congratulations! you finished all campaign levels");
@@ -140,6 +141,7 @@ function visitPage(whereTo){
 				
 				console.log(newUrl);
 				newUrl = nextLevel;
+				}
 			
 			break;
 			
