@@ -119,13 +119,14 @@ for (let row = 0; row < 16; row++) {
 
 function visitPage(whereTo){
 		const urlArr = document.URL.split("/");
+		
 		let newUrl = "";
 		switch(whereTo){
 			case "Main":
 				newUrl = "/home";
 			break;
 			case "Next":
-				console.log("heres");
+				console.log("heres and " + "survival: " + survival);
 				if(survival){
 					$.post('/nextRound', {}, responseJSON => {
 						location.reload();
