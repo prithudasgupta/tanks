@@ -1074,6 +1074,7 @@ function displayEndGame() {
     }
     let urlArr = document.URL.split("/");
     let level = parseInt(urlArr[urlArr.length -1]);
+    console.log("level "+level);
     $.post('/endGame', {"kills": kills, "currentTime":globalTime,
         "gameId": level, "survival": survival, "result": "lose", "userTwo": playerTwo}, responseJSON => {
     });
