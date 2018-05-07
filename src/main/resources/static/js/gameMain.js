@@ -1255,6 +1255,18 @@ $(document).ready(() => {
                 break;
         }
     });
+    
+    document.addEventListener('mousedown', function (e) {
+    	
+    		space = true;
+        
+    });
+    
+    document.addEventListener('mouseup', function (e) {
+    	
+		space = false;
+    
+});
 
     document.addEventListener("mousemove", function(e) {
         mousX = e.clientX;
