@@ -56,12 +56,8 @@ public class MapHandler implements Route {
     		
     		Set<String> attributes = request.session().attributes();
 		if (!attributes.contains("survival")) {
-			
-		  System.out.println("before " + attributes);
 		  request.session(true);
 			request.session().attribute("survival", "1"); 
-			
-			System.out.println("after " + attributes);
 		}
 		else {
 			difficulty = Integer.parseInt(request.session().attribute("survival").toString());

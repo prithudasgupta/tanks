@@ -33,6 +33,7 @@ let isGameOver;
 let winner = false;
 let survival = false;
 let survivalLevel = -1;
+let level;
 
 let playerTwo = 0;
 let gameId = 0;
@@ -599,8 +600,7 @@ function fire(sprite) {
             b.rotate(sprite.angle);
         }
         b.scale(1.7);
-        
-        this.playBulletTune();
+       
         // update it
         b.update();
         // create an object for storage with bullet trajectory
@@ -621,14 +621,6 @@ function fire(sprite) {
         bullSprites.push(b);
         sprite.lastFire = Date.now();
     }
-}
-
-function playBulletTune(){
-		
-	let myAudio = document.getElementById("gunShot");
-
-		myAudio.play();
-	
 }
 
 function findCollisionDirection(x1, y1, x2, y2){
@@ -1114,7 +1106,7 @@ function displayWinGame() {
     let urlArr = document.URL.split("/");
     
     if(!survival){
-    let level = parseInt(urlArr[urlArr.length -1]);
+     level = parseInt(urlArr[urlArr.length -1]);
     }else{
     	 level = survivalLevel;
     }
