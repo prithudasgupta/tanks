@@ -25,6 +25,7 @@ let gameTime = false;
 let globalTime = 0;
 let userShootRate = 500;
 let homingShootRate = 600;
+let pathShootRate = 700;
 let dumbTankShootRate = 700;
 let stationaryShootRate = 800;
 let represent = "";
@@ -493,9 +494,12 @@ function createSamePathTank(pair){
 	let goalCol = pair[1][0];
     let tank = canvasbg.Sprite("/sprites/pathTank.png");
     let can = canvasbg.Sprite("/sprites/pathTank_Can.png");
+    tank.shootRate = pathShootRate;
+    tank.tankType = "p";
 
-    tank.move(col*TILE_SIZE + 11, row*TILE_SIZE + 11);
-    can.move(col*TILE_SIZE + 11, row*TILE_SIZE + 11);
+    console.log(row + ", " + col);
+    tank.move(col*TILE_SIZE +22.5, row*TILE_SIZE +22.5 );
+    can.move(col*TILE_SIZE +22.5, row*TILE_SIZE +22.5);
     //space.update();
     tank.update();
     can.update();
@@ -513,7 +517,6 @@ function createSamePathTank(pair){
     collideable.push(tank);
     nonTrav.push(tank);
     pathEnemies.push(tank);
-    tank.tankType = "p";
 }
 
 
@@ -575,7 +578,7 @@ function fire(sprite) {
 
     if (ready && (Date.now() - sprite.lastFire) > sprite.shootRate) {
         let b = canvasbg.Sprite("/sprites/bullet.png");
-
+        console.log("here");
         // make sure that it is to size
         // put in location
         let direction;
@@ -1264,6 +1267,18 @@ $(document).ready(() => {
                 break;
         }
     });
+    
+    document.addEventListener('mousedown', function (e) {
+    	
+    		space = true;
+        
+    });
+    
+    document.addEventListener('mouseup', function (e) {
+    	
+		space = false;
+    
+});
 
     document.addEventListener("mousemove", function(e) {
         mousX = e.clientX;
@@ -1280,8 +1295,8 @@ function movePath(tank) {
 	//console.log("tank is going from " + tank.prevRow + " , " + tank.prevCol + " to " + tank.goalRow + " , " + tank.goalCol);
 	let rot;
 
-    let dx = (tank.goalCol * 45) - tank.x;
-    let dy = (tank.goalRow * 45) - tank.y;
+    let dx = ((tank.goalCol * 45)+22.5) - tank.x;
+    let dy = ((tank.goalRow * 45)+22.5) - tank.y;
     rot = Math.atan2(dy, dx);
 
     rot = (rot % 6.28);
@@ -1298,7 +1313,7 @@ function movePath(tank) {
         tank.cannon.correctAngle = tank.cannon.angle + canrot;
         fire(tank);
     }
-    else {
+
 
         let mov = forwardByAngle(tank.angle, 1.5);
         tank.move(mov[0], mov[1]);
@@ -1325,7 +1340,7 @@ function movePath(tank) {
             tank.prevCol = tempCol;
             tank.prevRow = tempRow;
         }
-    }
+
     tank.update();
 }
 
