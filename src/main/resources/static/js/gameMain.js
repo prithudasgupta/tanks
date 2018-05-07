@@ -128,6 +128,7 @@ function visitPage(whereTo){
 				newUrl = "/home";
 			break;
 			case "Next":
+				console.log("heres");
 				if(survival){
 					$.post('/nextRound', {}, responseJSON => {
 						location.reload();
@@ -138,6 +139,8 @@ function visitPage(whereTo){
 					alert("Congratulations! you finished all campaign levels");
 					return;
 				}
+				
+				console.log(newUrl);
 				newUrl = nextLevel;
 			
 			break;
