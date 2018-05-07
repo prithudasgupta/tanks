@@ -312,9 +312,9 @@ public class GameMap {
         double currX = cpu.getFirst();
         double currY = cpu.getSecond();
         
-        for (double i = 0; i < distance; i+=.25) {
-                      currX += (deltaX/(distance/.25));
-                      currY += (deltaY/(distance/.25));
+        for (double i = 0; i < distance; i+=.1) {
+                      currX += (deltaX/(distance/.1));
+                      currY += (deltaY/(distance/.1));
                       
                       Pair<Integer, Integer> currIndex = new Pair<Integer, Integer>((int) currX, (int) currY);
                       String representation = this.get((int) currX, (int) currY).getRepresentation();

@@ -2,6 +2,8 @@
 
 <button id="submitLevel"> Add tanks </button>
 
+<button id="backToBuilder"> Back </button>
+
 <button id="submitLevelFinal"> Submit </button>
 
 <button id="home" onclick="visitPage('Main')"> Home </button>
