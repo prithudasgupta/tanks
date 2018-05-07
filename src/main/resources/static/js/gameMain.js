@@ -1111,7 +1111,7 @@ function displayWinGame() {
         $('#retry').toggle();
     }
     
-    console.log("level "+level);
+    console.log("survival" + survival + "level "+level);
     $.post('/endGame', {"kills": kills, "currentTime": globalTime,
         "gameId": level, "survival":survival, "result": "win", "userTwo": playerTwo}, responseJSON => {
     });
