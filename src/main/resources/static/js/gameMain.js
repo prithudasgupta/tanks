@@ -25,6 +25,7 @@ let gameTime = false;
 let globalTime = 0;
 let userShootRate = 500;
 let homingShootRate = 600;
+let pathShootRate = 700;
 let dumbTankShootRate = 700;
 let stationaryShootRate = 800;
 let represent = "";
@@ -33,6 +34,7 @@ let isGameOver;
 let winner = false;
 let survival = false;
 let survivalLevel = -1;
+let level;
 
 let playerTwo = 0;
 let gameId = 0;
@@ -488,6 +490,7 @@ function createDumbTank(row, col) {
     nonTrav.push(tank);
     dumbEnemies.push(tank);
     tank.tankType = "d";
+
     return tank;
 }
 
@@ -511,6 +514,7 @@ function createHomingTank(row, col) {
     nonTrav.push(tank);
     homingEnemies.push(tank);
     tank.tankType = "h";
+
     return tank;
 }
 
@@ -518,13 +522,17 @@ function createSamePathTank(pair){
 
 	let row = pair[0][1];
 	let col = pair[0][0];
+
 	let goalRow = pair[1][1];
 	let goalCol = pair[1][0];
     let tank = canvasbg.Sprite("/sprites/pathTank.png");
     let can = canvasbg.Sprite("/sprites/pathTank_Can.png");
+    tank.shootRate = pathShootRate;
+    tank.tankType = "p";
 
-    tank.move(col*TILE_SIZE + 11, row*TILE_SIZE + 11);
-    can.move(col*TILE_SIZE + 11, row*TILE_SIZE + 11);
+    console.log(row + ", " + col);
+    tank.move(col*TILE_SIZE +22.5, row*TILE_SIZE +22.5 );
+    can.move(col*TILE_SIZE +22.5, row*TILE_SIZE +22.5);
     //space.update();
     tank.update();
     can.update();
@@ -542,7 +550,6 @@ function createSamePathTank(pair){
     collideable.push(tank);
     nonTrav.push(tank);
     pathEnemies.push(tank);
-    tank.tankType = "p";
 }
 
 
@@ -604,7 +611,7 @@ function fire(sprite) {
 
     if (ready && (Date.now() - sprite.lastFire) > sprite.shootRate) {
         let b = canvasbg.Sprite("/sprites/bullet.png");
-
+        console.log("here");
         // make sure that it is to size
         // put in location
         let direction;
@@ -629,8 +636,7 @@ function fire(sprite) {
             b.rotate(sprite.angle);
         }
         b.scale(1.7);
-        
-        this.playBulletTune();
+       
         // update it
         b.update();
         // create an object for storage with bullet trajectory
@@ -651,14 +657,6 @@ function fire(sprite) {
         bullSprites.push(b);
         sprite.lastFire = Date.now();
     }
-}
-
-function playBulletTune(){
-		
-	let myAudio = document.getElementById("gunShot");
-
-		myAudio.play();
-	
 }
 
 function findCollisionDirection(x1, y1, x2, y2){
@@ -886,8 +884,8 @@ function angleBetweenVectors(v1, v2){
 function enemyLogic(enemy) {
     if (ready) {
         if (user !== undefined && withinSight(enemy.x, enemy.y)) {
-            let dx = enemy.x - user.x;
-            let dy = enemy.y - user.y;
+            let dx = enemy.x - (user.x - 9.5);
+            let dy = enemy.y - (user.y - 14);
             rot = Math.atan2(-dy, -dx);
             enemy.setAngle(0);
             enemy.rotate(rot);
@@ -982,8 +980,8 @@ function movingEnemyLogic(movingEnemy) {
            moveBetween(movingEnemy);
         }
     if (user !== undefined && withinSight(movingEnemy.x, movingEnemy.y)) {
-        let dx = movingEnemy.cannon.x - user.x;
-        let dy = movingEnemy.cannon.y - user.y;
+        let dx = movingEnemy.cannon.x - (user.x -9.5);
+        let dy = movingEnemy.cannon.y - (user.y -14);
         rot = Math.atan2(-dy, -dx);
         movingEnemy.cannon.setAngle(0);
         movingEnemy.cannon.rotate(rot);
@@ -1004,6 +1002,7 @@ function reachedBlock(movingEnemy){
      //   console.log("y diff " + pix_y_diff)
 
    if(Math.abs(pix_x_diff) <= 15 && Math.abs(pix_y_diff) <= 7){
+
     return true;
     }
 
@@ -1143,7 +1142,7 @@ function displayWinGame() {
     let urlArr = document.URL.split("/");
     
     if(!survival){
-    let level = parseInt(urlArr[urlArr.length -1]);
+     level = parseInt(urlArr[urlArr.length -1]);
     }else{
     	 level = survivalLevel;
     }
@@ -1281,22 +1280,38 @@ $(document).ready(() => {
     document.addEventListener('keyup', function (e) {
         switch (e.key) {
             case "a":
+            case "A":
                 aKey = false;
                 break;
             case "s":
+            case "S":
                 sKey = false;
                 break;
             case "w":
+            case "W":
                 wKey = false;
                 break;
             case " ":
                 space = false;
                 break;
             case "d":
+            case "D":
                 dKey = false;
                 break;
         }
     });
+    
+    document.addEventListener('mousedown', function (e) {
+    	
+    		space = true;
+        
+    });
+    
+    document.addEventListener('mouseup', function (e) {
+    	
+		space = false;
+    
+});
 
     document.addEventListener("mousemove", function(e) {
         mousX = e.clientX;
@@ -1313,8 +1328,8 @@ function movePath(tank) {
 	//console.log("tank is going from " + tank.prevRow + " , " + tank.prevCol + " to " + tank.goalRow + " , " + tank.goalCol);
 	let rot;
 
-    let dx = (tank.goalCol * 45) - tank.x;
-    let dy = (tank.goalRow * 45) - tank.y;
+    let dx = ((tank.goalCol * 45)+22.5) - tank.x;
+    let dy = ((tank.goalRow * 45)+22.5) - tank.y;
     rot = Math.atan2(dy, dx);
 
     rot = (rot % 6.28);
@@ -1331,7 +1346,7 @@ function movePath(tank) {
         tank.cannon.correctAngle = tank.cannon.angle + canrot;
         fire(tank);
     }
-    else {
+
 
         let mov = forwardByAngle(tank.angle, 1.5);
         tank.move(mov[0], mov[1]);
@@ -1358,7 +1373,7 @@ function movePath(tank) {
             tank.prevCol = tempCol;
             tank.prevRow = tempRow;
         }
-    }
+
     tank.update();
 }
 
@@ -1412,13 +1427,12 @@ function euclidDist(x1, y1, x2, y2) {
 }
 
 function withinSight(cpuX, cpuY){
-    const deltaY = user.y - cpuY;
-    const deltaX = user.x - cpuX;
+    const deltaY = (user.y +8) - cpuY;
+    const deltaX = (user.x +7.5) - cpuX;
     const distance = enemyDetector(cpuX, cpuY);
-    const epsilon = .1;
-
-    const userXTile = Math.floor(parseInt(user.x) / TILE_SIZE);
-    const userYTile = Math.floor(parseInt(user.y) / TILE_SIZE);
+    const epsilon = 3;
+    const userXTile = Math.floor(parseInt(user.x + 8) / TILE_SIZE);
+    const userYTile = Math.floor(parseInt(user.y + 7.5) / TILE_SIZE);
 
     let currX = cpuX;
     let currY = cpuY;
@@ -1429,7 +1443,6 @@ function withinSight(cpuX, cpuY){
         const currXTile = Math.floor(currX / TILE_SIZE);
         const currYTile = Math.floor(currY / TILE_SIZE);
         const currTile = map[currYTile][currXTile];
-
         if (userXTile === currXTile && userYTile === currYTile){
             return true;
         }

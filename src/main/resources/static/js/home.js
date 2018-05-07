@@ -631,9 +631,9 @@ function playTune(){
 	let myAudio = new Audio('audio/homeTune.wav'); 
 	myAudio.addEventListener('ended', function() {
 	    this.currentTime = 0;
-	    this.play();
+	    this.play().catch();
 	}, false);
-	myAudio.play();
+	myAudio.play().catch();
 }
 
 
