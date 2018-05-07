@@ -1394,13 +1394,12 @@ function euclidDist(x1, y1, x2, y2) {
 }
 
 function withinSight(cpuX, cpuY){
-    const deltaY = user.y - cpuY;
-    const deltaX = user.x - cpuX;
+    const deltaY = (user.y +8) - cpuY;
+    const deltaX = (user.x +7.5) - cpuX;
     const distance = enemyDetector(cpuX, cpuY);
-    const epsilon = .1;
-
-    const userXTile = Math.floor(parseInt(user.x) / TILE_SIZE);
-    const userYTile = Math.floor(parseInt(user.y) / TILE_SIZE);
+    const epsilon = 3;
+    const userXTile = Math.floor(parseInt(user.x + 8) / TILE_SIZE);
+    const userYTile = Math.floor(parseInt(user.y + 7.5) / TILE_SIZE);
 
     let currX = cpuX;
     let currY = cpuY;
@@ -1411,7 +1410,6 @@ function withinSight(cpuX, cpuY){
         const currXTile = Math.floor(currX / TILE_SIZE);
         const currYTile = Math.floor(currY / TILE_SIZE);
         const currTile = map[currYTile][currXTile];
-
         if (userXTile === currXTile && userYTile === currYTile){
             return true;
         }
