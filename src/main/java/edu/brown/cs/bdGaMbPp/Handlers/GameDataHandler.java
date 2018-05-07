@@ -45,6 +45,7 @@ public class GameDataHandler implements Route{
 		Querier.setTime(id, time);
 		
 
+		
 		if (survival.equals("true") && result.equals("win")) {
 			int currentRound = Integer.parseInt(request.session().attribute("survival").toString());
 			Querier.setSurvival(id, currentRound);
@@ -60,14 +61,16 @@ public class GameDataHandler implements Route{
 				Querier.updateGameFinal(-1 * user2, id, Integer.parseInt(gameId), time, kills);
 			}
 		}
-
+		
 		if (!gameId.equals("survival")) {
-
 			if (user2 == 0) {
+				
 				int gameIdNumber = Integer.parseInt(gameId);
 				if (gameIdNumber >= 0 && gameIdNumber < 20) {
 					Querier.setCampaign(id, gameIdNumber);
+					
 				}
+				
 				Querier.updateLeaderboard(gameIdNumber, id, time);
 			}
 		}
