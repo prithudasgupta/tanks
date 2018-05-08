@@ -205,6 +205,7 @@ public final class GameInitializer {
   
   private static List<Tank> assignLocations(Map<Integer, Integer> tankNumbers,
       List<Tank> currentList, List<Pair<Integer, Integer>> landIndices) {
+	  System.out.println("start");
     // TODO Auto-generated method stub
     
     int randStat = tankNumbers.get(0);
