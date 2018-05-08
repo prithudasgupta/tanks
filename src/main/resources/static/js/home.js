@@ -185,7 +185,7 @@ function generateFriendsList(friendsList) {
 
     let table = document.getElementById("friendsTable");
     let tableBody = document.createElement("tbody");
-    
+    tableBody.id = "tablebodyFriends";
 
     let firstRow  = document.createElement("tr");
     let textTitle1 = document.createTextNode("Username");
@@ -415,13 +415,17 @@ function addFriend() {
 	 $.post('/friendRequest', {"username": document.getElementById("friendUse").value}, responseJSON => {
 		const respObject = JSON.parse(responseJSON);
 		if (respObject.success === true){
-		 let table = document.getElementById("friendsTable");
-    		 let tableBody = document.createElement("tbody");
-		 let row = document.createElement("tr");
-	     	let ele = document.createElement("td");
-			
-			document.createTextNode(list[curRow].username2);
-			row.append();
+             let tbody = document.getElementById("tablebodyFriends");
+             let row = document.createElement("tr");
+             let ele = document.createElement("td");
+             let text1 = document.createTextNode(document.getElementById("friendUse").value);
+             ele.appendChild(text1);
+             row.appendChild(ele);
+            let ele1 = document.createElement("td");
+            let text2 = document.createTextNode("Pending");
+            ele1.appendChild(text2);
+            row.appendChild(ele1);
+            tbody.appendChild(row);3
 		}
 		else{
 			alert("User not found! Please try again...");
