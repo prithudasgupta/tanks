@@ -52,7 +52,7 @@
         <p> This game was created to bring the joy from your childhood to the desktop.
             We are continually trying to improve the game, if you have any suggestions
             or want to leave a tip email gokul_ajith@brown.edu.</p>
-        
+        <br>
         <p> The game was created by : </p>
         <p >Benjamin Deckey </p>
         <p >Michael Bardakji </p>
