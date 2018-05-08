@@ -49,6 +49,16 @@
          onmouseout="this.src='/images/exit.png';" style="position: absolute; top: 6px; right: 9px;">
     <center>
         <h2> About: </h2>
+        <p> This game was created to bring the joy from your childhood to the desktop.
+            We are continually trying to improve the game, if you have any suggestions
+            or want to leave a tip email gokul_ajith@brown.edu.</p>
+        
+        <p> The game was created by : </p>
+        <p >Benjamin Deckey </p>
+        <p >Michael Bardakji </p>
+        <p >Prithu Dasgupta </p>
+        <p >Gokul Ajith </p>
+
     </center>
 </div>
 
@@ -261,14 +271,19 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     border-radius: 25px;
     position: absolute;
     top: 12.5%;
-    left: 10%;
-    width: 75%;
-    height: 75%;
+    left: 35%;
+    width: 30%;
+    height: 50%;
     background-image: url("/sprites/menu.png");
     background-repeat: repeat;
     display: none;
     z-index: 99;
 }
+
+#about p {
+    width: 75%;
+}
+
 
 
 #leaderboard {
