@@ -1123,14 +1123,15 @@ function displayEndGame() {
         $('#retry').toggle();
     }
     let urlArr = document.URL.split("/");
-    if(!survival){
-        let level = parseInt(urlArr[urlArr.length -1]);
-        }else{
-        	 level = survivalLevel;
+    let curLev;
+    if(!survival) {
+        curLev = parseInt(urlArr[urlArr.length - 1]);
+    } else{
+        curLev = survivalLevel;
         }
 
     $.post('/endGame', {"kills": kills, "currentTime":globalTime,
-        "gameId": level, "survival": survival, "result": "lose", "userTwo": playerTwo}, responseJSON => {
+        "gameId": curLev, "survival": survival, "result": "lose", "userTwo": playerTwo}, responseJSON => {
     });
 
 
@@ -1140,17 +1141,14 @@ function displayWinGame() {
     document.getElementById("result").innerHTML = "GAME WON!";
     $('#endGame').toggle();
     let urlArr = document.URL.split("/");
-    
+    let curLev;
     if(!survival){
-     level = parseInt(urlArr[urlArr.length -1]);
-    }else{
-    	 level = survivalLevel;
+     curLev = parseInt(urlArr[urlArr.length -1]);
+    } else {
+    	 curLev = survivalLevel;
     }
-    
-    console.log(playerTwo);
-
     if (playerTwo === 0) {
-        if (level >= 0 && level <= 19) {
+        if (curLev >= 0 && curLev <= 19) {
 
         } else if (survival) {
 
@@ -1164,7 +1162,7 @@ function displayWinGame() {
     
     console.log("survival" + survival + "level "+level);
     $.post('/endGame', {"kills": kills, "currentTime": globalTime,
-        "gameId": level, "survival":survival, "result": "win", "userTwo": playerTwo}, responseJSON => {
+        "gameId": curLev, "survival":survival, "result": "win", "userTwo": playerTwo}, responseJSON => {
     });
 }
 

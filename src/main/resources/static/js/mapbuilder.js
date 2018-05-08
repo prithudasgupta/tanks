@@ -318,6 +318,7 @@ function removePossiblePaths() {
 
 		finalSubmit.click(event => {
 		    let tanks = getLoTanks();
+		    representation = getRepresentation();
 		    // check to see atleast 1 enemy and user is placed
 		    if (userLoc !== undefined && tanks !== "") {
                 let loc = (userLoc[0]).toString() + "," + (userLoc[1]).toString();
@@ -605,8 +606,21 @@ function getLoTanks() {
             }
         }
     }
-    console.log(loEnemies);
     return loEnemies;
+}
+
+function getRepresentation() {
+       representation = "";
+       for (let row = 0; row < 16; row++) {
+           for (let col = 0; col < 24; col++) {
+               if ((map[row][col]).type === "l" || (map[row][col]).type === "p" || (map[row][col]).type === "u" || (map[row][col]).type === "b") {
+                   representation += (map[row][col]).type;
+               } else {
+                   representation += "l";
+               }
+           }
+       }
+       return representation;
 }
 
 function setupInformation() {
