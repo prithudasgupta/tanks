@@ -5,7 +5,7 @@
 <img id="profileBut" src = "images/friendsIcon.png" onmouseover="this.src='/images/friendsIcon_selected.png';"
      onmouseout="this.src='/images/friendsIcon.png';">
 
-<img id="information" src="/images/information.png" >
+<img id="information" src="/images/information.png" onclick="openAbout()" >
 
 <center>    
 <img id="logo" src="images/logo1.png" >
@@ -42,6 +42,14 @@
     </center>
     <div id="levels" style="top: 15%; left: 25%; position: absolute; height: 75%; width: 50%;">
     </div>
+</div>
+
+<div id="about">
+    <img id="exitAbout" src="/images/exit.png" onmouseover="this.src='/images/exit_hover.png';"
+         onmouseout="this.src='/images/exit.png';" style="position: absolute; top: 6px; right: 9px;">
+    <center>
+        <h2> About: </h2>
+    </center>
 </div>
 
 <div id="leaderboard">
@@ -248,6 +256,20 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     display: none;
     z-index: 99;
  }
+
+#about {
+    border-radius: 25px;
+    position: absolute;
+    top: 12.5%;
+    left: 10%;
+    width: 75%;
+    height: 75%;
+    background-image: url("/sprites/menu.png");
+    background-repeat: repeat;
+    display: none;
+    z-index: 99;
+}
+
 
 #leaderboard {
     border-radius: 25px;

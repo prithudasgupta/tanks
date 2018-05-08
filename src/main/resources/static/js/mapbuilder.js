@@ -20,7 +20,18 @@ let opt3;
 // free, smart tank
 let opt4;
 
+let currentTank = 1;
+// 1 = user
+// 2 = stat
+// 3 = dumb
+// 4 = path
+// 5 = homing
+
+let prevStage;
+
 let opt5;
+let up;
+let down;
 
 let opt6;
 // copy of map
@@ -33,6 +44,7 @@ let prev;
 let offScreen;
 const submit = $("#submitLevel");
 const finalSubmit = $("#submitLevelFinal");
+const info = $("#information");
 
 
 function visitPage(whereTo){
@@ -127,7 +139,8 @@ function loadMap() {
         "/sprites/freeSpace.png", "/sprites/pothole.png", "/sprites/breakable.png",
         "/sprites/imm_tank.png", "/sprites/tank_space.png", "/sprites/selected.png",
         "/sprites/menu.png", "/sprites/select.png", "/sprites/pathTankSelect.png",
-        "/sprites/freeSpacePath.png","/sprites/homingTankSelect.png", "/sprites/EndPath.png"], function () {
+        "/sprites/freeSpacePath.png","/sprites/homingTankSelect.png", "/sprites/EndPath.png",
+        "/sprites/up.png", "/sprites/down.png"], function () {
         // loading map into view
         for (let row = 0; row < 16; row++) {
             for (let col = 0; col < 24; col++) {
@@ -173,10 +186,22 @@ function loadMap() {
                     next = game.Sprite("/sprites/freeSpace.png");
                     opt4 = next;
                     map[row][col] = new Tile(next, "l");
-                } else if (row === 10 && col === 26) {
-                    next = game.Sprite("/sprites/menu.png");
-                    opt5 = next;
-                    map[row][col] = new Tile(next, "path");
+                } else if ((row === 10 || row === 11 ||row === 12) && col === 26) {
+                    if (row === 11) {
+                        next = game.Sprite("/sprites/userTankSelect.png");
+                        opt5 = next;
+                        opt5.selectedTank = new Selected("user");
+                        map[row][col] = new Tile(next, "path");
+                    } else if (row === 10) {
+                        next = game.Sprite("/sprites/up.png");
+                        up = next;
+                        map[row][col] = new Tile(next, "path");
+                    } else if (row == 12) {
+                        next = game.Sprite("/sprites/down.png");
+                        downBut = next;
+                        map[row][col] = new Tile(next, "path");
+                    }
+
                 } else if (row === 12 && col === 26) {
                     next = game.Sprite("/sprites/menu.png");
                     opt6 = next;
@@ -203,7 +228,6 @@ function setPossiblePath(start) {
     let leftClear = true;
 
     for (let i = 1; i < 5; i++) {
-        console.log("setting up paths");
         if (aboveClear && row-i >= 0) {
             if (map[row-i][col].type === "l") {
                 map[row-i][col].sprite.loadImg("/sprites/freeSpacePath.png");
@@ -254,46 +278,47 @@ function removePossiblePaths() {
 }
 
     $(document).ready(() => {
-
+        finalSubmit.toggle();
 		let down = false;
 
 
-		submit.click(event => {
-            representation = "";
-            for (let row = 0; row < 16; row++) {
-                for (let col = 0; col < 24; col++) {
-                    representation += (map[row][col]).type;
-                }
-            }
-            // console.log(idOfMap.val());
-            // $.post('/mapBuilderSubmit', {"representation": representation}, responseJSON => {
-	        	// 	console.log(responseJSON);
-            // });
-	        opt1.loadImg("/sprites/userTankSelect.png");
-	        opt1.update();
-            opt2.loadImg("/sprites/statTankSelect.png");
-            opt2.update();
-            opt3.loadImg("/sprites/dumbTankSelect.png");
-            opt3.update();
-            opt5.loadImg("/sprites/pathTankSelect.png");
-            opt5.update();
-            opt6.loadImg("/sprites/homingTankSelect.png");
-            opt6.update();
-            submit.toggle();
-            finalSubmit.toggle();
-            stage = 1;
-            // reset selected block
-            sel.loadImg("/sprites/menu.png");
-            sel.update();
-            map[2][25].sprite.loadImg("/sprites/select.png");
-            map[2][25].sprite.update();
-            sel = map[2][25].sprite;
-            cur = opt1;
-            cur.sel = new Selected("user");
-		});
+		// submit.click(event => {
+         //    representation = "";
+         //    for (let row = 0; row < 16; row++) {
+         //        for (let col = 0; col < 24; col++) {
+         //            representation += (map[row][col]).type;
+         //        }
+         //    }
+         //    // console.log(idOfMap.val());
+         //    // $.post('/mapBuilderSubmit', {"representation": representation}, responseJSON => {
+	     //    	// 	console.log(responseJSON);
+         //    // });
+	     //    opt1.loadImg("/sprites/userTankSelect.png");
+	     //    opt1.update();
+         //    opt2.loadImg("/sprites/statTankSelect.png");
+         //    opt2.update();
+         //    opt3.loadImg("/sprites/dumbTankSelect.png");
+         //    opt3.update();
+         //    opt5.loadImg("/sprites/pathTankSelect.png");
+         //    opt5.update();
+         //    opt6.loadImg("/sprites/homingTankSelect.png");
+         //    opt6.update();
+         //    submit.toggle();
+         //    finalSubmit.toggle();
+         //    stage = 1;
+         //    // reset selected block
+         //    sel.loadImg("/sprites/menu.png");
+         //    sel.update();
+         //    map[2][25].sprite.loadImg("/sprites/select.png");
+         //    map[2][25].sprite.update();
+         //    sel = map[2][25].sprite;
+         //    cur = opt1;
+         //    cur.sel = new Selected("user");
+		// });
 
 		finalSubmit.click(event => {
 		    let tanks = getLoTanks();
+		    representation = getRepresentation();
 		    // check to see atleast 1 enemy and user is placed
 		    if (userLoc !== undefined && tanks !== "") {
                 let loc = (userLoc[0]).toString() + "," + (userLoc[1]).toString();
@@ -323,6 +348,9 @@ function removePossiblePaths() {
                                 map[curRow][curCol].sprite.loadImg(cur.sel.string);
                                 map[curRow][curCol].sprite.update();
                                 // updateZval();
+                                if (map[curRow][curCol].type === "user") {
+                                    userLoc = undefined;
+                                }
                             }
                         }
                     }
@@ -341,17 +369,16 @@ function removePossiblePaths() {
             //fix this
             if (stage === 1) {
                 if (e.clientY <= 720 && e.clientY >= 0 && e.clientX >= 0 && e.clientX <= 1080) {
+                    curRow = Math.floor(e.clientY/45);
+                    curCol = Math.floor(e.clientX/45);
                     if ((map[curRow][curCol]).perWall === false) {
-                        curRow = Math.floor(e.clientY/45);
-                        curCol = Math.floor(e.clientX/45);
-                        console.log(map[curRow][curCol].type);
                         // if the map location is not a pothole, breakable, or a wall
                         if (map[curRow][curCol].type !== "p" && map[curRow][curCol].type !== "u"
                             && map[curRow][curCol].type !== "b") {
                             // only allow user to be placed once
-                            if (cur.sel.type === "user" && userLoc === undefined) {
+                            if (opt5.selectedTank.type === "user" && userLoc === undefined) {
                                 userLoc = [curRow, curCol];
-                            } else if (cur.sel.type === "user") {
+                            } else if (opt5.selectedTank.type === "user") {
                                 map[userLoc[0]][userLoc[1]].type = "l";
                                 map[userLoc[0]][userLoc[1]].sprite.loadImg("/sprites/freeSpace.png");
                                 map[userLoc[0]][userLoc[1]].sprite.update();
@@ -362,15 +389,14 @@ function removePossiblePaths() {
                             if (map[curRow][curCol].type === "user") {
                                 userLoc = undefined;
                             }
-                            console.log(cur.sel.type);
-                            if (cur.sel.type === "path") {
-                                console.log(map[curRow][curCol]);
+
+                            if (opt5.selectedTank.type === "path") {
                                 if (pathStage === 0) {
                                     setPossiblePath([curRow,curCol]);
                                     pathStage = 1;
                                     curPath = map[curRow][curCol];
-                                    map[curRow][curCol].type = cur.sel.type;
-                                    map[curRow][curCol].sprite.loadImg(cur.sel.string);
+                                    map[curRow][curCol].type = opt5.selectedTank.type;
+                                    map[curRow][curCol].sprite.loadImg(opt5.selectedTank.string);
                                     map[curRow][curCol].sprite.update();
                                 } else if (pathOptions.includes(map[curRow][curCol])) {
                                     removePossiblePaths();
@@ -388,8 +414,8 @@ function removePossiblePaths() {
                                     map[curRow][curCol].endToPath.sprite.loadImg("/sprites/freeSpace.png");
                                     map[curRow][curCol].endToPath.sprite.update();
                                 }
-                                map[curRow][curCol].type = cur.sel.type;
-                                map[curRow][curCol].sprite.loadImg(cur.sel.string);
+                                map[curRow][curCol].type = opt5.selectedTank.type;
+                                map[curRow][curCol].sprite.loadImg(opt5.selectedTank.string);
                                 map[curRow][curCol].sprite.update();
                             }
 
@@ -405,18 +431,15 @@ function removePossiblePaths() {
                         removePossiblePaths();
                         curPath.type = "l";
                     }
-
+                    stage = 0;
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[2][25].sprite.loadImg("/sprites/select.png");
                     map[2][25].sprite.update();
                     sel = map[2][25].sprite;
                     cur = opt1;
-                    if (stage === 0) {
-                        cur.sel = new Selected("u");
-                    } else {
-                        cur.sel = new Selected("user");
-                    }
+                    cur.sel = new Selected("u");
+
 
                 }
             }
@@ -428,17 +451,15 @@ function removePossiblePaths() {
                         removePossiblePaths();
                         curPath.type = "l";
                     }
+                    stage = 0;
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[4][25].sprite.loadImg("/sprites/select.png");
                     map[4][25].sprite.update();
                     sel = map[4][25].sprite;
                     cur = opt2;
-                    if (stage === 0) {
-                        cur.sel = new Selected("p");
-                    } else {
-                        cur.sel = new Selected("stat");
-                    }
+                    cur.sel = new Selected("p");
+
 
                 }
             }
@@ -450,17 +471,14 @@ function removePossiblePaths() {
                         removePossiblePaths();
                         curPath.type = "l";
                     }
+                    stage = 0;
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[6][25].sprite.loadImg("/sprites/select.png");
                     map[6][25].sprite.update();
                     sel = map[6][25].sprite;
                     cur = opt3;
-                    if (stage === 0) {
-                        cur.sel = new Selected("b");
-                    } else {
-                        cur.sel = new Selected("dumb");
-                    }
+                    cur.sel = new Selected("b");
 
                 }
             }
@@ -472,6 +490,7 @@ function removePossiblePaths() {
                         removePossiblePaths();
                         curPath.type = "l";
                     }
+                    stage = 0;
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
                     map[8][25].sprite.loadImg("/sprites/select.png");
@@ -482,35 +501,24 @@ function removePossiblePaths() {
                 }
             }
             // path
-            if (opt5.isPointIn(e.clientX, e.clientY) && stage === 1){
+            if (opt5.isPointIn(e.clientX, e.clientY)){
                 if (opt5 !== opt1) {
+                    stage = 1;
                     sel.loadImg("/sprites/menu.png");
                     sel.update();
-                    map[10][25].sprite.loadImg("/sprites/select.png");
-                    map[10][25].sprite.update();
-                    sel = map[10][25].sprite;
+                    map[11][25].sprite.loadImg("/sprites/select.png");
+                    map[11][25].sprite.update();
+                    sel = map[11][25].sprite;
                     cur = opt5;
-                    cur.sel = new Selected("path");
+                    cur.sel = opt5.selectedTank;
                 }
             }
-            if (opt6.isPointIn(e.clientX, e.clientY) && stage === 1){
-                if (opt6 !== opt1) {
-                    if (pathStage === 1) {
-                        pathStage = 0;
-                        curPath.sprite.loadImg("/sprites/freeSpace.png");
-                        removePossiblePaths();
-                        curPath.type = "l";
-                    }
-                    sel.loadImg("/sprites/menu.png");
-                    sel.update();
-                    map[12][25].sprite.loadImg("/sprites/select.png");
-                    map[12][25].sprite.update();
-                    sel = map[12][25].sprite;
-                    cur = opt5;
-                    cur.sel = new Selected("homing");
-                }
+            if (up.isPointIn(e.clientX, e.clientY)) {
+                switchTank("up");
             }
-
+            if (downBut.isPointIn(e.clientX, e.clientY)) {
+                switchTank("down");
+            }
             
         });
         loadMap();
@@ -522,7 +530,59 @@ function removePossiblePaths() {
 $(document).ready(() => {
     document.getElementById("sjs0").style.position = "absolute";
     document.getElementById("sjs0").style.zIndex = "90";
+    setupInformation();
 });
+
+function switchTank(ud) {
+        let change = 0;
+        if (ud === "down") {
+            change = 1;
+        } else {
+            change = -1;
+        }
+        if (currentTank + change <= 0) {
+            currentTank = 5;
+        } else if (currentTank + change >= 6) {
+            currentTank = 1;
+        } else {
+            currentTank += change;
+        }
+        if (pathStage === 1) {
+            pathStage = 0;
+            curPath.sprite.loadImg("/sprites/freeSpace.png");
+            removePossiblePaths();
+            curPath.type = "l";
+        }
+        switch (currentTank) {
+            case 1:
+                opt5.loadImg("/sprites/userTankSelect.png");
+                opt5.update();
+                opt5.selectedTank = new Selected("user");
+                break;
+            case 2:
+                opt5.loadImg("/sprites/statTankSelect.png");
+                opt5.update();
+                opt5.selectedTank = new Selected("stat");
+                break;
+            case 3:
+                opt5.loadImg("/sprites/dumbTankSelect.png");
+                opt5.update();
+                opt5.selectedTank = new Selected("dumb");
+                break;
+            case 4:
+                opt5.loadImg("/sprites/pathTankSelect.png");
+                opt5.update();
+                opt5.selectedTank = new Selected("path");
+                pathStage = 0;
+                break;
+            case 5:
+                opt5.loadImg("/sprites/homingTankSelect.png");
+                opt5.update();
+                opt5.selectedTank = new Selected("homing");
+                break;
+    }
+
+}
 
 function getLoTanks() {
     let loEnemies = "";
@@ -546,9 +606,42 @@ function getLoTanks() {
             }
         }
     }
-    console.log(loEnemies);
     return loEnemies;
 }
+
+function getRepresentation() {
+       representation = "";
+       for (let row = 0; row < 16; row++) {
+           for (let col = 0; col < 24; col++) {
+               if ((map[row][col]).type === "l" || (map[row][col]).type === "p" || (map[row][col]).type === "u" || (map[row][col]).type === "b") {
+                   representation += (map[row][col]).type;
+               } else {
+                   representation += "l";
+               }
+           }
+       }
+       return representation;
+}
+
+function setupInformation() {
+    info.style.top = 405 + 'px';
+    info.style.left = 1215 + 'px';
+}
+
+
+function information() {
+    if (stage !== 3) {
+        prevStage = stage;
+        stage = 3;
+        $('#tankInformation').toggle();
+    }
+}
+
+function informationOff() {
+    stage = prevStage;
+    $('#tankInformation').toggle();
+}
+
 
 function main() {
     

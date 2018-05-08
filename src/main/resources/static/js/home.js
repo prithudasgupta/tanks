@@ -185,6 +185,7 @@ function generateFriendsList(friendsList) {
 
     let table = document.getElementById("friendsTable");
     let tableBody = document.createElement("tbody");
+    tableBody.id = "tablebodyFriends";
 
     let firstRow  = document.createElement("tr");
     let textTitle1 = document.createTextNode("Username");
@@ -410,9 +411,25 @@ function generateMapsMult(gameList, campaign) {
 
 }
 
-function addFriend(){
+function addFriend() {
 	 $.post('/friendRequest', {"username": document.getElementById("friendUse").value}, responseJSON => {
-		//addToTable
+		const respObject = JSON.parse(responseJSON);
+		if (respObject.success === true){
+             let tbody = document.getElementById("tablebodyFriends");
+             let row = document.createElement("tr");
+             let ele = document.createElement("td");
+             let text1 = document.createTextNode(document.getElementById("friendUse").value);
+             ele.appendChild(text1);
+             row.appendChild(ele);
+            let ele1 = document.createElement("td");
+            let text2 = document.createTextNode("Pending");
+            ele1.appendChild(text2);
+            row.appendChild(ele1);
+            tbody.appendChild(row);3
+		}
+		else{
+			alert("User not found! Please try again...");
+		}
 	});
 }
 
@@ -789,7 +806,9 @@ $(document).ready(() => {
         $('#login').toggle();
     });
 
-   
+    $('#exitAbout').on('click', function () {
+        $('#about').toggle();
+    });
 
 
     $('#mapBuild').on('click', function () {
@@ -811,6 +830,10 @@ $(document).ready(() => {
     loadMap();
 
 });
+
+function openAbout() {
+    $("#about").toggle();
+}
 
 function loadCampLevel(level) {
     let url = window.location.href;

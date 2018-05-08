@@ -1,8 +1,10 @@
 package edu.brown.cs.bdGaMbPp.Handlers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
 import edu.brown.cs.bdGaMbPp.Database.Profile;
@@ -64,7 +66,8 @@ public class FriendRequestHandler implements Route {
 	      else {
 	    	  	Querier.friendRequest(id, friendId, 1);
 	      }
-	      Gson GSON = new Gson();
-	      return new Gson();
+	      Map<String, Object> variables = ImmutableMap.of("success", success);
+			Gson GSON = new Gson();
+			return GSON.toJson(variables);
 	}
 }
