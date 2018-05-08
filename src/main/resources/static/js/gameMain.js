@@ -925,6 +925,10 @@ function checkEndGame() {
 }
 
 function addRoute(movingEnemy){
+   movingEnemy.loading = true;
+   movingEnemy.isReady = false;
+
+
     let toCol;
     let toRow;
     switch(movingEnemy.tankType){
@@ -937,7 +941,6 @@ function addRoute(movingEnemy){
             toRow = Math.floor(user.y/45);
         break;
     }
-   movingEnemy.loading = true;
 
  $.post('/homing', {"userRow": toRow, "representation": represent,"userCol": toCol,
   "enemyRow": Math.floor(movingEnemy.y / 45), "enemyCol": Math.floor(movingEnemy.x / 45)}, responseJSON => {
@@ -970,7 +973,7 @@ function movingEnemyLogic(movingEnemy) {
                 movingEnemy.routeIndex += 1;
 
             if((!movingEnemy.loading && movingEnemy.route.length < (movingEnemy.routeIndex + 4))){
-
+                console.log("asked");
                 addRoute(movingEnemy);
                  }
                 //console.log("iter " + movingEnemy.routeIndex);
@@ -1148,14 +1151,21 @@ function displayWinGame() {
     	 curLev = survivalLevel;
     }
     if (playerTwo === 0) {
-        if (curLev >= 0 && curLev <= 19) {
+        if (level >= 0 && level < 19) {
 
         } else if (survival) {
 
-        } else {
+        }
+         else {
+
             $('#next').toggle();
+            if(level ==19){
+              alert("Congratulations, you finished all campaign levels!")
+                    }
         }
     } else {
+                console.log("here4");
+
         $('#next').toggle();
         $('#retry').toggle();
     }

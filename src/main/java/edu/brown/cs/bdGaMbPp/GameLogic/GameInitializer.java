@@ -32,7 +32,7 @@ public final class GameInitializer {
     Tank user = new UserTank(convertToCoordinate(userTankStart));
 		landIndices.remove(index);
 		map = newMap;
-		List<Tank> enemies = createTanks(difficulty, landIndices);
+		List<Tank> enemies = createTanks(2 * difficulty, landIndices);
 		
 		return new Game(newMap, user, enemies);
 	
@@ -47,41 +47,16 @@ public final class GameInitializer {
 	}
 	
 	private static List<Tank> createTanks(int difficulty, List<Tank> currentList,  List<Pair<Integer, Integer>> landIndices){
-		//template method need to add when more tank types added
-
-//		int numTanks = (int) (Math.random() * Math.min(difficulty, landIndices.size()));
-//
-//		if (numTanks == 0) {
-//			numTanks = 1;
-//		}
-//
-//		for (int i = 0; i < numTanks; i++) {
-//			int randIndex = (int) (Math.random() * landIndices.size());
-//			Pair<Integer, Integer> newStart = landIndices.get(randIndex);
-//			landIndices.remove(randIndex);
-//			int randProb = (int) (Math.random() * difficulty);
-//			Tank newTank = null;
-//			if (randProb < DUMB_PROB) {
-//				newTank = new DrunkWalkTank(convertToCoordinate(newStart));
-//			}
-//			else {
-//			 newTank = new StationaryEnemyTank(convertToCoordinate(newStart));
-//			}
-//			currentList.add(newTank);
-//		}
-//		//System.out.println("currentList = " + currentList);
-//		return currentList;
-//	}
-	  
-	  if(isBetween(difficulty, 0, 15)) {
+		
+	  if(isBetween(difficulty, 0, 10)) {
 	    return firstDifficultyLevel(difficulty, currentList, landIndices);
-	  }else if(isBetween(difficulty, 16, 35)) {
+	  }else if(isBetween(difficulty, 11, 20)) {
 	    return secondDifficultyLevel(difficulty, currentList, landIndices);
-	  }else if(isBetween(difficulty, 36, 50)) {
+	  }else if(isBetween(difficulty, 21, 40)) {
 	    return thirdDifficultyLevel(difficulty, currentList, landIndices);
-	  }else if(isBetween(difficulty, 51, 65)) {
+	  }else if(isBetween(difficulty, 41, 60)) {
 	    return fourthDifficultyLevel(difficulty, currentList, landIndices);
-	  }else if(isBetween(difficulty, 66, 80)) {
+	  }else if(isBetween(difficulty, 61, 80)) {
 	    return fifthDifficultyLevel(difficulty, currentList, landIndices);
 	  }else if(isBetween(difficulty, 81, 100)) {
 	    return sixthDifficultyLevel(difficulty, currentList, landIndices);
@@ -97,7 +72,7 @@ public final class GameInitializer {
     int randStat = 0;
     int randDumb = getRandomInt(0,2);
     int randPath = getRandomInt(2,4);
-    int randHome = getRandomInt(2,4);
+    int randHome = getRandomInt(2,5);
    
     tankNumbers.put(0, randStat);
     tankNumbers.put(1, randDumb);
@@ -113,7 +88,7 @@ public final class GameInitializer {
     
     Map<Integer, Integer> tankNumbers = new HashMap<Integer, Integer>();
     int randStat = 0;
-    int randDumb = getRandomInt(0,2);
+    int randDumb = getRandomInt(0,4);
     int randPath = getRandomInt(2,4);
     int randHome = getRandomInt(1,3);
     
@@ -150,7 +125,7 @@ public final class GameInitializer {
 	  Map<Integer, Integer> tankNumbers = new HashMap<Integer, Integer>();
     int randStat = getRandomInt(0, 1);
     int randDumb = getRandomInt(2,3);
-    int randPath = getRandomInt(1,2);
+    int randPath = getRandomInt(1,3);
     int randHome = getRandomInt(0,1);
    
     tankNumbers.put(0, randStat);
@@ -182,14 +157,11 @@ public final class GameInitializer {
 
   private static List<Tank> firstDifficultyLevel(int difficulty, List<Tank> currentList,
       List<Pair<Integer, Integer>> landIndices) {
-    // TODO Auto-generated method stub
-
-      //List<Integer> tankNumbers = new ArrayList<Integer>();
+    
     
     Map<Integer, Integer> tankNumbers = new HashMap<Integer, Integer>();
 	    int randStat = getRandomInt(1, 3);
-	    int randDumb = getRandomInt(0,0);
-	    //int randPath = getRandomInt(0,1);
+	    int randDumb = getRandomInt(0,1);
 	    int randPath = getRandomInt(0,0);
 	    int randHome = 0;
 	   
@@ -205,6 +177,7 @@ public final class GameInitializer {
   
   private static List<Tank> assignLocations(Map<Integer, Integer> tankNumbers,
       List<Tank> currentList, List<Pair<Integer, Integer>> landIndices) {
+	  System.out.println("start");
     // TODO Auto-generated method stub
     
     int randStat = tankNumbers.get(0);

@@ -40,8 +40,11 @@
     <center>
         <h2> Select level </h2>
     </center>
-    <div id="levels" style="top: 15%; left: 25%; position: absolute; height: 75%; width: 50%;">
-    </div>
+    <center>
+        <div id="levels" style="top: 15%; left: 25%; position: absolute; height: 75%; width: 50%;">
+        </div>
+    </center>
+
 </div>
 
 <div id="about">
@@ -49,6 +52,16 @@
          onmouseout="this.src='/images/exit.png';" style="position: absolute; top: 6px; right: 9px;">
     <center>
         <h2> About: </h2>
+        <p> This game was created to bring the joy from your childhood to the desktop.
+            We are continually trying to improve the game, if you have any suggestions
+            or want to leave a tip email gokul_ajith@brown.edu.</p>
+        <br>
+        <p> The game was created by : </p>
+        <p >Benjamin Deckey </p>
+        <p >Michael Bardakji </p>
+        <p > Gokul Ajith </p>
+        <p >Prithu Dasgupta </p>
+
     </center>
 </div>
 
@@ -261,14 +274,19 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     border-radius: 25px;
     position: absolute;
     top: 12.5%;
-    left: 10%;
-    width: 75%;
-    height: 75%;
+    left: 35%;
+    width: 30%;
+    height: 50%;
     background-image: url("/sprites/menu.png");
     background-repeat: repeat;
     display: none;
     z-index: 99;
 }
+
+#about p {
+    width: 75%;
+}
+
 
 
 #leaderboard {
@@ -447,6 +465,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 a{
 color: black;
 }
+
 
 a:hover{
 color: red;

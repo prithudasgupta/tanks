@@ -298,11 +298,6 @@ public class GameMap {
 
 	}
 	
-	/*public Map<Tank, List<Pair<Integer, Integer>>> getTankLocations(){
-		
-	}*/
-	
-	
 	
 	public boolean withinSight(Pair<Integer, Integer> cpu, Pair<Integer, Integer> user) {
 		double deltaY = (user.getSecond() - cpu.getSecond());
@@ -311,7 +306,6 @@ public class GameMap {
        
         double currX = cpu.getFirst();
         double currY = cpu.getSecond();
-        
         for (double i = 0; i < distance; i+=.1) {
                       currX += (deltaX/(distance/.1));
                       currY += (deltaY/(distance/.1));
@@ -322,11 +316,13 @@ public class GameMap {
                             return true;
                       }
                       else if (representation.equals("u")) {
+
                             return false;
                       }
                      
-        }                         
-        return false;
+        }        
+
+        return true;
 	}
 
 
