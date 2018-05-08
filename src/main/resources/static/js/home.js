@@ -570,13 +570,30 @@ function getLeaderboardLists() {
     });
 }
 
-function setupCampaign(level) {
-    for(let i = 0; i < 20; i++){
+function setupCampaign1(level) {
+    for(let i = 0; i < 20; i++){0
         if (i < level) {
             $('div#levels').append("<img id='level' onclick='loadCampLevel(" + i + ")' src='images/mapIcons/mapIcon" + i + ".png'/> </img>");
         } else {
             $('div#levels').append("<img id='level' src='images/mapIcon_lock.png'/> </img>");
         }
+    }
+}
+
+function setupCampaign(level) {
+    let num = 0;
+    for(let i = 0; i < 4; i++){
+        let str = "<p>";
+        for (let j = 0; j < 5; j++) {
+            if (num < level) {
+                str +=  "<img id='level' onclick='loadCampLevel(" + num + ")' src='images/mapIcons/mapIcon" + num + ".png'/> </img>";
+            } else {
+                str += "<img id='level' src='images/mapIcon_lock.png'/> </img>";
+            }
+            num++;
+        }
+        str += "</p>";
+        $('div#levels').append(str);
     }
 }
 

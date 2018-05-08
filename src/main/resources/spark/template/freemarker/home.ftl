@@ -40,8 +40,11 @@
     <center>
         <h2> Select level </h2>
     </center>
-    <div id="levels" style="top: 15%; left: 25%; position: absolute; height: 75%; width: 50%;">
-    </div>
+    <center>
+        <div id="levels" style="top: 15%; left: 25%; position: absolute; height: 75%; width: 50%;">
+        </div>
+    </center>
+
 </div>
 
 <div id="about">
@@ -56,8 +59,8 @@
         <p> The game was created by : </p>
         <p >Benjamin Deckey </p>
         <p >Michael Bardakji </p>
+        <p > Gokul Ajith </p>
         <p >Prithu Dasgupta </p>
-        <p >Gokul Ajith </p>
 
     </center>
 </div>
@@ -462,6 +465,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 a{
 color: black;
 }
+
 
 a:hover{
 color: red;
