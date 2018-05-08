@@ -10,19 +10,18 @@
      <img id="exitTut" src="/images/exit.png" onmouseover="this.src='/images/exit_hover.png';"
           onmouseout="this.src='/images/exit.png';" onclick="informationOff();" style="position: absolute; top: 6px; right: 9px;">
      <center><h3>Information:</h3></center>
-     <img  src="/sprites/userTankSelect.png" style="left: 10%; top: 20%; position: absolute;">
-     <p style="left: 25%; top: 20%; position: absolute;"> User Tank </p>
-     <img  src="/sprites/statTankSelect.png" style="left: 10%; top: 35%; position: absolute;">
-     <p style="left: 25%; top: 30%; position: absolute; width: 70%"> Stationary Tank : Will fire when in line of sight of the user. </p>
-     <img  src="/sprites/dumbTankSelect.png" style="left: 10%; top: 50%; position: absolute;">
-     <p style="left: 25%; top: 45%; position: absolute; width: 70%"> Random Tank : Will randomly move around
+     <img  src="/sprites/userTankSelect.png" style="left: 10%; top: 15%; position: absolute;">
+     <p style="left: 25%; top: 15%; position: absolute;"> User Tank </p>
+     <img  src="/sprites/statTankSelect.png" style="left: 10%; top: 30%; position: absolute;">
+     <p style="left: 25%; top: 27%; position: absolute; width: 70%"> Stationary Tank : Will fire when in line of sight of the user. </p>
+     <img  src="/sprites/dumbTankSelect.png" style="left: 10%; top: 45%; position: absolute;">
+     <p style="left: 25%; top: 42%; position: absolute; width: 70%"> Random Tank : Will randomly move around
          the map, and fire when in line of sight. </p>
-     <img  src="/sprites/pathTankSelect.png" style="left: 10%; top: 65%; position: absolute;">
-     <p style="left: 25%; top: 60%; position: absolute; width: 70%"> Path Tank : Will move back and forth to the
+     <img  src="/sprites/pathTankSelect.png" style="left: 10%; top: 63%; position: absolute;">
+     <p style="left: 25%; top: 57%; position: absolute; width: 70%"> Path Tank : Will move back and forth to the
      point given on creation, fires when in line of sight with the user.</p>
-     <img  src="/sprites/homingTankSelect.png" style="left: 10%; top: 80%; position: absolute;">
-     <p style="left: 25%; top: 75%; position: absolute; width: 70%"> Homing Tank : Will follow shortest path to the user
-         , fires when in line of sight with the user.</p>
+     <img  src="/sprites/homingTankSelect.png" style="left: 10%; top: 82%; position: absolute;">
+     <p style="left: 25%; top: 78%; position: absolute; width: 70%"> Homing Tank : Will follow shortest path to the user, fires when in line of sight with the user.</p>
  </div>
 
 
