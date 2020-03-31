@@ -39,7 +39,7 @@ public class GameDataHandler implements Route{
 			id = Integer.parseInt(request.session().attribute("user").toString());
 		}
 
-
+		// test
 		Querier.setKills(id, kills);
 		Querier.setTime(id, time);
 		
