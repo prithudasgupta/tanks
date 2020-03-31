@@ -160,7 +160,7 @@ public final class Main {
     Spark.post("/mapBuilderSubmit", new MapBuilderHandler());
     Spark.get("/mapbuilder", new MapBuilderHomeHandler(), freeMarker);
 
-    //Spark.post("/user", new UserTankHandler());
+    Spark.post("/user", new UserTankHandler());
   }
 
 
@@ -181,7 +181,7 @@ public final class Main {
   //     }
   //     res.body(stacktrace.toString());
   //   }
-  }
+  //}
 
 
 
