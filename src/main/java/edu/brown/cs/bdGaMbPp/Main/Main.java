@@ -23,7 +23,6 @@ import edu.brown.cs.bdGaMbPp.Map.MapBuilder;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import spark.ExceptionHandler;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -132,7 +131,7 @@ public final class Main {
   private void runSparkServer(int port) {
     Spark.port(port);
     Spark.externalStaticFileLocation("src/main/resources/static");
-    Spark.exception(Exception.class, new ExceptionPrinter());
+    // Spark.exception(Exception.class, new ExceptionPrinter());
 
     FreeMarkerEngine freeMarker = createEngine();
 
@@ -170,18 +169,18 @@ public final class Main {
    *
    * @author jj
    */
-  private static class ExceptionPrinter implements ExceptionHandler {
-    @Override
-    public void handle(Exception e, Request req, Response res) {
-      res.status(500);
-      StringWriter stacktrace = new StringWriter();
-      try (PrintWriter pw = new PrintWriter(stacktrace)) {
-        pw.println("<pre>");
-        e.printStackTrace(pw);
-        pw.println("</pre>");
-      }
-      res.body(stacktrace.toString());
-    }
+  // private static class ExceptionPrinter implements ExceptionHandler {
+  //   @Override
+  //   public void handle(Exception e, Request req, Response res) {
+  //     res.status(500);
+  //     StringWriter stacktrace = new StringWriter();
+  //     try (PrintWriter pw = new PrintWriter(stacktrace)) {
+  //       pw.println("<pre>");
+  //       e.printStackTrace(pw);
+  //       pw.println("</pre>");
+  //     }
+  //     res.body(stacktrace.toString());
+  //   }
   }
 
 
