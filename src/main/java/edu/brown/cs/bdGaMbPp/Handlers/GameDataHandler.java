@@ -3,7 +3,6 @@ package edu.brown.cs.bdGaMbPp.Handlers;
 import com.google.gson.Gson;
 
 import edu.brown.cs.bdGaMbPp.Database.Querier;
-import org.omg.CORBA.INTERNAL;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
@@ -40,7 +39,7 @@ public class GameDataHandler implements Route{
 			id = Integer.parseInt(request.session().attribute("user").toString());
 		}
 
-
+		// test
 		Querier.setKills(id, kills);
 		Querier.setTime(id, time);
 		
