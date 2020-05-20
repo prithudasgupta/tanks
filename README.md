@@ -1,5 +1,9 @@
 # cs0320 Term Project 2018
 
+This is the code for the game Desktops Tanks, which was originally made on Wii. Java, JS, HTMl, CSS, and SQL were used devloping this game. The game is deployed on heroku: https://cs32-desktop-tanks.herokuapp.com/home Enjoy!
+
+## Project Checkpoints
+
 **Team Members:** 
 Gokul Ajith
 Michael Bardakji
@@ -107,5 +111,3 @@ _On your first meeting with your mentor TA, you should plan dates for at least t
 ## Project Specs, Mockup, and Design (March 16)
 _A link to your specifications, mockup, and your design presentation will go here!_
 
-## How to Build and Run
-_A necessary part of any README!_
